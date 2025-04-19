@@ -1,0 +1,4 @@
+"id","sequence","code","name","report_name","internal_type","doc_code_prefix","country_id/id"
+"dt_ve_f","10","1","Facturas","Factura","invoice","F","base.ve"
+"dt_ve_nd","20","2","Notas de Débito","Nota de Débito","debit_note","ND","base.ve"
+"dt_ve_nc","30","3","Notas de Crédito","Nota de Crédito","credit_note","NC","base.ve"

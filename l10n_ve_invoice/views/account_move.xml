@@ -59,7 +59,7 @@
             </xpath>
         </field>
     </record>
-    <record id="view_account_move_od_journal_sequence" model="ir.ui.view">
+    <!-- <record id="view_account_move_od_journal_sequence" model="ir.ui.view">
         <field name="name">view.account.move.od.journal.sequence</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="od_journal_sequence.view_move_form" />
@@ -68,7 +68,7 @@
                 <attribute name="readonly">False</attribute>
             </xpath>
         </field>
-    </record>
+    </record> -->
     <!-- ACTION OUT_INVOICE -->
     <record id="account.action_move_out_invoice_type" model="ir.actions.act_window">
         <field name="name">Invoices</field>

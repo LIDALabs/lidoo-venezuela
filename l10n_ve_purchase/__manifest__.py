@@ -10,6 +10,7 @@
     "website": "https://binauraldev.com/",
     "category": "Purchase",
     "depends": ["purchase", "account"],
+    'auto_install': True,
     "data": [
         "security/ir.model.access.csv",
     ],

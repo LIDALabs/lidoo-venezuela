@@ -9,12 +9,17 @@
     "website": "https://binauraldev.com/",
     "category": "Accounting/Localizations/Account Chart",
     "depends": [
+        "account",
         "l10n_ve_rate",
         "l10n_ve_base",
         "l10n_ve_accountant",
         "l10n_ve_contact",
         "l10n_ve_tax",
-        "od_journal_sequence",
+        "l10n_ve_binaural",
+    ],
+    "auto_install": [
+        "account",
+        "l10n_ve_binaural",
     ],
     "data": [
         "security/l10n_ve_invoice_groups.xml",

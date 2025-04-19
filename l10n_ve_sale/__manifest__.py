@@ -10,7 +10,7 @@
     "version": "17.0.1.1.9",
     # any module necessary for this one to work correctly
     "depends": [
-        "base",
+        "sale",
         "l10n_ve_base",
         "l10n_ve_tax",
         "sale_management",
@@ -18,6 +18,11 @@
         "l10n_ve_contact",
         "l10n_ve_invoice",
         "l10n_ve_filter_partner",
+        "l10n_ve_binaural",
+    ],
+    'auto_install': [
+        "sale",
+        "l10n_ve_binaural",
     ],
     "data": [
         "security/ir.model.access.csv",

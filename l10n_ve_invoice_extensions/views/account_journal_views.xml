@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">view.account.journal.l10n.ve.invoice.extensions.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <field name="is_debit" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+
+            <xpath expr="//form//notebook" position="inside">
+                <page name="document_numbers" string="Números iniciales de documentos"
+                    invisible="type != 'sale' or not l10n_latam_use_documents"
+                    groups="l10n_ve_invoice.group_sales_invoicing_series"
+                >
+                    <group>
+                        <field name="l10n_ve_invoice_first_document_number" />
+                        <field name="l10n_ve_credit_note_first_document_number" />
+                        <field name="l10n_ve_debit_note_first_document_number" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -11,6 +11,7 @@
         "account_accountant",
         "l10n_ve_accountant",
     ],
+    "auto_install": True,
     "data": [
         "views/res_config_settings.xml",
     ],
