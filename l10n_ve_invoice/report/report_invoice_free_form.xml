@@ -8,11 +8,11 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
             <field name="report_file">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
-            <field name="attachment">(object.state == 'posted') and ((object.l10n_latam_document_number) + '.pdf')</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name).replace(' ', '-'))</field>
             <field name="paperformat_id" ref="l10n_ve_invoice.invoice_free_form_paperformat_binaural_invoice"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_type">report</field>
-            <field name="print_report_name" >(object.state == 'posted') and ((object.l10n_latam_document_number) + '.pdf')</field>
+            <field name="print_report_name" >(object.state == 'posted') and ((object.name).replace(' ', '-'))</field>
         </record>
 
         <template id="report_freeform_document">
@@ -21,10 +21,10 @@
                 <h3 t-if="o.state == 'draft'" style="position:absolute;left:65px;top:250px;font-size:260px !important;opacity: 0.1;">BORRADOR</h3>
                     <div class="text-center" t-if="o.state != 'draft'">
                         <span>
-                            <t t-if="o.move_type in ['out_refund', 'in_refund']">
+                            <t t-if="o.reversed_entry_id">
                                 NOTA DE CRÉDITO
                             </t>
-                            <t t-elif="o.is_debit">
+                            <t t-elif="o.debit_origin_id">
                                 NOTA DE DÉBITO
                             </t>
                             <t t-else="">
@@ -37,7 +37,7 @@
             <div class="mt-5">
                 <div class="page">
                     <div id="informations" class="row mt-4 mb-4">
-                        <div class="col-auto col-6 mw-100 mb-2" name="header_left">
+                        <div class="col-auto col-7 mw-100 mb-2" name="header_left">
                             <span><strong>Razón Social:</strong> <t t-out="o.partner_id.name"/></span>
                             <br/>
                             <span>
@@ -53,13 +53,13 @@
                             <br/>
                             <span t-if="o.partner_id.phone"><strong>Teléfono:</strong> <t t-out="o.partner_id.phone"/></span>
                         </div>
-                        <div class="col-auto col-1 mw-100 mb-1" name="header_right">
+                        <div class="col-auto col-5 mw-100 mb-1" name="header_right">
                             <t t-set="currency_base" t-value="o.currency_id.id == %(base.VEF)s"/>
                             <t t-if="o.company_id.taxpayer_type == 'ordinary'">
                                 <span><strong>CONTRIBUYENTE FORMAL</strong></span>
                                 <br/>
                             </t>
-                            <t t-if="o.move_type in ['out_refund', 'in_refund']">
+                            <t t-if="o.reversed_entry_id">
                                 <span><strong>Nro de nota de crédito:</strong><t t-if="o.name != '/'" t-out="o.l10n_latam_document_number"/></span>
                                 <br/>
                                 <span><strong>Factura afectada:</strong><t t-out="o.reversed_entry_id.l10n_latam_document_number"/></span>
@@ -77,7 +77,7 @@
                                 </span>
                                 <br/>
                             </t>
-                            <t t-elif="o.is_debit">
+                            <t t-elif="o.debit_origin_id">
                                 <span><strong>Nota de débito:</strong><t t-if="o.name != '/'" t-out="o.l10n_latam_document_number"/></span>
                                 <br/>
                                 <span>

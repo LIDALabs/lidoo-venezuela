@@ -108,6 +108,7 @@ class AccountMove(models.Model):
         compute="_compute_total_debit_credit", currency_field="foreign_currency_id"
     )
     amount = fields.Float(tracking=True)
+
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         context = self.with_context(active_test=False)
@@ -310,7 +311,7 @@ class AccountMove(models.Model):
         the move is edited.
         """
 
-        if 'name' in vals:
+        if 'name' in vals and vals['name'] != "/":
             existing_record = self.search([('name', '=', vals['name']), ('id', '!=', self.id)], limit=1)
             if existing_record:
                 raise ValidationError(_("The operation cannot be completed: Another entry with the same name already exists."))
@@ -702,7 +703,6 @@ class AccountMove(models.Model):
         elif self.foreign_inverse_rate == 0:
             raise ValidationError(_("The rate entered cannot be zero."))
 
-
     def _get_payments(self, line_ids):
         self.ensure_one()
 
@@ -764,7 +764,7 @@ class AccountMove(models.Model):
 
         return account_analytic_by_line_id
 
-    #override 
+    # override
     def _get_retention_payment_move_ids(self, line_ids):
         return []
 
