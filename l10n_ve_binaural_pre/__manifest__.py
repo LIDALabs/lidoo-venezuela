@@ -7,6 +7,7 @@
     "website": "https://lidalabs.com",
     "category": "Accounting/Localizations",
     "depends": [
+        "account",
         "l10n_latam_invoice_document",
     ],
     "data": [
