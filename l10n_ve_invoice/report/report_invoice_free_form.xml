@@ -8,11 +8,11 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
             <field name="report_file">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
-            <field name="attachment">(object.state == 'posted') and ((object.name).replace(' ', '-'))</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name + ('-copia' if object.is_print_copy else '')).replace(' ', '-'))</field>
             <field name="paperformat_id" ref="l10n_ve_invoice.invoice_free_form_paperformat_binaural_invoice"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_type">report</field>
-            <field name="print_report_name" >(object.state == 'posted') and ((object.name).replace(' ', '-'))</field>
+            <field name="print_report_name" >(object.state == 'posted') and ((object.name + ('-copia' if object.is_print_copy else '')).replace(' ', '-'))</field>
         </record>
 
         <template id="report_freeform_document">
@@ -245,6 +245,14 @@
                 <p t-if="o.invoice_incoterm_id" name="incoterm">
                     <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                 </p>
+                <t t-if="o.state == 'draft' or o.free_form_copy_number > 1">
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <p class="fw-bold">COPIA</p>
+                            <p class="fw-bold">SIN DERECHO A CRÉDITO FISCAL</p>
+                        </div>
+                    </div>
+                </t>
             </div>
         </template>
 

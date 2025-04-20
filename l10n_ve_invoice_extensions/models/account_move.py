@@ -15,7 +15,7 @@ PREPRINTED_CORRELATIVE_PATTERN = re.compile('^\d{2}[-]\d{1,8}$')
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    is_debit = fields.Boolean(computed='_computed_is_debit')
+    is_debit = fields.Boolean(compute='_computed_is_debit')
 
     @api.depends('l10n_latam_document_type_id')
     def _computed_is_debit(self):
@@ -26,6 +26,14 @@ class AccountMove(models.Model):
     def _compute_is_debit_journal(self):
         for move in self:
             move.is_debit_journal = True
+
+    def _get_invoice_reference_odoo_invoice(self):
+        """ This computes the reference based on the Odoo format.
+            We simply return the number of the invoice, defined on the journal
+            sequence.
+        """
+        self.ensure_one()
+        return self.name.replace(' ', '-')
 
     @api.model
     def get_sequence(self):
@@ -50,9 +58,3 @@ class AccountMove(models.Model):
             raise UserError(_("El número de control generado no cumple con el patrón secuencia '00-00000'"))
 
         return correlative
-
-    def action_debit_note_button(self):
-        action = ""
-        for picking in self:
-            action = picking.env.ref('account_debit_note.action_view_account_move_debit').read()[0]
-        return action

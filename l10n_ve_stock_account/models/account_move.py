@@ -14,15 +14,15 @@ class AccountMove(models.Model):
     transfer_ids = fields.Many2many("stock.picking", string="Transfers")
     from_picking = fields.Boolean(string="From Picking", default=False)
 
-    # 0: not printed yet, 1: first print (original), 2 or more: copies
-    free_form_copy_number = fields.Integer(default=0, copy=False)
+    # # 0: not printed yet, 1: first print (original), 2 or more: copies
+    # free_form_copy_number = fields.Integer(default=0, copy=False)
 
-    def print_invoice_free_form(self):
+    # def print_invoice_free_form(self):
 
-        report = self.env.ref(
-            "l10n_ve_invoice.action_invoice_free_form_l10n_ve_invoice"
-        )
+    #     report = self.env.ref(
+    #         "l10n_ve_invoice.action_invoice_free_form_l10n_ve_invoice"
+    #     )
 
-        self.free_form_copy_number = self.free_form_copy_number + 1
+    #     self.free_form_copy_number = self.free_form_copy_number + 1
 
-        return report.report_action(self)
+    #     return report.report_action(self)

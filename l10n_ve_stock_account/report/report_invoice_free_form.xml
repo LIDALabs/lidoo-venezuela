@@ -7,7 +7,7 @@
                 <t t-out="o.guide_number or 'N/A'"/>
             </t>
         </xpath>
-
+<!-- 
         <xpath expr="//div[@class='mt-5'][1]/p[2]" position="after">
             <t t-if="o.state == 'draft' or o.free_form_copy_number > 1">
                 <div class="row mt-4">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </t>
-        </xpath>
+        </xpath> -->
 
     </template>
 </odoo>

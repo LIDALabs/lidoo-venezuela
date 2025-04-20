@@ -1,9 +1,9 @@
-from datetime import datetime
 import json
 import logging
+from datetime import datetime
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_date
 
 _logger = logging.getLogger(__name__)
@@ -29,6 +29,11 @@ class AccountMove(models.Model):
         compute="_compute_is_debit_journal",
         store=True
     )
+
+    # 0: not printed yet, 1: first print (original), 2 or more: copies
+    free_form_copy_number = fields.Integer(default=0, copy=False)
+    is_print_copy = fields.Boolean(compute='_compute_is_print_copy')
+
     @api.constrains("invoice_line_ids")
     def _check_price_in_zero(self):
         for record in self:
@@ -42,10 +47,10 @@ class AccountMove(models.Model):
 
             correlative = str(sequence.number_next_actual).zfill(sequence.padding)
 
-            invoices = record.env['account.move'].sudo().search([("correlative","=",correlative),('move_type', 'in',["out_invoice","out_refund"])])
+            invoices = record.env['account.move'].sudo().search([("correlative", "=", correlative), ('move_type', 'in', ["out_invoice", "out_refund"])])
 
-            if invoices and record.move_type in ["out_invoice","out_refund"]:
-                raise ValidationError(_("Ya existe una factura con el Número de Control: %s"%correlative))
+            if invoices and record.move_type in ["out_invoice", "out_refund"]:
+                raise ValidationError(_("Ya existe una factura con el Número de Control: %s" % correlative))
         return super().action_post()
 
     @api.constrains("correlative", "is_contingency")
@@ -76,6 +81,7 @@ class AccountMove(models.Model):
                 raise UserError(
                     _("The correlative must be unique per journal when using a contingency journal")
                 )
+
     @api.depends('journal_id')
     def _compute_is_debit_journal(self):
         for move in self:
@@ -155,18 +161,17 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         res = super()._post(soft)
         for move in res:
-            
+
             if "invoice_print_type" in move.company_id._fields:
                 invoice_print_type = move.company_id.invoice_print_type
             else:
                 invoice_print_type = None
-            
+
             if move.is_valid_to_sequence() and invoice_print_type != "fiscal":
-                
+
                 move.correlative = move.get_sequence()
-                
+
         return res
-        
 
     @api.model
     def is_valid_to_sequence(self) -> bool:
@@ -177,7 +182,7 @@ class AccountMove(models.Model):
         Returns:
             True or False whether the invoice already has a sequence number or not.
         """
-        
+
         is_contingency = self.journal_id.is_contingency
         journal_type = self.journal_id.type == "sale"
         is_series_invoicing_enabled = self.company_id.group_sales_invoicing_series
@@ -225,9 +230,22 @@ class AccountMove(models.Model):
             )
         return correlative.next_by_id(correlative.id)
 
+    @api.depends('state', 'free_form_copy_number')
+    def _compute_is_print_copy(self):
+        for move in self:
+            move.is_print_copy = move.state == 'draft' or move.free_form_copy_number > 1
 
     def action_debit_note_button(self):
         action = ""
         for picking in self:
             action = picking.env.ref('account_debit_note.action_view_account_move_debit').read()[0]
         return action
+
+    def print_invoice_free_form(self):
+        report = self.env.ref(
+            "l10n_ve_invoice.action_invoice_free_form_l10n_ve_invoice"
+        )
+
+        self.free_form_copy_number = self.free_form_copy_number + 1
+
+        return report.report_action(self)

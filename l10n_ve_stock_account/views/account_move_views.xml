@@ -6,18 +6,18 @@
         <field name="arch" type="xml">
 
 
-            <xpath expr="//form//header" position="inside">
+            <!-- <xpath expr="//form//header" position="inside">
                 <button
                     name="print_invoice_free_form" string="Free Form"
                     type="object" class="o_btn_validate"
                     invisible="(move_type not in ('out_invoice', 'out_refund')) or state != 'posted' or correlative == False"
                 />
-            </xpath>
+            </xpath> -->
 
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="picking_id" readonly="1" />
                 <field name="guide_number" />
-                <field name="free_form_copy_number" readonly="1" />
+                <!-- <field name="free_form_copy_number" readonly="1" /> -->
                 <field name="transfer_ids" widget="many2many_tags" invisible="1" />
             </xpath>
 
