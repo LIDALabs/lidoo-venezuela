@@ -12,7 +12,14 @@ class AccountMove(models.Model):
         journal document number with a 8 padding number """
         if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "VE":
             if self.l10n_latam_document_type_id:
-                return self._l10n_ve_get_formatted_sequence()
+                numero = 1
+                if self.l10n_latam_document_type_id.internal_type == 'invoice':
+                    numero = int(self.journal_id.l10n_ve_invoice_first_document_number)
+                elif self.l10n_latam_document_type_id.internal_type == 'credit_note':
+                    numero = int(self.journal_id.l10n_ve_credit_note_first_document_number)
+                elif self.l10n_latam_document_type_id.internal_type == 'debit_note':
+                    numero = int(self.journal_id.l10n_ve_debit_note_first_document_number)
+                return self._l10n_ve_get_formatted_sequence(max(1, numero))
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):

@@ -8,10 +8,10 @@
     "website": "https://lidalabs.com",
     "category": "Contacts/Contacts",
     "version": "17.0.1.0.0",
-    "depends": ["base", "contacts", "l10n_ve_contacts"],
+    "depends": ["base_vat", "l10n_ve_contact"],
     "auto_install": True,
     "data": [
     ],
     "images": ["static/description/icon.png"],
-    "application": True,
+    # "application": True,
 }

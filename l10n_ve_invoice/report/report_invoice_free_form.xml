@@ -8,11 +8,11 @@
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
             <field name="report_file">l10n_ve_invoice.template_invoice_free_form_l10n_ve_invoice</field>
-            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_') + '.pdf')</field>
+            <field name="attachment">(object.state == 'posted') and ((object.l10n_latam_document_number) + '.pdf')</field>
             <field name="paperformat_id" ref="l10n_ve_invoice.invoice_free_form_paperformat_binaural_invoice"/>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_type">report</field>
-            <field name="print_report_name" >(object.state == 'posted') and ((object.name or 'INV').replace('/','_') + '.pdf')</field>
+            <field name="print_report_name" >(object.state == 'posted') and ((object.l10n_latam_document_number) + '.pdf')</field>
         </record>
 
         <template id="report_freeform_document">
@@ -24,7 +24,7 @@
                             <t t-if="o.move_type in ['out_refund', 'in_refund']">
                                 NOTA DE CRÉDITO
                             </t>
-                            <t t-elif="o.journal_id.is_debit">
+                            <t t-elif="o.is_debit">
                                 NOTA DE DÉBITO
                             </t>
                             <t t-else="">
@@ -60,9 +60,9 @@
                                 <br/>
                             </t>
                             <t t-if="o.move_type in ['out_refund', 'in_refund']">
-                                <span><strong>Nro de nota de crédito:</strong><t t-if="o.name != '/'" t-out="o.name"/></span>
+                                <span><strong>Nro de nota de crédito:</strong><t t-if="o.name != '/'" t-out="o.l10n_latam_document_number"/></span>
                                 <br/>
-                                <span><strong>Factura afectada:</strong><t t-out="o.reversed_entry_id.name"/></span>
+                                <span><strong>Factura afectada:</strong><t t-out="o.reversed_entry_id.l10n_latam_document_number"/></span>
                                 <br/>
                                 <span><strong>Nro de control:</strong><t t-out="o.reversed_entry_id.correlative"/></span>
                                 <br/>
@@ -77,12 +77,12 @@
                                 </span>
                                 <br/>
                             </t>
-                            <t t-elif="o.journal_id.is_debit">
-                                <span><strong>Nota de débito:</strong><t t-if="o.name != '/'" t-out="o.name"/></span>
+                            <t t-elif="o.is_debit">
+                                <span><strong>Nota de débito:</strong><t t-if="o.name != '/'" t-out="o.l10n_latam_document_number"/></span>
                                 <br/>
                                 <span>
                                     <strong>Factura afectada:</strong>
-                                    <t t-out="o.debit_origin_id.name"/>
+                                    <t t-out="o.debit_origin_id.l10n_latam_document_number"/>
                                 </span>
                                 <span t-if="o.debit_origin_id.correlative">
                                     <br/>
@@ -105,7 +105,7 @@
                                 <br/>
                             </t>
                             <t t-else="">
-                                <span><strong>Nro de factura:</strong><t t-if="o.name != '/'" t-out="o.name"/></span>
+                                <span><strong>Nro de factura:</strong><t t-if="o.name != '/'" t-out="o.l10n_latam_document_number"/></span>
                                 <br/>
                             </t>
                             <strong>Pedido: </strong><t t-out="o.invoice_origin or 'N/A'"/>

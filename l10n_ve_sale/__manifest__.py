@@ -10,6 +10,7 @@
     "version": "17.0.1.1.9",
     # any module necessary for this one to work correctly
     "depends": [
+        "base",
         "sale",
         "l10n_ve_base",
         "l10n_ve_tax",

@@ -13,4 +13,7 @@ class ResCompany(models.Model):
     def init(self):
         super().init()
 
-        # self.env.cr
+        self.env.cr.execute("""
+            UPDATE res_company
+            SET group_sales_invoicing_series = true
+        """)

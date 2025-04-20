@@ -8,7 +8,7 @@
                 <attribute name="invisible">True</attribute>
             </field>
 
-            <xpath expr="//form//notebook" position="inside">
+            <xpath expr="//notebook" position="inside">
                 <page name="document_numbers" string="Números iniciales de documentos"
                     invisible="type != 'sale' or not l10n_latam_use_documents"
                     groups="l10n_ve_invoice.group_sales_invoicing_series"
