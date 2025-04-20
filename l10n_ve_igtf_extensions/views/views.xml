@@ -1,0 +1,46 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="l10n_ve_igtf_extensions.action_window">
+      <field name="name">l10n_ve_igtf_extensions window</field>
+      <field name="res_model">l10n_ve_igtf_extensions.l10n_ve_igtf_extensions</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="l10n_ve_igtf_extensions.action_server">
+      <field name="name">l10n_ve_igtf_extensions server</field>
+      <field name="model_id" ref="model_l10n_ve_igtf_extension_l10n_ve_igtf_extension"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="l10n_ve_igtf_extensions" id="l10n_ve_igtf_extensions.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="l10n_ve_igtf_extensions.menu_1" parent="l10n_ve_igtf_extensions.menu_root"/>
+    <menuitem name="Menu 2" id="l10n_ve_igtf_extensions.menu_2" parent="l10n_ve_igtf_extensions.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="l10n_ve_igtf_extensions.menu_1_list" parent="l10n_ve_igtf_extensions.menu_1"
+              action="l10n_ve_igtf_extensions.action_window"/>
+    <menuitem name="Server to list" id="l10n_ve_igtf_extensions" parent="l10n_ve_igtf_extensions.menu_2"
+              action="l10n_ve_igtf_extensions.action_server"/>
+-->
+  </data>
+</odoo>
