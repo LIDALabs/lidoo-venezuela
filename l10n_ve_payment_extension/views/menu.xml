@@ -214,12 +214,12 @@
 
         <menuitem id="l10n_ve_payment_extension_economy_branch"
             name="Economy Branch"
-            action="action_economic_activity"
+            action="action_economic_branch"
             parent="l10n_ve_accountant.l10n_ve_account_support_views" />
 
         <menuitem id="l10n_ve_payment_extension_economy_activity"
             name="Economy Activity"
-            action="action_economic_branch"
+            action="action_economic_activity"
             parent="l10n_ve_accountant.l10n_ve_account_support_views" />
     </data>
 </odoo>
