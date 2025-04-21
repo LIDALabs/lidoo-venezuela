@@ -1,12 +1,14 @@
-from odoo import api, models, fields, Command, _
-from datetime import datetime
-import re
-from odoo.exceptions import UserError, ValidationError
-from ..utils.utils_retention import load_retention_lines, search_invoices_with_taxes
-from collections import defaultdict
 import json
-from odoo.tools.float_utils import float_round
 import logging
+import re
+from collections import defaultdict
+from datetime import datetime
+
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_round
+
+from ..utils.utils_retention import load_retention_lines, search_invoices_with_taxes
 
 _logger = logging.getLogger(__name__)
 
@@ -114,10 +116,10 @@ class AccountRetention(models.Model):
         states={"draft": [("readonly", False)]},
         help="Retentions",
     )
-    
-    code_visible=fields.Boolean(
+
+    code_visible = fields.Boolean(
         related='company_id.code_visible')
-    
+
     payment_ids = fields.One2many(
         "account.payment",
         "retention_id",
@@ -175,7 +177,7 @@ class AccountRetention(models.Model):
                 ("partner_id", "=", retention.partner_id.id),
                 ("move_type", "in", allowed_types),
             ]
-        
+
             retention.allowed_lines_move_ids = self.env["account.move"].search(domain)
 
     @api.depends(
@@ -280,8 +282,8 @@ class AccountRetention(models.Model):
                 i.retention_iva_line_ids.filtered(lambda l: l.state in ("draft", "emitted"))
             )
         )
-        if not any(invoices_with_taxes):
-            raise UserError(_("There are no invoices with taxes to be retained for the supplier."))
+        # if not any(invoices_with_taxes):
+        #     raise UserError(_("There are no invoices with taxes to be retained for the supplier."))
         self.clear_retention()
         lines = load_retention_lines(invoices_with_taxes, self.env["account.retention"])
 
@@ -414,7 +416,7 @@ class AccountRetention(models.Model):
                 if (
                     line.move_id.id
                     and lines_per_invoice_counter[str(line.move_id.id)]
-                    != original_lines_per_invoice_counter[str(line.move_id.id)]
+                    != original_lines_per_invoice_counter.get(str(line.move_id.id), lines_per_invoice_counter[str(line.move_id.id)])
                 ):
                     retention.retention_line_ids -= line
 
@@ -435,7 +437,7 @@ class AccountRetention(models.Model):
         if vals.get("retention_line_ids", False):
             self._create_payments_from_retention_lines()
         return res
-    
+
     def unlink(self):
         for record in self:
             if record.state == "emitted":
@@ -584,7 +586,7 @@ class AccountRetention(models.Model):
 
             move_ids = retention.mapped("retention_line_ids.move_id")
             self.set_voucher_number_in_invoice(move_ids, retention)
-            
+
             if not retention.payment_ids:
                 payments = retention.create_payment_from_retention_form()
                 retention.payment_ids = payments.ids
