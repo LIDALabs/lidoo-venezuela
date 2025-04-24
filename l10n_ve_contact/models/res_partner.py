@@ -1,7 +1,9 @@
 import logging
 import re
-from odoo import models, fields, api, _
+
+from odoo import _, api, fields, models
 from odoo.exceptions import MissingError, ValidationError
+
 from ...tools import binaural_cne_query
 
 _logger = logging.getLogger(__name__)
@@ -170,7 +172,7 @@ class ResPartner(models.Model):
     def _onchange_(self):
         """This function assign the name of the person by the vat number and the prefix of the vat number
         calling the function get_default_name_by_vat from binaural_cne_query
-    
+
         Args:
             prefix_vat (string): prefix of the vat number (V)
             vat (string): vat number of the person, this number is unique in Venezuela
@@ -182,21 +184,21 @@ class ResPartner(models.Model):
                 return
             for record in self:
                 record.name = name
-    
+
     @api.constrains('name')
     def _check_name(self):
         for record in self:
-            if not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.name):
+            if record.name and not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.name):
                 raise ValidationError(_("The name contains a character that is not allowed for registration."))
-    
+
     @api.constrains('street')
     def _check_address(self):
         for record in self:
-            if not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.street):
+            if record.street and not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.street):
                 raise ValidationError(_("The address contains a character that is not allowed for registration."))
-    
+
     @api.constrains('street2')
     def _check_address2(self):
         for record in self:
-            if not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.street2):
+            if record.street2 and not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.street2):
                 raise ValidationError(_("The address contains a character that is not allowed for registration."))
