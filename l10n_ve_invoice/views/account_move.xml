@@ -46,22 +46,25 @@
             <xpath expr="//page[@name='other_info']//field[@name='ref']" position="attributes">
                 <attribute name="readonly">move_type in ['out_refund', 'out_invoice'] and debit_origin_id</attribute>
             </xpath>
-            <button name="button_draft" position="attributes">
-                <!-- <attribute name="invisible">1</attribute> -->
+            <!-- Usa show_reset_to_draft_button para evitar acción -->
+            <!-- <button name="button_draft" position="attributes">
+                <attribute name="invisible">1</attribute>
                 <attribute name="invisible">not show_reset_to_draft_button or (state in ['posted', 'cancel'] and move_type in ['out_invoice', 'out_refund'])</attribute>
-            </button>
+            </button> -->
 
             <button name="action_reverse" position="attributes">
                 <attribute name="invisible">move_type in ['in_invoice', 'in_refund'] or (correlative == False or debit_origin_id or reversed_entry_id)</attribute>
             </button>
 
-            <xpath expr="//form//header" position="inside">
+            <button name="action_reverse" position="after">
                 <button
-                    name="action_debit_note_button" string="Debit note"
+                    name="action_debit_note_button" string="Add Debit note"
                     type="object" class="o_btn_validate"
                     invisible="correlative == False or debit_origin_id or reversed_entry_id"
                 />
+            </button>
 
+            <xpath expr="//form//header" position="inside">
                 <button
                     name="print_invoice_free_form" string="Free Form"
                     type="object" class="o_btn_validate"

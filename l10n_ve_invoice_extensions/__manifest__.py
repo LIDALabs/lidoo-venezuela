@@ -5,7 +5,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Accountant/Accountant",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.0.1",
     "license": "LGPL-3",
     "depends": ["account", "l10n_ve_invoice"],
     "auto_install": True,

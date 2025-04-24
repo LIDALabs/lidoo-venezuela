@@ -33,7 +33,15 @@ class AccountMove(models.Model):
             sequence.
         """
         self.ensure_one()
-        return self.name.replace(' ', '-')
+        return self.name
+
+    @api.depends('posted_before', 'move_type')
+    def _compute_show_reset_to_draft_button(self):
+        """ Previene que un movimiento sea regresado a  """
+        super()._compute_show_reset_to_draft_button()
+        for move in self:
+            if move.move_type in ('out_invoice', 'out_refund', 'out_receipt') and move.posted_before:
+                move.show_reset_to_draft_button = False
 
     @api.model
     def get_sequence(self):
