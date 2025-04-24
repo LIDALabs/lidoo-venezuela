@@ -77,7 +77,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "default_account_id": "account_activa_account_60101001",
             },
 
-            "binaural_account_journal_bank": {
+            "bank": {
                 "name": "Banco",
                 "invoice_reference_type": "invoice",
                 "type": "bank",
@@ -93,7 +93,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "default_account_id": "account_activa_account_10102001",
             },
 
-            "binaural_account_journal_cash_bs": {
+            "cash": {
                 "name": "Efectivo Bs",
                 "invoice_reference_type": "invoice",
                 "type": "cash",
@@ -134,7 +134,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # <field name="company_id" ref="base.main_company"/>
             },
 
-            "binaural_account_journal_various_operations": {
+            "general": {
                 "name": "Operaciones varias",
                 "invoice_reference_type": "invoice",
                 "type": "general",
