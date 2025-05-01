@@ -185,11 +185,11 @@ class ResPartner(models.Model):
             for record in self:
                 record.name = name
 
-    @api.constrains('name')
-    def _check_name(self):
-        for record in self:
-            if record.name and not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.name):
-                raise ValidationError(_("The name contains a character that is not allowed for registration."))
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     for record in self:
+    #         if record.name and not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.name):
+    #             raise ValidationError(_("The name contains a character that is not allowed for registration."))
 
     @api.constrains('street')
     def _check_address(self):
