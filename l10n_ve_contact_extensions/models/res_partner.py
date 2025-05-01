@@ -34,9 +34,9 @@ class ResPartner(models.Model):
                 raise ValidationError(_("Debe indicar el tipo de CI/RIF"))
 
             if partner.prefix_vat in ('V', 'E'):
-                if not (re.match(person_vat_pattern, partner.vat)):
+                if partner.vat and not (re.match(person_vat_pattern, partner.vat)):
                     raise ValidationError(_("The vat field only accepts numbers and must be between 1 and 9 digits"))
-            elif not re.match(enterprise_vat_pattern, partner.vat):
+            elif partner.vat and not re.match(enterprise_vat_pattern, partner.vat):
                 raise ValidationError(_("The vat field only accepts numbers and must be 9 digits long"))
 
     # @api.depends("prefix_vat")

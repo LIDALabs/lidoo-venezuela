@@ -7,11 +7,11 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Contacts/Contacts",
-    "version": "17.0.1.0.1",
+    "version": "17.0.1.0.2",
     "depends": ["base_vat", "l10n_ve_contact"],
     "auto_install": True,
     "data": [
     ],
     "images": ["static/description/icon.png"],
-    # "application": True,
+    "application": False,
 }
