@@ -9,11 +9,11 @@ class AccountChartTemplate(models.AbstractModel):
     @template("ve_binaural")
     def _get_ve_binaural_template_data(self):
         return {
-            "code_digits": "7",
+            "code_digits": "8",
             "property_account_receivable_id": "account_activa_account_10104001",
             "property_account_payable_id": "account_activa_account_20101004",
             "property_account_expense_categ_id": "account_activa_account_60301027",
-            "property_account_income_categ_id": "account_activa_account_501",
+            "property_account_income_categ_id": "account_activa_account_40101001",
             "name": _("Binaural/Venezuela"),
         }
 
@@ -23,8 +23,8 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 "currency_id": "base.VEF",
                 "account_fiscal_country_id": "base.ve",
-                "bank_account_code_prefix": "1113",
-                "cash_account_code_prefix": "1111",
+                "bank_account_code_prefix": "10102",
+                "cash_account_code_prefix": "10101",
                 "transfer_account_code_prefix": "1129003",
                 "account_default_pos_receivable_account_id": "account_activa_account_10102",
                 "income_currency_exchange_account_id": "account_activa_account_30201002",
