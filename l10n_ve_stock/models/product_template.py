@@ -114,5 +114,6 @@ class ProductTemplate(models.Model):
     @api.constrains('name')
     def _check_name(self):
         for record in self:
+            continue
             if not re.match(r'^[a-zA-Z0-9 .,()-]+$', record.name):
-                raise ValidationError(_("The name contains a character that is not allowed for registration."))
+                raise ValidationError(_("The name [%s] contains a character that is not allowed for registration.", record.name))

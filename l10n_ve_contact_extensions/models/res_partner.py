@@ -27,7 +27,7 @@ class ResPartner(models.Model):
         person_vat_pattern = "^[0-9]{1,9}$"
         enterprise_vat_pattern = "^[0-9]{9}$"
         for partner in self:
-            if not partner.prefix_vat and not partner.vat:
+            if not partner.vat:
                 continue
 
             if not partner.prefix_vat:
