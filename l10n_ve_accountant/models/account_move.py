@@ -5,7 +5,7 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import drop_index, float_compare, index_exists
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
@@ -286,7 +286,7 @@ class AccountMove(models.Model):
         moves = super().create(vals_list)
 
         for move in moves:
-            if move.move_type != "in_invoice":
+            if move.move_type != "in_invoice" or float_is_zero(move.foreign_rate, precision_digits=move.foreign_currency_id.decimal_places):
                 move._compute_rate()
             if move.move_type in ["out_refund", "in_refund"] and move.reversed_entry_id:
                 move.foreign_rate = move.reversed_entry_id.foreign_rate
@@ -611,7 +611,7 @@ class AccountMove(models.Model):
                 vat = str(move.partner_id.vat) if move.partner_id.vat else ''
             move.vat = vat.upper()
 
-    @api.depends("invoice_date")
+    @api.depends("invoice_date", "date", "foreign_currency_id")
     def _compute_rate(self):
         """
         Compute the rate of the invoice using the compute_rate method of the res.currency.rate model.
@@ -859,6 +859,9 @@ class AccountMove(models.Model):
                     }
 
         for invoice in self:
+            if float_is_zero(invoice.foreign_rate, precision_digits=invoice.foreign_currency_id.decimal_places):
+                invoice._compute_rate()
+
             if (
                 invoice.company_id.account_use_credit_limit
                 and invoice.partner_id.use_partner_credit_limit
