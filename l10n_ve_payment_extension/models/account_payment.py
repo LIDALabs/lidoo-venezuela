@@ -1,5 +1,12 @@
-from odoo import api, fields, models, Command
+import json
+import logging
+
+from odoo import Command, api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools import date_utils
 from odoo.tools.float_utils import float_round
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountPayment(models.Model):
@@ -91,7 +98,7 @@ class AccountPayment(models.Model):
             if any(isinstance(id, models.NewId) for id in self.retention_line_ids.ids):
                 payment.retention_line_ids = False
             else:
-                payment.retention_line_ids = Command.clear()
+                payment.retention_line_ids = [Command.clear()]
         return super().unlink()
 
     def compute_retention_amount_from_retention_lines(self):

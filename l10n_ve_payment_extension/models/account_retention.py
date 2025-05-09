@@ -314,8 +314,8 @@ class AccountRetention(models.Model):
                 i.retention_iva_line_ids.filtered(lambda l: l.state in ("draft", "emitted"))
             )
         )
-        if not any(invoices_with_taxes):
-            raise UserError(_("There are no invoices with taxes to be retained for the customer."))
+        # if not any(invoices_with_taxes):
+        #     raise UserError(_("There are no invoices with taxes to be retained for the customer."))
         self.clear_retention()
         lines = load_retention_lines(invoices_with_taxes, self.env["account.retention"])
 
