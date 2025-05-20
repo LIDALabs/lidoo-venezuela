@@ -66,9 +66,3 @@ class AccountMove(models.Model):
             raise UserError(_("El número de control generado no cumple con el patrón secuencia '00-00000'"))
 
         return correlative
-
-    def _check_price_in_zero(self):
-        for record in self.filtered(lambda x: x.move_type != 'entry'):
-            for line in record.invoice_line_ids:
-                if line.price_unit <= 0:
-                    raise ValidationError(("Una factura no puede tener una linea con precio en cero"))
