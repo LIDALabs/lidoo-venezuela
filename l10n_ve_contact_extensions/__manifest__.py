@@ -7,7 +7,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Contacts/Contacts",
-    "version": "17.0.1.0.2",
+    "version": "17.0.1.0.3",
     "depends": ["base_vat", "l10n_ve_contact"],
     "auto_install": True,
     "data": [
