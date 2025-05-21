@@ -2,5 +2,3 @@
 "dt_ve_f","10","f","Facturas","Factura","invoice","F","base.ve"
 "dt_ve_nd","20","nd","Notas de Débito","Nota de Débito","debit_note","ND","base.ve"
 "dt_ve_nc","30","nc","Notas de Crédito","Nota de Crédito","credit_note","NC","base.ve"
-"dt_ve_ne","40","ne","Notas de Entrega","Nota de Entrega","invoice","NE","base.ve"
-"dt_ve_gd","50","gd","Guías de Despacho","Guía de Despacho","invoice","GD","base.ve"

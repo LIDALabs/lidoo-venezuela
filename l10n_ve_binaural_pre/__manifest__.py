@@ -6,7 +6,7 @@
     "author": "Odoo S.A., LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Accounting/Localizations",
-    "version": "17.0.1.0.2",
+    "version": "17.0.1.0.3",
     "depends": [
         "account",
         "l10n_latam_invoice_document",
