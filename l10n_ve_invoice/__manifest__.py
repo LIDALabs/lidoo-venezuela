@@ -3,7 +3,7 @@
     "summary": """
         Módulo de Facturación Venezuela
     """,
-    "version": "17.0.0.0.8",
+    "version": "17.0.0.0.10",
     "license": "LGPL-3",
     "author": "binaural-dev",
     "website": "https://binauraldev.com/",
@@ -16,6 +16,7 @@
         "l10n_ve_contact",
         "l10n_ve_tax",
         "l10n_ve_binaural",
+        "account_debit_note",
     ],
     "auto_install": [
         "account",
@@ -34,6 +35,7 @@
         "views/res_config_settings.xml",
         "views/menu.xml",
         "wizard/accounting_reports_views.xml",
+        "views/account_debit_note_view.xml",
     ],
     "images": ["static/description/icon.png"],
     "application": True,
