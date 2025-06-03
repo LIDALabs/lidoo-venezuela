@@ -21,10 +21,9 @@
     </record>
 
     <record id="action_generate_txt" model="ir.actions.act_window">
-        <field name="name">Generate TXT</field>
+        <field name="name">TXT de Retenciones de IVA</field>
         <field name="res_model">wizard.retention.iva</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 </odoo>
-

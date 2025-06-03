@@ -1022,8 +1022,8 @@ msgstr "¿Genera retención de IVA?"
 #: model:ir.actions.act_window,name:l10n_ve_payment_extension.action_generate_txt
 #: model:ir.ui.menu,name:l10n_ve_payment_extension.txt_report
 #: model_terms:ir.ui.view,arch_db:l10n_ve_payment_extension.library_rent_wizard_form
-msgid "Generate TXT"
-msgstr "Generar TXT"
+msgid "TXT de Retenciones de IVA"
+msgstr "TXT de Retenciones de IVA"
 
 #. module: l10n_ve_payment_extension
 #: model_terms:ir.ui.view,arch_db:l10n_ve_payment_extension.view_retention_iva_search_l10n_ve_payment_extension
