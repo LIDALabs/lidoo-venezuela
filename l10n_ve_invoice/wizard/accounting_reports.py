@@ -4,7 +4,7 @@ from io import BytesIO
 
 import xlsxwriter
 from dateutil.relativedelta import relativedelta
-from odoo import fields, models, _
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 from xlsxwriter import utility
 
@@ -72,7 +72,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
             "accounting_date": self._format_date(move.date),
             "vat": move.vat,
             "partner_name": move.invoice_partner_display_name,
-            "document_number": move.name,
+            "document_number": move.l10n_latam_document_number if move.is_invoice() else move.name,
             "move_type": self._determinate_type_for_move(move),
             "transaction_type": self._determinate_transaction_type(move),
             "number_invoice_affected": (
@@ -105,7 +105,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
             "accounting_date": self._format_date(move.date),
             "vat": move.vat,
             "partner_name": move.invoice_partner_display_name,
-            "document_number": move.name,
+            "document_number": move.l10n_latam_document_number if move.is_invoice() else move.name,
             "move_type": self._determinate_type_for_move(move),
             "transaction_type": self._determinate_transaction_type(move),
             "number_invoice_affected": move.debit_origin_id.name if move.journal_id.is_debit else move.reversed_entry_id.name or "--",
@@ -384,9 +384,9 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
                 "field": "amount_general_aliquot",
                 "format": "number",
             },
-            
-            
-            
+
+
+
         ]
 
         if not self.company_id.not_show_reduced_aliquot_sale:
@@ -593,7 +593,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
         search_domain += [
             ("state", "in", ("posted", "cancel")),
             ("move_type", "in", move_type),
-            ("correlative", "not in", ['/',False])
+            ("correlative", "not in", ['/', False])
         ]
 
         return search_domain
@@ -628,7 +628,6 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
         type_for_move = self._determinate_type(move_type)
 
         return type_for_move
-
 
     def _determinate_type(self, type):
 
@@ -1045,7 +1044,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
             {"bold": 1, "border": 1, "align": "center", "valign": "vcenter", "fg_color": "gray", "locked": True}
         )
         cell_formats = {
-            "number": workbook.add_format({"num_format": "#,##0.00","locked": True}),
+            "number": workbook.add_format({"num_format": "#,##0.00", "locked": True}),
             "percent": workbook.add_format({"num_format": "0.00%", "locked": True}),
         }
 
@@ -1054,7 +1053,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
             "C1:M1",
             f"{self.company_id.name} - {self.company_id.vat}",
             workbook.add_format({"bold": True, "center_across": True, "font_size": 18, "locked": True}),
-        ) 
+        )
         worksheet.merge_range(
             "C2:M2",
             f"Direccion:  {self.company_id.street}",
@@ -1071,7 +1070,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
         )
 
         company = self.company_id
-        if self.company_id.config_deductible_tax:            
+        if self.company_id.config_deductible_tax:
             row_buy_national = 3
 
             if company.not_show_reduced_aliquot_purchase or company.not_show_extend_aliquot_purchase:
@@ -1088,8 +1087,8 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
 
             buy_rows = ranges.get(row_buy_national, "")
             worksheet.merge_range(
-                buy_rows, 
-                "COMPRAS NACIONALES DEDUCIBLES", 
+                buy_rows,
+                "COMPRAS NACIONALES DEDUCIBLES",
                 merge_format
             )
 
@@ -1147,7 +1146,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
                 )
 
         self.generate_book_resume(worksheet, total_idx, merge_format, cell_formats)
-        
+
         worksheet.protect(password=password_protection)
 
         workbook.close()
@@ -1198,10 +1197,10 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
                         row_resume, 3, total_d_formula, cell_formats.get("number")
                     )
                     worksheet.write_formula(
-                        row_resume, 4, total_e_formula,cell_formats.get("number")
+                        row_resume, 4, total_e_formula, cell_formats.get("number")
                     )
                     worksheet.write_formula(
-                        row_resume, 5, total_f_formula,cell_formats.get("number")
+                        row_resume, 5, total_f_formula, cell_formats.get("number")
                     )
 
             else:
@@ -1218,10 +1217,10 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
                         row_resume, 3, total_d_formula, cell_formats.get("number")
                     )
                     worksheet.write_formula(
-                        row_resume, 4, total_e_formula,cell_formats.get("number")
+                        row_resume, 4, total_e_formula, cell_formats.get("number")
                     )
                     worksheet.write_formula(
-                        row_resume, 5, total_f_formula,cell_formats.get("number")
+                        row_resume, 5, total_f_formula, cell_formats.get("number")
                     )
 
             column_bi_range = (

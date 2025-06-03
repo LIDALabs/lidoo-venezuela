@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from odoo import http
 
 
@@ -10,6 +11,8 @@ class AccountingReportsController(http.Controller):
         sale_book = sale_book_model.search([], order="id desc", limit=1)
 
         file = sale_book.generate_sales_book(company_id)
+        from_date = datetime.strftime(sale_book.date_from, "%Y_%m_%d")
+        to_date = datetime.strftime(sale_book.date_to, "%Y_%m_%d")
 
         return http.request.make_response(
             file,
@@ -20,7 +23,7 @@ class AccountingReportsController(http.Controller):
                 ),
                 (
                     "Content-Disposition",
-                    "attachment;filename=Libro_de_venta.xlsx"
+                    f"attachment;filename={from_date}-{to_date}-libro_de_venta.xlsx"
                 )
             ]
         )
@@ -32,6 +35,8 @@ class AccountingReportsController(http.Controller):
         purchase_book = purchase_book_model.search([], order="id desc", limit=1)
 
         file = purchase_book.generate_purchases_book(company_id)
+        from_date = datetime.strftime(purchase_book.date_from, "%Y_%m_%d")
+        to_date = datetime.strftime(purchase_book.date_to, "%Y_%m_%d")
 
         return http.request.make_response(
             file,
@@ -42,7 +47,7 @@ class AccountingReportsController(http.Controller):
                 ),
                 (
                     "Content-Disposition",
-                    "attachment;filename=Libro_de_compra.xlsx"
+                    f"attachment;filename={from_date}-{to_date}-libro_de_compra.xlsx"
                 )
             ]
         )
