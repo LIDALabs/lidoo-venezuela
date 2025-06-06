@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_account_move_form" model="ir.ui.view">
+        <field name="name">view.account.move.l10n_ve.withholding.extensions.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_ve_payment_extension.account_move_form_l10n_ve_payment_extension" />
+        <field name="arch" type="xml">
+            <field name="generate_iva_retention" position="attributes">
+                <attribute name="invisible">move_type not in ('in_invoice', 'in_receipt', 'in_refund') or posted_before</attribute>
+            </field>
+
+            <page name='iva_retention' position="attributes">
+                <attribute name="invisible">move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')</attribute>
+            </page>
+
+            <page name='islr_retention'  position="attributes">
+                <attribute name="invisible">move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')</attribute>
+            </page>
+
+            <page name='municipal_retention'  position="attributes">
+                <attribute name="invisible">move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')</attribute>
+            </page>
+
+            <field name="retention_islr_line_ids" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+
+            <field name="retention_municipal_line_ids" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
