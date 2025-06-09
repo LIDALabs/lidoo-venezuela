@@ -15,12 +15,11 @@
         "l10n_ve_accountant",
         "l10n_ve_contact",
         "l10n_ve_tax",
-        "l10n_ve_binaural",
         "account_debit_note",
     ],
     "auto_install": [
         "account",
-        "l10n_ve_binaural",
+        "l10n_ve_base",
     ],
     "data": [
         "security/l10n_ve_invoice_groups.xml",

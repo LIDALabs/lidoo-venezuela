@@ -14,11 +14,11 @@
         "product",
         "l10n_ve_rate",
         "stock_delivery",
-        "l10n_ve_binaural",
+        "l10n_ve_base",
     ],
     'auto_install': [
         "stock",
-        "l10n_ve_binaural",
+        "l10n_ve_base",
     ],
     "data": [
         "security/ir.model.access.csv",
