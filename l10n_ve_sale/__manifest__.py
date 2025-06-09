@@ -19,11 +19,10 @@
         "l10n_ve_contact",
         "l10n_ve_invoice",
         "l10n_ve_filter_partner",
-        "l10n_ve_binaural",
     ],
     'auto_install': [
         "sale",
-        "l10n_ve_binaural",
+        "l10n_ve_base",
     ],
     "data": [
         "security/ir.model.access.csv",

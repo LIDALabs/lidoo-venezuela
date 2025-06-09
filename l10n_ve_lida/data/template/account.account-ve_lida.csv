@@ -1,0 +1,142 @@
+id,code,name,account_type,reconcile
+acc_caja_principal_nacional,1.1.1.01.001,CAJA PRINCIPAL NACIONAL,asset_cash,False
+acc_caja_chica,1.1.1.01.002,CAJA CHICA,asset_cash,False
+acc_caja_dolares,1.1.1.02.001,CAJA DOLARES,asset_cash,False
+acc_caja_euros,1.1.1.02.002,CAJA EUROS,asset_cash,False
+acc_banco_generico,1.1.1.11.001,BANCO ABC,asset_cash,False
+acc_transferencias_internas,1.1.1.40.000,TRANSFERENCIAS INTERNAS,asset_current,False
+acc_transito_bancario,1.1.1.50.000,TRANSITO BANCARIO,asset_current,False
+acc_cuentas_por_cobrar_clientes,1.1.2.01.000,CUENTAS POR COBRAR CLIENTES,asset_receivable,True
+acc_cuentas_por_cobrar_a_terceros,1.1.2.02.000,CUENTAS POR COBRAR A TERCEROS,asset_receivable,True
+acc_cuentas_por_cobrar_a_empleados,1.1.2.03.000,CUENTAS POR COBRAR A EMPLEADOS,asset_receivable,True
+acc_cuentas_por_cobrar_accionistas,1.1.2.04.000,CUENTAS POR COBRAR ACCIONISTAS,asset_receivable,True
+acc_efectos_por_cobrar,1.1.2.05.000,EFECTOS POR COBRAR,asset_receivable,True
+acc_otras_cuentas_por_cobrar,1.1.2.06.000,OTRAS CUENTAS POR COBRAR,asset_receivable,True
+acc_provision_de_cuentas_incobrables,1.1.2.07.000,PROVISION DE CUENTAS INCOBRABLES,asset_current,False
+acc_retencion_iva,1.1.2.08.000,RETENCION IVA,asset_current,False
+acc_credito_fiscal,1.1.2.09.000,CREDITO FISCAL,asset_current,False
+acc_retencion_de_islr,1.1.2.10.000,RETENCION DE ISLR,asset_current,False
+acc_anticipo_de_islr,1.1.2.11.000,ANTICIPO DE ISLR,asset_current,False
+acc_inventario_de_mercancia,1.1.3.00.010,INVENTARIO DE MERCANCIA,asset_current,False
+acc_inventario_en_transito,1.1.3.00.020,INVENTARIO EN TRANSITO,asset_current,False
+acc_suministros_varios,1.1.3.00.030,SUMINISTROS VARIOS,asset_current,False
+acc_utiles_de_oficina,1.1.3.00.040,SUMINISTROS DE OFICINA,asset_current,False
+acc_seguro_pagados_por_anticipados,1.1.4.00.100,SEGURO PAGADOS POR ANTICIPADOS,asset_current,False
+acc_anticipo_dado_a_proveedores,1.1.4.00.200,ANTICIPO DADO A PROVEEDORES,asset_current,False
+acc_terreno,1.2.1.01.000,TERRENO,asset_fixed,False
+acc_edificios,1.2.1.02.000,EDIFICIOS,asset_fixed,False
+acc_depreciacion_acumulada_edificio,1.2.1.02.100,DEPRECIACION ACUMULADA EDIFICIO(-),asset_fixed,False
+acc_maquinarias,1.2.1.03.000,MAQUINARIAS,asset_fixed,False
+acc_depreciacion_acumulada_maquinarias,1.2.1.03.100,DEPRECIACION ACUMULADA MAQUINARIAS(-),asset_fixed,False
+acc_vehiculos,1.2.1.04.000,VEHICULOS,asset_fixed,False
+acc_depreciacion_acumulada_vehiculos,1.2.1.04.100,DEPRECIACION ACUMULADA VEHICULOS (-),asset_fixed,False
+acc_mobiliario,1.2.1.05.000,MOBILIARIO,asset_fixed,False
+acc_depreciacion_acumulada_mobiliario,1.2.1.05.100,DEPRECIACION ACUMULADA MOBILIARIO (-),asset_fixed,False
+acc_equipos,1.2.1.06.000,EQUIPOS,asset_fixed,False
+acc_depreciacion_acumulada_equipos,1.2.1.06.100,DEPRECIACION ACUMULADA EQUIPOS (-),asset_fixed,False
+acc_acciones_en_la_empresa_xx,1.2.2.00.001,ACCIONES EN LA EMPRESA XX,asset_non_current,False
+acc_bonos,1.2.2.00.002,BONOS,asset_non_current,False
+acc_patente_de_fabrica,1.2.3.01.000,PATENTE DE FABRICA,asset_non_current,False
+acc_amortizacion_de_patente,1.2.3.01.100,AMORTIZACION DE PATENTE (-),asset_non_current,False
+acc_derechos_de_autor,1.2.3.02.000,DERECHOS DE AUTOR,asset_non_current,False
+acc_amortizacion_derechos_de_autor,1.2.3.02.100,AMORTIZACION DERECHOS DE AUTOR (-),asset_non_current,False
+acc_marcas_registradas,1.2.3.03.000,MARCAS REGISTRADAS,asset_non_current,False
+acc_amortizacion_marcas_registradas,1.2.3.03.100,AMORTIZACION MARCAS REGISTRADAS (-),asset_non_current,False
+acc_franquicias,1.2.3.04.000,FRANQUICIAS,asset_non_current,False
+acc_amortizacion_de_franquicias,1.2.3.04.100,AMORTIZACION DE FRANQUICIAS (-),asset_non_current,False
+acc_utilidades_a_trabajadores_por_pagar,2.1.0.10.000,UTILIDADES A TRABAJADORES POR PAGAR,liability_payable,True
+acc_vacaciones_trabajadores_por_pagar,2.1.0.11.000,VACACIONES TRABAJADORES POR PAGAR,liability_payable,True
+acc_prestaciones_sociales_por_pagar,2.1.0.12.000,PRESTACIONES SOCIALES POR PAGAR,liability_payable,True
+acc_sueldo_y_salarios_por_pagar,2.1.0.13.000,SUELDO Y SALARIOS POR PAGAR,liability_payable,True
+acc_aportes_patronales_por_pagar,2.1.0.14.000,APORTES PATRONALES POR PAGAR,liability_payable,True
+acc_prestamos_bancarios_por_pagar,2.1.0.15.000,PRESTAMOS BANCARIOS POR PAGAR,liability_payable,True
+acc_otros_prestamos_por_pagar,2.1.0.16.000,OTROS PRESTAMOS POR PAGAR,liability_payable,True
+acc_cuentas_por_pagar,2.1.1.00.000,CUENTAS POR PAGAR,liability_payable,True
+acc_documentos_por_pagar,2.1.2.00.000,DOCUMENTOS POR PAGAR,liability_payable,True
+acc_impuesto_sobre_la_renta_por_pagar,2.1.3.00.000,IMPUESTO SOBRE LA RENTA POR PAGAR,liability_payable,True
+acc_iva_por_pagar,2.1.4.00.000,IVA POR PAGAR,liability_payable,True
+acc_impuestos_municipales_por_pagar,2.1.5.00.000,IMPUESTOS MUNICIPALES POR PAGAR,liability_payable,True
+acc_contribuciones_por_pagar,2.1.6.00.000,CONTRIBUCIONES POR PAGAR,liability_payable,True
+acc_iva_retenido_por_pagar,2.1.7.00.000,IVA RETENIDO POR PAGAR,liability_payable,True
+acc_dividendos_por_pagar,2.1.8.00.000,DIVIDENDOS POR PAGAR,liability_payable,True
+acc_interes_por_pagar,2.1.9.00.000,INTERES POR PAGAR,liability_payable,True
+acc_prestamos_bancarios_por_pagar_largo_plazo,2.2.1.00.000,PRESTAMOS BANCARIOS POR PAGAR LARGO PLAZO,liability_non_current,False
+acc_cuentas_por_pagar_largo_plazo,2.2.2.00.000,CUENTAS POR PAGAR LARGO PLAZO,liability_non_current,False
+acc_documentos_por_pagar_largo_plazo,2.2.3.00.000,DOCUMENTOS POR PAGAR LARGO PLAZO,liability_non_current,False
+acc_anticipo_recibido_de_clientes,2.3.1.00.000,ANTICIPO RECIBIDO DE CLIENTES,liability_non_current,False
+acc_capital_social,3.1.0.00.000,CAPITAL SOCIAL,equity,False
+acc_capital_social_suscrito_y_pagado,3.2.0.00.000,CAPITAL SOCIAL SUSCRITO Y PAGADO,equity,False
+acc_reserva_legal,3.3.0.00.000,RESERVA LEGAL,equity,False
+acc_reserva_estatutaria,3.4.0.00.000,RESERVA ESTATUTARIA,equity,False
+acc_utilidades_no_distribuidas,3.5.0.00.000,UTILIDADES NO DISTRIBUIDAS,equity,False
+acc_utilidades_no_distribuidas_ajustadas,3.6.0.00.000,UTILIDADES NO DISTRIBUIDAS AJUSTADAS,equity,False
+acc_utilidad_neta_del_ejercicio,3.6.1.00.000,UTILIDAD NETA DEL EJERCICIO,equity_unaffected,False
+acc_perdida_acumulada,3.7.0.00.000,PERDIDA ACUMULADA,equity,False
+acc_perdida_del_ejercicio,3.8.0.00.000,PERDIDA DEL EJERCICIO,equity,False
+acc_perdida_acumulada_ajustada,3.9.0.00.000,PERDIDA ACUMULADA AJUSTADA,equity,False
+acc_ingreso_principal,4.1.0.00.001,INGRESO PRINCIPAL,income,False
+acc_ingresos_por_ventas,4.1.0.00.002,INGRESOS POR VENTAS,income,False
+acc_ingresos_por_servicio,4.1.0.00.003,INGRESOS POR SERVICIO,income,False
+acc_otros_ingresos,4.2.0.00.000,OTROS INGRESOS,income_other,False
+acc_ingresos_diferidos,4.2.0.00.001,INGRESOS DIFERIDOS,income,False
+acc_ingreso_por_donativos_y_colaboraciones,4.2.0.00.002,INGRESO POR DONATIVOS Y COLABORACIONES,income_other,False
+acc_compras,5.1.1.10.000,COMPRAS,expense_direct_cost,False
+acc_compras_de_servicios,5.1.2.10.000,COMPRAS DE SERVICIOS,expense_direct_cost,False
+acc_prestaciones_sociales,6.0.1.00.000,PRESTACIONES SOCIALES,expense,False
+acc_vacaciones,6.0.1.10.000,VACACIONES,expense,False
+acc_vacaciones_personal_directivo,6.0.1.11.000,VACACIONES PERSONAL DIRECTIVO,expense,False
+acc_vacaciones_personal_obrero,6.0.1.12.000,VACACIONES PERSONAL OBRERO,expense,False
+acc_vacaciones_personal_administrativo,6.0.1.13.000,VACACIONES PERSONAL ADMINISTRATIVO,expense,False
+acc_bono_vacional,6.0.1.20.000,BONO VACIONAL,expense,False
+acc_bono_vacacional_personal_directivo,6.0.1.21.000,BONO VACACIONAL PERSONAL DIRECTIVO,expense,False
+acc_bono_vacacional_personal_administrativo,6.0.1.22.000,BONO VACACIONAL PERSONAL ADMINISTRATIVO,expense,False
+acc_bono_vacacional_personal_obrero,6.0.1.23.000,BONO VACACIONAL PERSONAL OBRERO,expense,False
+acc_viaticos,6.0.1.30.000,VIATICOS,expense,False
+acc_horas_extras,6.0.1.40.000,HORAS EXTRAS,expense,False
+acc_dias_feriados_y_domingos,6.0.1.50.000,DIAS FERIADOS Y DOMINGOS,expense,False
+acc_bono_de_alimentacion,6.0.1.60.000,BONO DE ALIMENTACION,expense,False
+acc_gastos_medicos,6.0.1.70.000,GASTOS MEDICOS,expense,False
+acc_honorarios_profesionales,6.0.1.80.000,HONORARIOS PROFESIONALES,expense,False
+acc_capacitaciones_del_personal,6.0.1.90.000,CAPACITACIONES DEL PERSONAL,expense,False
+acc_seguro_hcm_personal,6.0.2.00.000,SEGURO HCM PERSONAL,expense,False
+acc_alquileres,6.0.2.10.000,ALQUILERES,expense,False
+acc_servicios_contratados,6.0.2.20.000,SERVICIOS CONTRATADOS,expense,False
+acc_gastos_de_mercadeo_y_ventas,6.0.2.30.000,GASTOS DE MERCADEO Y VENTAS,expense,False
+acc_impuestos_municipales,6.0.2.40.000,IMPUESTOS MUNICIPALES,expense,False
+acc_tasas_y_otras_contribuciones,6.0.2.50.000,TASAS Y OTRAS CONTRIBUCIONES,expense,False
+acc_materiales_y_articulos_de_oficina,6.0.2.60.000,MATERIALES Y ARTICULOS DE OFICINA,expense,False
+acc_gastos_de_soporte_tecnico,6.0.2.70.000,GASTOS DE SOPORTE TECNICO,expense,False
+acc_gastos_de_transporte,6.0.2.80.000,GASTOS DE TRANSPORTE,expense,False
+acc_dieta_de_directivos,6.0.2.90.000,DIETA DE DIRECTIVOS,expense,False
+acc_credito_fiscal_no_deducible,6.0.3.00.000,CREDITO FISCAL NO DEDUCIBLE,expense,False
+acc_colaboracion_y_donaciones,6.0.3.10.000,COLABORACION Y DONACIONES,expense,False
+acc_gastos_miscelaneos,6.0.3.20.000,GASTOS MISCELANEOS,expense,False
+acc_aporte_ivss_y_pie,6.1.1.00.000,APORTE IVSS Y PIE,expense,False
+acc_aporte_f_a_o_v,6.1.2.00.000,APORTE F.A.O.V.,expense,False
+acc_aporte_inces,6.1.3.00.000,APORTE INCES,expense,False
+acc_agua,6.2.1.00.000,AGUA,expense,False
+acc_electricidad,6.2.2.00.000,ELECTRICIDAD,expense,False
+acc_aseo_urbano,6.2.3.00.000,ASEO URBANO,expense,False
+acc_internet,6.2.4.00.000,INTERNET,expense,False
+acc_telefonia,6.2.5.00.000,TELEFONIA,expense,False
+acc_depreciacion_edificio,6.3.1.00.000,DEPRECIACION EDIFICIO,expense_depreciation,False
+acc_depreciacion_maquinaria,6.3.2.00.000,DEPRECIACION MAQUINARIA,expense_depreciation,False
+acc_depreciacion_vehiculo,6.3.3.00.000,DEPRECIACION VEHICULO,expense_depreciation,False
+acc_depreciacion_mobiliario,6.3.4.00.000,DEPRECIACION MOBILIARIO,expense_depreciation,False
+acc_depreciacion_equipos,6.3.5.00.000,DEPRECIACION EQUIPOS,expense_depreciation,False
+acc_repar_y_mtto_mob_y_equipos,6.4.1.00.000,REPAR. Y MTTO. MOB Y EQUIPOS.,expense,False
+acc_reparacion_y_mantenimiento_de_vehiculo,6.4.2.00.000,REPARACION Y MANTENIMIENTO DE VEHICULO,expense,False
+acc_reparaciones_a_edificacion,6.4.2.10.000,REPARACIONES A EDIFICACION,expense,False
+acc_reparaciones_a_vehiculos,6.4.2.20.000,REPARACIONES A VEHICULOS,expense,False
+acc_reparaciones_maquinarias,6.4.2.30.000,REPARACIONES MAQUINARIAS,expense,False
+acc_gasto_de_vigilancia_privada,6.5.0.00.000,GASTO DE VIGILANCIA PRIVADA,expense,False
+acc_fletes_en_ventas,6.6.0.00.000,FLETES EN VENTAS,expense,False
+acc_intereses_mora,6.7.1.00.000,INTERESES MORA,expense,False
+acc_intereses_bancario,6.7.2.00.000,INTERESES BANCARIO,expense,False
+acc_intereses_sobre_prestaciones_sociales,6.7.3.00.000,INTERESES SOBRE PRESTACIONES SOCIALES,expense,False
+acc_comisiones_bancarias,6.8.0.00.000,COMISIONES BANCARIAS,expense,False
+acc_sueldos_y_salarios,6.9.0.00.000,SUELDOS Y SALARIOS,expense,False
+acc_sueldo_y_salario_personal_administrativo,6.9.1.00.000,SUELDO Y SALARIO PERSONAL ADMINISTRATIVO,expense,False
+acc_sueldo_y_salario_personal_obrero,6.9.2.00.000,SUELDO Y SALARIO PERSONAL OBRERO,expense,False
+acc_sueldos_y_salarios_personal_directivos,6.9.3.00.000,SUELDOS Y SALARIOS PERSONAL DIRECTIVOS,expense,False
+acc_otros_egresos_no_atribuibles,7.1.0.00.000,OTROS EGRESOS NO ATRIBUIBLES,expense,False

@@ -1,0 +1,33 @@
+"id","code_prefix_start","code_prefix_end","name"
+group_activos,1.,"",ACTIVOS
+group_activos_corrientes,1.1.,"",ACTIVOS CORRIENTES
+group_disponibles,1.1.1.,"",DISPONIBLES
+group_caja_moneda_nacional,1.1.1.01.,"",CAJA MONEDA NACIONAL
+group_caja_moneda_extranjera,1.1.1.02.,"",CAJA MONEDA EXTRANJERA
+group_bancos_nacionales,1.1.1.11.,"",BANCOS NACIONALES
+group_banco_internacional,1.1.1.12.,"",BANCO INTERNACIONAL
+group_exigibles,1.1.2.,"",EXIGIBLES
+group_realizables,1.1.3.,"",REALIZABLES
+group_prepagados,1.1.4.,"",PREPAGADOS
+group_no_corrientes,1.2.,"",NO CORRIENTES
+group_propiedad_planta_y_equipos,1.2.1.,"",PROPIEDAD PLANTA Y EQUIPOS
+group_inversiones_permanentes,1.2.2.,"",INVERSIONES PERMANENTES
+group_otros_activos,1.2.3.,"",OTROS ACTIVOS
+group_pasivos,2.,"",PASIVOS
+group_pasivos_corrientes,2.1.,"",PASIVOS CORRIENTES
+group_pasivos_no_corrientes,2.2.,"",PASIVOS NO CORRIENTES
+group_otros_pasivos,2.3.,"",OTROS PASIVOS
+group_patrimonio,3.,"",PATRIMONIO
+group_ingresos,4.,"",INGRESOS
+group_ingreso_principal,4.1.,"",INGRESO PRINCIPAL
+group_egresos,5.,"",EGRESOS
+group_costos,5.1.,"",COSTOS
+group_costo_de_ventas,5.1.1.,"",COSTO DE VENTAS
+group_costo_de_los_servicios,5.1.2.,"",COSTO DE LOS SERVICIOS
+group_gastos_operativos,6.,"",GASTOS OPERATIVOS
+group_contribuciones_parafiscales,6.1.,"",CONTRIBUCIONES PARAFISCALES
+group_servicios_publicos,6.2.,"",SERVICIOS PUBLICOS
+group_depreciacion_y_amortizacion,6.3.,"",DEPRECIACION Y AMORTIZACION
+group_reparaciones,6.4.,"",REPARACIONES
+group_intereses,6.7.,"",INTERESES
+group_otros_egresos,7.,"",OTROS EGRESOS
