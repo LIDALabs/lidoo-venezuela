@@ -29,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 "account_default_pos_receivable_account_id": "acc_cuentas_por_cobrar_clientes",
                 "income_currency_exchange_account_id": "acc_otros_ingresos",
                 "expense_currency_exchange_account_id": "acc_otros_egresos_no_atribuibles",
+                "deferred_expense_account_id": "acc_otros_egresos_no_atribuibles",
+                "deferred_revenue_account_id": "acc_ingresos_diferidos",
                 "account_sale_tax_id": "IVA_16_SALE",
                 "account_purchase_tax_id": "IVA_16_PURCHASE",
             },
@@ -140,7 +142,7 @@ class AccountChartTemplate(models.AbstractModel):
             accounts_data.update({
                 'account_journal_suspense_account_id': {
                     'name': _("Bank Suspense Account"),
-                    'code': 'acc_transferencias_internas',
+                    'code': '1.1.1.50.990',
                     'account_type': 'asset_current',
                 },
                 'account_journal_payment_debit_account_id': {
@@ -179,7 +181,7 @@ class AccountChartTemplate(models.AbstractModel):
                 },
                 'transfer_account_id': {
                     'name': _("Liquidity Transfer"),
-                    'code': "1.1.1.40.000",
+                    'code': "1.1.1.40.990",
                     'account_type': 'asset_current',
                     'reconcile': True,
                 },
