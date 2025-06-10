@@ -35,6 +35,9 @@ class AccountMove(models.Model):
     @api.depends('amount_untaxed', 'amount_subject_to_igtf', 'foreign_rate', 'foreign_inverse_rate')
     def _compute_bi_igtf(self):
         for move in self:
+            # This functions runs when the localization is being installed. At that point, there might not be a foreign currency configured.
+            if not move.foreign_currency_id:
+                continue
             move.bi_igtf = float_round(min(move.amount_untaxed, move.amount_subject_to_igtf * move.foreign_rate), precision_rounding=move.currency_id.rounding)
             move.amount_subject_to_igtf = float_round(move.bi_igtf * move.foreign_inverse_rate, precision_rounding=move.foreign_currency_id.rounding)
 

@@ -29,8 +29,10 @@ class AccountChartTemplate(models.AbstractModel):
                 "account_default_pos_receivable_account_id": "acc_cuentas_por_cobrar_clientes",
                 "income_currency_exchange_account_id": "acc_otros_ingresos",
                 "expense_currency_exchange_account_id": "acc_otros_egresos_no_atribuibles",
-                "deferred_expense_account_id": "acc_otros_egresos_no_atribuibles",
-                "deferred_revenue_account_id": "acc_ingresos_diferidos",
+                "deferred_expense_account_id": "acc_anticipo_dado_a_proveedores",
+                "deferred_revenue_account_id": "acc_anticipo_recibido_de_clientes",
+                "transfer_account_id": "acc_transferencias_internas",
+                "account_journal_suspense_account_id": "acc_transito_bancario",
                 "account_sale_tax_id": "IVA_16_SALE",
                 "account_purchase_tax_id": "IVA_16_PURCHASE",
             },
@@ -140,11 +142,11 @@ class AccountChartTemplate(models.AbstractModel):
         accounts_data = super()._get_accounts_data_values(company, template_data)
         if company.account_fiscal_country_id.code == 'VE':
             accounts_data.update({
-                'account_journal_suspense_account_id': {
-                    'name': _("Bank Suspense Account"),
-                    'code': '1.1.1.50.990',
-                    'account_type': 'asset_current',
-                },
+                # 'account_journal_suspense_account_id': {
+                #     'name': _("Bank Suspense Account"),
+                #     'code': '1.1.1.50.990',
+                #     'account_type': 'asset_current',
+                # },
                 'account_journal_payment_debit_account_id': {
                     'name': _("Outstanding Receipts"),
                     'code': "1.1.1.50.991",
@@ -179,11 +181,8 @@ class AccountChartTemplate(models.AbstractModel):
                     'account_type': 'expense',
                     'tag_ids': [(6, 0, self.ref('account.account_tag_investing').ids)],
                 },
-                'transfer_account_id': {
-                    'name': _("Liquidity Transfer"),
-                    'code': "1.1.1.40.990",
-                    'account_type': 'asset_current',
-                    'reconcile': True,
-                },
             })
+
+            del accounts_data['account_journal_suspense_account_id']
+            del accounts_data['transfer_account_id']
         return accounts_data

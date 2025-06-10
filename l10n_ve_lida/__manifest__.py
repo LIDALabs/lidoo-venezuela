@@ -6,7 +6,7 @@
     "icon": "/account/static/description/l10n.png",
     "countries": ["ve"],
     "license": "LGPL-3",
-    "version": "17.0.0.0.4",
+    "version": "17.0.1.0.1",
     "description": """
         Plantilla de plan de cuentas de servicio donde se agregan las
         cuentas contables y diarios para tipo de empresa servicio

@@ -4,7 +4,7 @@ acc_caja_chica,1.1.1.01.002,CAJA CHICA,asset_cash,False
 acc_caja_dolares,1.1.1.02.001,CAJA DOLARES,asset_cash,False
 acc_caja_euros,1.1.1.02.002,CAJA EUROS,asset_cash,False
 acc_banco_generico,1.1.1.11.001,BANCO ABC,asset_cash,False
-acc_transferencias_internas,1.1.1.40.000,TRANSFERENCIAS INTERNAS,asset_current,False
+acc_transferencias_internas,1.1.1.40.000,TRANSFERENCIAS INTERNAS,asset_current,True
 acc_transito_bancario,1.1.1.50.000,TRANSITO BANCARIO,asset_current,False
 acc_cuentas_por_cobrar_clientes,1.1.2.01.000,CUENTAS POR COBRAR CLIENTES,asset_receivable,True
 acc_cuentas_por_cobrar_a_terceros,1.1.2.02.000,CUENTAS POR COBRAR A TERCEROS,asset_receivable,True
@@ -44,26 +44,28 @@ acc_marcas_registradas,1.2.3.03.000,MARCAS REGISTRADAS,asset_non_current,False
 acc_amortizacion_marcas_registradas,1.2.3.03.100,AMORTIZACION MARCAS REGISTRADAS (-),asset_non_current,False
 acc_franquicias,1.2.3.04.000,FRANQUICIAS,asset_non_current,False
 acc_amortizacion_de_franquicias,1.2.3.04.100,AMORTIZACION DE FRANQUICIAS (-),asset_non_current,False
-acc_utilidades_a_trabajadores_por_pagar,2.1.0.10.000,UTILIDADES A TRABAJADORES POR PAGAR,liability_payable,True
-acc_vacaciones_trabajadores_por_pagar,2.1.0.11.000,VACACIONES TRABAJADORES POR PAGAR,liability_payable,True
-acc_prestaciones_sociales_por_pagar,2.1.0.12.000,PRESTACIONES SOCIALES POR PAGAR,liability_payable,True
-acc_sueldo_y_salarios_por_pagar,2.1.0.13.000,SUELDO Y SALARIOS POR PAGAR,liability_payable,True
-acc_aportes_patronales_por_pagar,2.1.0.14.000,APORTES PATRONALES POR PAGAR,liability_payable,True
-acc_prestamos_bancarios_por_pagar,2.1.0.15.000,PRESTAMOS BANCARIOS POR PAGAR,liability_payable,True
-acc_otros_prestamos_por_pagar,2.1.0.16.000,OTROS PRESTAMOS POR PAGAR,liability_payable,True
-acc_cuentas_por_pagar,2.1.1.00.000,CUENTAS POR PAGAR,liability_payable,True
-acc_documentos_por_pagar,2.1.2.00.000,DOCUMENTOS POR PAGAR,liability_payable,True
-acc_impuesto_sobre_la_renta_por_pagar,2.1.3.00.000,IMPUESTO SOBRE LA RENTA POR PAGAR,liability_payable,True
-acc_iva_por_pagar,2.1.4.00.000,IVA POR PAGAR,liability_payable,True
-acc_impuestos_municipales_por_pagar,2.1.5.00.000,IMPUESTOS MUNICIPALES POR PAGAR,liability_payable,True
-acc_contribuciones_por_pagar,2.1.6.00.000,CONTRIBUCIONES POR PAGAR,liability_payable,True
-acc_iva_retenido_por_pagar,2.1.7.00.000,IVA RETENIDO POR PAGAR,liability_payable,True
-acc_dividendos_por_pagar,2.1.8.00.000,DIVIDENDOS POR PAGAR,liability_payable,True
-acc_interes_por_pagar,2.1.9.00.000,INTERES POR PAGAR,liability_payable,True
+acc_utilidades_a_trabajadores_por_pagar,2.1.0.00.001,UTILIDADES A TRABAJADORES POR PAGAR,liability_current,False
+acc_vacaciones_trabajadores_por_pagar,2.1.0.00.002,VACACIONES TRABAJADORES POR PAGAR,liability_current,False
+acc_prestaciones_sociales_por_pagar,2.1.0.00.003,PRESTACIONES SOCIALES POR PAGAR,liability_current,False
+acc_sueldo_y_salarios_por_pagar,2.1.0.00.004,SUELDO Y SALARIOS POR PAGAR,liability_current,False
+acc_aportes_patronales_por_pagar,2.1.0.00.005,APORTES PATRONALES POR PAGAR,liability_current,False
+acc_prestamos_bancarios_por_pagar,2.1.0.00.006,PRESTAMOS BANCARIOS POR PAGAR,liability_current,False
+acc_otros_prestamos_por_pagar,2.1.0.00.007,OTROS PRESTAMOS POR PAGAR,liability_current,False
+acc_cuentas_por_pagar,2.1.0.00.008,CUENTAS POR PAGAR,liability_payable,True
+acc_documentos_por_pagar,2.1.0.00.009,DOCUMENTOS POR PAGAR,liability_payable,True
+acc_impuesto_sobre_la_renta_por_pagar,2.1.0.00.010,IMPUESTO SOBRE LA RENTA POR PAGAR,liability_current,True
+acc_iva_por_pagar,2.1.0.00.011,IVA POR PAGAR,liability_current,True
+acc_igtf_por_pagar,2.1.0.00.012,IGTF POR PAGAR,liability_current,True
+acc_impuestos_municipales_por_pagar,2.1.0.00.013,IMPUESTOS MUNICIPALES POR PAGAR,liability_current,True
+acc_contribuciones_por_pagar,2.1.0.00.014,CONTRIBUCIONES POR PAGAR,liability_current,False
+acc_iva_retenido_por_pagar,2.1.0.00.015,IVA RETENIDO POR PAGAR,liability_current,False
+acc_dividendos_por_pagar,2.1.0.00.016,DIVIDENDOS POR PAGAR,liability_current,False
+acc_interes_por_pagar,2.1.0.00.017,INTERES POR PAGAR,liability_current,False
+acc_anticipo_recibido_de_clientes,2.1.0.00.018,ANTICIPO RECIBIDO DE CLIENTES,liability_current,False
+acc_retenciones_de_islr_por_pagar,2.1.0.00.019,RETENCIONES DE ISLR POR PAGAR,liability_current,True
 acc_prestamos_bancarios_por_pagar_largo_plazo,2.2.1.00.000,PRESTAMOS BANCARIOS POR PAGAR LARGO PLAZO,liability_non_current,False
 acc_cuentas_por_pagar_largo_plazo,2.2.2.00.000,CUENTAS POR PAGAR LARGO PLAZO,liability_non_current,False
 acc_documentos_por_pagar_largo_plazo,2.2.3.00.000,DOCUMENTOS POR PAGAR LARGO PLAZO,liability_non_current,False
-acc_anticipo_recibido_de_clientes,2.3.1.00.000,ANTICIPO RECIBIDO DE CLIENTES,liability_non_current,False
 acc_capital_social,3.1.0.00.000,CAPITAL SOCIAL,equity,False
 acc_capital_social_suscrito_y_pagado,3.2.0.00.000,CAPITAL SOCIAL SUSCRITO Y PAGADO,equity,False
 acc_reserva_legal,3.3.0.00.000,RESERVA LEGAL,equity,False
