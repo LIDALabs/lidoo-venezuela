@@ -7,7 +7,7 @@
     "category": "Accountant/Accountant",
     "version": "17.0.1.0.1",
     "license": "LGPL-3",
-    "depends": ["account", "l10n_ve_invoice"],
+    "depends": ["account", "l10n_ve_invoice", "l10n_latam_invoice_document"],
     "auto_install": True,
     "application": False,
     "data": [
