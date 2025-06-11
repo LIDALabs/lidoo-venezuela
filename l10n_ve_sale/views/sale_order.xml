@@ -5,7 +5,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="replace">
+            <field name='partner_id' position="replace">
                 <field name="partner_id_domain" invisible="1" />
                 <field name="filter_partner"
                     readonly="state in ['sale', 'done']"
@@ -15,11 +15,9 @@
                 <field name="partner_id" domain="partner_id_domain"
                     context="{'res_partner_search_mode': 'customer', 'show_address': 1}"
                     options="{&quot;always_reload&quot;: True, 'no_quick_create': True}" />
-                <field name="manually_set_rate" invisible="1"/>
-            </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="vat" />
-            </xpath>
+                <field name="manually_set_rate" invisible="1"/>
+            </field>
 
             <xpath expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_unit']"
                 position="after">
@@ -85,7 +83,7 @@
 
             <xpath expr="//sheet//group[1]//div[3]" position="replace">
                 <field name="pricelist_id" invisible="1" />
-                <div groups="l10n_ve_sale.pricelist_sale_order_group" class="o_row">
+                <div groups="l10n_ve_sale.pricelist_sale_order_group" class="o_row" invisible="not has_active_pricelist">
                     <field name="pricelist_id" readonly="1"
                         options="{'no_open':True,'no_create': True}" />
                     <button name="action_update_prices" type="object"
@@ -95,7 +93,7 @@
                         confirm="This will update all unit prices based on the currently set pricelist."
                         invisible="not show_update_pricelist or state in ['sale', 'done', 'cancel']" />
                 </div>
-                <div groups="!l10n_ve_sale.pricelist_sale_order_group" class="o_row">
+                <div groups="!l10n_ve_sale.pricelist_sale_order_group" class="o_row" invisible="not has_active_pricelist">
                     <field name="pricelist_id" options="{'no_open':True,'no_create': True}" />
                     <button name="action_update_prices" type="object"
                         string=" Update Prices"
