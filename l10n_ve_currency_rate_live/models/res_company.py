@@ -21,8 +21,15 @@ class ResCompany(models.Model):
             invalid_update_in_habil_day = not is_habil_day and can_update_habil_days
             if invalid_update_in_habil_day:
                 return
-            usd_rate_bcv = binaural_bcv_query.get_usd_rate_of_the_day_bcv(self)
-            is_valid_update_date = str(usd_rate_bcv[1]) == str(current_date)
-            if not is_valid_update_date:
+            rates, rate_day = binaural_bcv_query.get_bcv_rate_of_the_day(self)
+            is_valid_update_date = str(rate_day) == str(current_date)
+            if not rate_day or not is_valid_update_date:
                 return
-            return {"USD": (1, usd_rate_bcv[1]), "VEF": usd_rate_bcv}
+            
+            veb_per_usd = rates["USD"]
+            data = {}
+            for c, rate in rates.items():
+                data[c] = (veb_per_usd/rate, rate_day)
+            data["USD"] = (1, rate_day)
+            data["VEF"] = (veb_per_usd, rate_day)
+            return data

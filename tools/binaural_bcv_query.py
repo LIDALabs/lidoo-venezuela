@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 _logger = logging.getLogger(__name__)
 
 
-def get_usd_rate_of_the_day_bcv(self):
+def get_bcv_rate_of_the_day(self):
     """This function return the rate of the day by the BCV website
 
     Raises:
@@ -30,7 +30,33 @@ def get_usd_rate_of_the_day_bcv(self):
         usd_value = (
             usd_container.text.replace("\n", "").replace("USD", "").replace(",", ".").strip()
         )
-        return (float(usd_value), current_date)
+
+        eur_container = soup.find(id="euro")
+        eur_value = (
+            eur_container.text.replace("\n", "").replace("EUR", "").replace(",", ".").strip()
+        )
+
+        cny_container = soup.find(id="yuan")
+        cny_value = (
+            cny_container.text.replace("\n", "").replace("CNY", "").replace(",", ".").strip()
+        )
+
+        rub_container = soup.find(id="rublo")
+        rub_value = (
+            rub_container.text.replace("\n", "").replace("RUB", "").replace(",", ".").strip()
+        )
+
+        try_container = soup.find(id="lira")
+        try_value = (
+            try_container.text.replace("\n", "").replace("TRY", "").replace(",", ".").strip()
+        )
+        return ({
+            "USD": float(usd_value),
+            "EUR": float(eur_value),
+            "CNY": float(cny_value),
+            "RUB": float(rub_value),
+            "TRY": float(try_value),
+        }, current_date)
     except Exception as e:
         _logger.error(e)
         return (1, False)
