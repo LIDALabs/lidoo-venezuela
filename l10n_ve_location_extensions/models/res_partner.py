@@ -10,3 +10,5 @@ class ResPartner(models.Model):
 
     city = fields.Char(string="City related",
                        related="municipality.name", store=True)
+
+    municipality = fields.Many2one("res.country.municipality", "Municipality", domain="[('state_id', '=', state_id)]")
