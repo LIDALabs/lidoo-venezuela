@@ -8,7 +8,7 @@
     "version": "17.0.1.0.1",
     "license": "LGPL-3",
     'depends': ['account', 'l10n_ve_igtf'],
-    'auto_install': True,
+    'auto_install': False,
     'application': False,
     'data': [
         'views/account_move_views.xml',
