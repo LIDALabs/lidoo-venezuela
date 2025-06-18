@@ -38,14 +38,33 @@ class ResPartner(models.Model):
             elif partner.vat and not re.match(enterprise_vat_pattern, partner.vat):
                 raise ValidationError(_("The vat field only accepts numbers and must be 9 digits long"))
 
-    # @api.depends("prefix_vat")
-    # def _compute_l10n_ve_vat_prefix(self):
-    #     """
-    #     Compute the vat of the partner and add the prefix to it if it exists in the partner record
-    #     """
-    #     for partner in self:
-    #         if partner.country_code == 'VE' and partner.prefix_vat:
-    #             partner.l10n_ve_vat_prefix = partner.prefix_vat
+    def check_duplicate_email(self, email, company_id=None):
+        if email and (self.env.company.validate_user_creation_general or self.env.company.validate_user_creation_by_company):
+            domain = [
+                ("email", "=", email),
+                ("id", "!=", self.id if self else False),
+            ]
+
+            if self.env.company.validate_user_creation_by_company:
+                domain.extend(
+                    [
+                        ("company_id", "=", company_id or self.env.company.id),
+                    ]
+                )
+                error_message = _(
+                    "A partner with the same email address already exists for this company."
+                )
+            elif self.env.company.validate_user_creation_general:
+                error_message = _(
+                    "A partner with the same email already exists.")
+            else:
+                error_message = _(
+                    "A partner with the same email address already exists for this company."
+                )
+
+            existing_partner = self.env["res.partner"].search(domain, limit=1)
+            if existing_partner:
+                raise ValidationError(error_message)
 
     @api.depends('prefix_vat', 'vat')
     def _compute_l10n_ve_vat(self):
