@@ -48,16 +48,16 @@ class ResCurrencyRate(models.Model):
             return {}
 
         rate = rates.filtered(lambda r: r.name == rate_date) or rates[0]
-        base_usd_id = self.env["ir.model.data"]._xmlid_to_res_id(
-            "base.USD", raise_if_not_found=False
+        base_vef_id = self.env["ir.model.data"]._xmlid_to_res_id(
+            "base.VEF", raise_if_not_found=False
         )
-        if foreign_currency_id == base_usd_id:
+        if foreign_currency_id == base_vef_id:
+            return {"foreign_rate": rate.company_rate, "foreign_inverse_rate": rate.company_rate}
+        else:
             return {
                 "foreign_rate": rate.inverse_company_rate,
                 "foreign_inverse_rate": rate.company_rate,
             }
-        else:
-            return {"foreign_rate": rate.company_rate, "foreign_inverse_rate": rate.company_rate}
 
     @api.model
     def compute_inverse_rate(self, rate):
@@ -76,9 +76,9 @@ class ResCurrencyRate(models.Model):
         float
             The inverse rate for the given rate.
         """
-        base_usd_id = self.env["ir.model.data"]._xmlid_to_res_id(
-            "base.USD", raise_if_not_found=False
+        base_vef_id = self.env["ir.model.data"]._xmlid_to_res_id(
+            "base.VEF", raise_if_not_found=False
         )
         foreign_currency_id = self.env.company.currency_foreign_id.id or False
-        inverse_rate = 1 / rate if foreign_currency_id == base_usd_id else rate
+        inverse_rate = rate if foreign_currency_id == base_vef_id else 1 / rate
         return inverse_rate
