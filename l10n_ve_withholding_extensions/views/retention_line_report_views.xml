@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="view_retention_line_report_search" model="ir.ui.view">
+            <field name="name">retention.line.report.search.inherit</field>
+            <field name="model">retention.line.report</field>
+            <field name="inherit_id"
+                ref="l10n_ve_payment_extension.view_retention_line_report_search" />
+            <field name="arch" type="xml">
+                <filter name="filter_type_supplier" position="after">
+                    <separator />
+                    <filter string="Período contable"
+                        name="filter_retention_date_accounting"
+                        date="retention_date_accounting"
+                        default_period="this_month,last_month,antepenultimate_month" />
+                </filter>
+            </field>
+        </record>
+    </data>
+</odoo>
