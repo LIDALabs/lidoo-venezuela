@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="reference_price_pricelist" model="product.pricelist">
+            <field name="name">Precios referenciales</field>
+            <field name="currency_id" ref="base.USD" />
+        </record>
+
+        <record id="base_price_pricelist" model="product.pricelist">
+            <field name="name">Precios predeterminados</field>
+            <field name="item_ids" eval="[
+                Command.clear(),
+                Command.create({'compute_price': 'formula', 'base': 'pricelist', 'base_pricelist_id': ref('reference_price_pricelist'), 'applied_on': '3_global'})]"/>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="reference_pricelist_id" ref="reference_price_pricelist" />
+        </record>
+
+        <record model="ir.actions.server" id="action_fill_reference_pricelist">
+            <field name="name">Fill reference pricelist</field>
+            <field name="model_id" ref="product.model_product_pricelist" />
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_fill_reference_pricelist()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_fill_reference_pricelist">
+            <field name="name">Update Pending Sale Orders</field>
+            <field name="model_id" ref="sale.model_sale_order" />
+            <field name="state">code</field>
+            <field name="code">
+                action = model.cron_action_update_prices()
+            </field>
+        </record>
+    </data>
+</odoo>

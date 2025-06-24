@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_product_price_update" model="ir.cron">
+            <field name="name">Actualizar Precios de Productos</field>
+            <field name="model_id" ref="product.model_product_pricelist" />
+            <field name="state">code</field>
+            <field name="code">model._update_product_prices()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall"
+                eval="(DateTime.now().replace(hour=0, minute=30) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="priority">4</field>
+        </record>
+
+        <record id="ir_cron_sale_order_price_update" model="ir.cron">
+            <field name="name">Actualizar Ordenes pendientes</field>
+            <field name="model_id" ref="sale.model_sale_order" />
+            <field name="state">code</field>
+            <field name="code">model.cron_action_update_prices()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall"
+                eval="(DateTime.now().replace(hour=0, minute=30) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="priority">4</field>
+        </record>
+    </data>
+</odoo>
