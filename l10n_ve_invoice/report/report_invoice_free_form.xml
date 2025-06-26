@@ -295,6 +295,7 @@
                     </t>
                 </tr>
             </t>
+            
         </template>
 
         <template id="document_tax_totals">
@@ -327,10 +328,10 @@
 
             <t t-set="has_rounding" t-value="'formatted_amount_total_rounded' in tax_totals"/>
             <!--Total amount with all taxes-->
-            <tr class="border-black o_total">
+            <tr id="invoice_total" class="border-black o_total">
                 <t t-if="has_rounding"><td>Total</td></t>
                 <t t-else=""><td><strong>Total</strong></td></t>
-                <td class="text-end">
+                <td id="invoice_total_amount" class="text-end">
                     <t t-if="base_vef">
                         <span t-out="tax_totals['formatted_amount_total']"/>
                     </t>
@@ -339,10 +340,10 @@
                     </t>
                 </td>
             </tr>
-            <tr class="border-black o_total" t-if="o.company_id.show_total_on_usd_invoice">
+            <tr id="invoice_total_in_usd" class="border-black o_total" t-if="o.company_id.show_total_on_usd_invoice">
                 <t t-if="has_rounding"><td>Total en USD</td></t>
                 <t t-else=""><td><strong>Total en USD</strong></td></t>
-                <td class="text-end">
+                <td id="invoice_total_in_usd_amount" class="text-end">
                     <t t-if="base_vef">
                         <span t-out="tax_totals['foreign_formatted_amount_total']"/>
                     </t>

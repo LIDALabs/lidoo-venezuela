@@ -5,7 +5,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Accountant/Accountant",
-    "version": "17.0.1.2.0",
+    "version": "17.0.1.3.0",
     "license": "LGPL-3",
     "depends": ["account", "l10n_ve_payment_extension"],
     "auto_install": True,
@@ -16,4 +16,5 @@
     ],
     "demo": [
     ],
+    "post_init_hook": "setup_accounts",
 }

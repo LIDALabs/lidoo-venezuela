@@ -5,7 +5,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Accountant/Accountant",
-    "version": "17.0.1.0.1",
+    "version": "17.0.1.1.0",
     "license": "LGPL-3",
     "depends": ["account", "l10n_ve_invoice", "l10n_latam_invoice_document"],
     "auto_install": True,
@@ -13,8 +13,10 @@
     "data": [
         "data/l10n_ve_invoice_groups.xml",
         "data/ir_sequence_data.xml",
+        "data/report_paperformat_data.xml",
         "views/account_journal_views.xml",
     ],
     "demo": [
     ],
+    "post_init_hook": "assign_correlative_sequence",
 }

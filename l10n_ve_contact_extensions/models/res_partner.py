@@ -19,6 +19,9 @@ class ResPartner(models.Model):
     def check_vat(self):
         """ Since we validate more documents than the vat for Venezuelan partners (RIF, CI) we
         extend this method in order to process it. """
+        if self.env.company.country_code != 'VE':
+            return super(ResPartner, self).check_vat()
+
         l10n_ve_partners = self.filtered(lambda x: x.country_code == 'VE')
         l10n_ve_partners.l10n_ve_identification_validation()
         return super(ResPartner, self - l10n_ve_partners).check_vat()
