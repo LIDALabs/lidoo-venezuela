@@ -8,13 +8,17 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet" position="before">
                     <header>
+                        <field name="is_reference_price" readonly="1" invisible="1"/>
+
                         <button type="object" name="action_update_product_prices"
                             string="Actualizar precios"
+                            invisible="not is_reference_price"
                             groups="base.group_no_one"
                             />
 
                         <button type="object" name="action_fill_reference_pricelist"
                             string="Llenar lista de precios referenciales"
+                            invisible="not is_reference_price"
                             groups="base.group_no_one"
                             />
                     </header>
