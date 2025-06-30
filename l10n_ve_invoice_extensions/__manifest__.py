@@ -13,10 +13,9 @@
     "data": [
         "data/l10n_ve_invoice_groups.xml",
         "data/ir_sequence_data.xml",
-        "data/report_paperformat_data.xml",
+        # "data/report_paperformat_data.xml",
         "views/account_journal_views.xml",
     ],
     "demo": [
     ],
-    # "post_init_hook": "assign_correlative_sequence",
 }
