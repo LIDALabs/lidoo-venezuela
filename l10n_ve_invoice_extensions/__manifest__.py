@@ -18,5 +18,5 @@
     ],
     "demo": [
     ],
-    "post_init_hook": "assign_correlative_sequence",
+    # "post_init_hook": "assign_correlative_sequence",
 }
