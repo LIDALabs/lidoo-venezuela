@@ -1,10 +1,9 @@
-from odoo.exceptions import UserError
 import logging
+from datetime import date, datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from datetime import date, datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -202,7 +201,7 @@ class StockPicking(models.Model):
                         {
                             "name": move_ids_without_package.description_picking,
                             "product_id": move_ids_without_package.product_id.id,
-                            "price_unit": move_ids_without_package.product_id.lst_price,
+                            "price_unit": move_ids_without_package.product_id.standard_price,
                             "account_id": (
                                 move_ids_without_package.product_id.property_account_income_id.id
                                 if move_ids_without_package.product_id.property_account_income_id
@@ -259,7 +258,7 @@ class StockPicking(models.Model):
                         {
                             "name": move_ids_without_package.description_picking,
                             "product_id": move_ids_without_package.product_id.id,
-                            "price_unit": move_ids_without_package.product_id.lst_price,
+                            "price_unit": move_ids_without_package.product_id.standard_price,
                             "account_id": (
                                 move_ids_without_package.product_id.property_account_income_id.id
                                 if move_ids_without_package.product_id.property_account_income_id
@@ -314,7 +313,7 @@ class StockPicking(models.Model):
                         {
                             "name": move_ids_without_package.description_picking,
                             "product_id": move_ids_without_package.product_id.id,
-                            "price_unit": move_ids_without_package.product_id.lst_price,
+                            "price_unit": move_ids_without_package.product_id.standard_price,
                             "account_id": (
                                 move_ids_without_package.product_id.property_account_income_id.id
                                 if move_ids_without_package.product_id.property_account_income_id
