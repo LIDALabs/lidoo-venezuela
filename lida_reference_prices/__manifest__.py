@@ -7,7 +7,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Sales",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "depends": [
         "product",
         "sale",
@@ -18,6 +18,7 @@
         'data/product_pricelist_data.xml',
         'data/ir_cron_data.xml',
         'views/product_pricelist_views.xml',
+        'views/product_views.xml',
         'views/res_config_settings_views.xml',
     ],
     "license": "LGPL-3",

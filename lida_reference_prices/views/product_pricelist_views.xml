@@ -10,6 +10,12 @@
                     <header>
                         <field name="is_reference_price" readonly="1" invisible="1"/>
 
+                        <button type="object" name="action_change_reference_pricelist"
+                            string="Usar como precio referencial"
+                            invisible="is_reference_price"
+                            groups="base.group_no_one"
+                            />
+
                         <button type="object" name="action_update_product_prices"
                             string="Actualizar precios"
                             invisible="not is_reference_price"
