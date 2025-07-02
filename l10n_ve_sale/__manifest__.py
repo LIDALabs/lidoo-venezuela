@@ -7,7 +7,7 @@
     "author": "binaural-dev",
     "website": "https://binauraldev.com/",
     "category": "Sales/Sales",
-    "version": "17.0.1.1.10",
+    "version": "17.0.1.1.14",
     # any module necessary for this one to work correctly
     "depends": [
         "base",
@@ -19,6 +19,7 @@
         "l10n_ve_contact",
         "l10n_ve_invoice",
         "l10n_ve_filter_partner",
+        "l10n_ve_stock",
     ],
     'auto_install': [
         "sale",
@@ -36,4 +37,5 @@
     ],
     "images": ["static/description/icon.png"],
     "application": True,
+    "pre_init_hook": "pre_init_hook",
 }
