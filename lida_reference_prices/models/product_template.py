@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
     reference_price = fields.Monetary(
         string="Precio Referencial",
         currency_field='reference_currency_id',
-        compute='_compute_reference_pricelist_id',
+        compute='_compute_reference_price',
         readonly=False,
         inverse='_inverse_reference_price',
         help="This is the reference price of the product in the reference pricelist. "
@@ -91,6 +91,24 @@ class ProductTemplate(models.Model):
 
             tmpl.reference_price = reference_price
 
+    @api.depends('reference_pricelist_id', 'reference_currency_id', 'reference_pricelist_item_id')
+    def _compute_reference_price(self):
+        """ Compute the reference pricelist for the product template."""
+        Rate = self.env['res.currency.rate']
+        today = fields.Date.today()
+        for tmpl in self:
+            if not tmpl.reference_pricelist_id:
+                continue
+
+            item_id = tmpl.reference_pricelist_item_id
+            if item_id:
+                reference_price = item_id.fixed_price if item_id else 0.0
+            else:
+                rate = Rate.compute_rate(tmpl.reference_currency_id.id, today)['foreign_inverse_rate']
+                reference_price = float_round(tmpl.list_price * rate, tmpl.reference_currency_id.decimal_places)
+
+            tmpl.reference_price = reference_price
+
     def _convert_to_reference_currency(self, reference):
         """
         Convert the given price to the reference currency using the current rate.
@@ -105,7 +123,7 @@ class ProductTemplate(models.Model):
             'list_price': price,
         }
 
-    @api.depends('reference_currency_id')
+    @api.depends('reference_currency_id', 'reference_pricelist_item_id')
     def _inverse_reference_price(self):
         """
         Inverse method for reference_price field.
