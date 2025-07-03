@@ -1,5 +1,6 @@
+from datetime import date
+
 from odoo import http
-import pandas as pd
 
 
 class IslrReportController(http.Controller):
@@ -13,6 +14,8 @@ class IslrReportController(http.Controller):
         file = islr_report._excel_file_retention_islr(
             table, "XML Retencion de ISLR", start, end, company
         )
+        from_date = date.strftime(islr_report.date_start, "%Y_%m_%d")
+        to_date = date.strftime(islr_report.date_end, "%Y_%m_%d")
 
         return http.request.make_response(
             file,
@@ -22,6 +25,6 @@ class IslrReportController(http.Controller):
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 ),
                 ("Content-Length", len(file)),
-                ("Content-Disposition", "attachment; filename=ISLR_Report.xlsm;"),
+                ("Content-Disposition", f"attachment; filename={from_date}-{to_date}-ISLR_Report.xlsm;"),
             ],
         )

@@ -1,15 +1,16 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError,ValidationError
-import xlsxwriter
-from datetime import datetime, date
-from io import BytesIO
-from dateutil.relativedelta import relativedelta
-from collections import OrderedDict
-import pandas as pd
-from odoo.http import request
-import os
-
 import logging
+import os
+from collections import OrderedDict
+from datetime import date, datetime
+from io import BytesIO
+
+import pandas as pd
+import xlsxwriter
+from dateutil.relativedelta import relativedelta
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
+
 _logger = logging.getLogger(__name__)
 
 
@@ -133,7 +134,7 @@ class RetentionIslrReport(models.TransientModel):
 
     @api.model
     def _get_retention_islr_excel_model_row(self):
-        
+
         new_model_row = OrderedDict(
             [
                 ("ID Sec", 0),
@@ -146,10 +147,10 @@ class RetentionIslrReport(models.TransientModel):
                 ("Porcentaje de retención", 0.00),
             ]
         )
-        
+
         return new_model_row
 
-    @api.model    
+    @api.model
     def _get_retention_islr_excel_row(self, row_idx, ret_line_id, is_vef_currency):
 
         new_row = self._get_retention_islr_excel_model_row()
@@ -164,9 +165,18 @@ class RetentionIslrReport(models.TransientModel):
 
         fpi = datetime.strptime(pi, "%Y-%m-%d")
 
-        new_row["Número factura"] = ret_line_id.move_id.name[-10:] if len(ret_line_id.move_id.name) > 10 else ret_line_id.move_id.name
+        document_number = str(ret_line_id.move_id.l10n_latam_document_number or ret_line_id.move_id.name)
+        if " " in document_number:
+            s = str().split(" ", 2)
+            document_number = s[1]
+        if len(document_number) > 10:
+            document_number = document_number[-10:]
+        new_row["Número factura"] = document_number
 
-        new_row["Control Número"] = ret_line_id.move_id.correlative
+        correlative = str(ret_line_id.move_id.correlative)
+        if len(correlative) > 10:
+            correlative = correlative[-10:]
+        new_row["Control Número"] = correlative
 
         new_row["Fecha Operación"] = fpi.strftime("%d/%m/%Y")
 
@@ -206,7 +216,7 @@ class RetentionIslrReport(models.TransientModel):
         is_vef_currency = self.env.ref("base.VEF").id == self.env.company.currency_foreign_id.id
 
         retention_ids = self._get_retention_ids(current_company)
-        
+
         if not retention_ids:
             raise ValidationError(_("No withholdings have been found in the selected period"))
 
@@ -218,7 +228,6 @@ class RetentionIslrReport(models.TransientModel):
             new_row = self._get_retention_islr_excel_row(row_idx, retention_line_id, is_vef_currency)
 
             table_rows.append(new_row)
-
 
         return table_rows, row_idx
 
