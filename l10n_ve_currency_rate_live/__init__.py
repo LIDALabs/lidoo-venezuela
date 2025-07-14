@@ -15,5 +15,8 @@ def setup_currency_update(env):
         "currency_next_execution_date": datetime.date.today() + relativedelta(days=+1)
     })
 
-    env.company.update_currency_rates()
+    try:
+        env.company.update_currency_rates()
+    except Exception:
+        pass
     return
