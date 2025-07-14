@@ -299,11 +299,11 @@ class AccountChartTemplate(models.AbstractModel):
                 company.customer_account_igtf_id = company.customer_account_igtf_id or self.ref('acc_igtf_por_pagar', raise_if_not_found=False)
             if 'supplier_account_igtf_id' in company._fields:
                 company.supplier_account_igtf_id = company.supplier_account_igtf_id or self.ref('acc_otros_egresos_no_atribuibles', raise_if_not_found=False)
-            if 'is_igtf' in Journals._fields:
-                bs_currency = self.ref('base.VEF', raise_if_not_found=False)
-                igtf_journals = Journals.search([('company_id', '=', company.id), ('type', 'in', ['cash', 'bank']), ('currency_id', '!=', bs_currency.id)])
-                if igtf_journals:
-                    igtf_journals.write({'is_igtf': True})
+            # if 'is_igtf' in Journals._fields:
+            #     bs_currency = self.ref('base.VEF', raise_if_not_found=False)
+            #     igtf_journals = Journals.search(['&', ('company_id', '=', company.id), ('type', 'in', ['cash', 'bank']), ('currency_id', '!=', bs_currency.id)])
+            #     if igtf_journals:
+            #         igtf_journals.write({'is_igtf': True})
 
                 # Retenciones
             if 'iva_supplier_retention_journal_id' in company._fields:
