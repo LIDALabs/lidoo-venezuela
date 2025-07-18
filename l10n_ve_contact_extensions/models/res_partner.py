@@ -30,10 +30,15 @@ class ResPartner(models.Model):
         person_vat_pattern = "^[0-9]{1,9}$"
         enterprise_vat_pattern = "^[0-9]{9}$"
         for partner in self:
-            if not partner.user_ids and not partner.prefix_vat:
-                raise ValidationError(_("Debe indicar el tipo de CI/RIF"))
-            if not partner.user_ids and not partner.vat:
-                raise ValidationError(_("Debe indicar el CI/RIF"))
+            # TODO: Permitir saltar esta validación según el contexto.
+            # En este punto puede que el partner se este creando como parte de un usuario y en el formulario de usuario no hay forma de agregar VAT.
+            # En los formularios adecuados estos campos son requeridos.
+            if not partner.prefix_vat or not partner.vat:
+                continue
+            # if not partner.user_ids and not partner.prefix_vat:
+            #     raise ValidationError(_("Debe indicar el tipo de CI/RIF"))
+            # if not partner.user_ids and not partner.vat:
+            #     raise ValidationError(_("Debe indicar el CI/RIF"))
 
             if partner.prefix_vat in ('V', 'E'):
                 if partner.vat and not (re.match(person_vat_pattern, partner.vat)):
