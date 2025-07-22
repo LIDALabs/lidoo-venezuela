@@ -18,6 +18,7 @@
         "l10n_ve_invoice",
         "l10n_ve_tax_payer",
         "l10n_ve_stock_account",
+        "lida_NOT_SUPPORTED",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -32,7 +33,7 @@
         "wizards/accounting_reports_views.xml",
     ],
     "assets": {"web.assets_backend": ["l10n_ve_iot_mf/static/src/js/*.js"]},
-    "installable": False,
+    "installable": True,
     "application": False,
     "auto_install": False,
     "pre_init_hook": "pre_init_hook"

@@ -16,11 +16,13 @@
         "l10n_ve_payment_extension",
         "binaural_subsidiary",
         "stock",
+        "lida_NOT_SUPPORTED"
     ],
     
     "images": ["static/description/icon.png"],
-    "application": True,
-    "installable": False,
+    "application": False,
+    "installable": True,
+    "auto_install": False,
     "data": [
         "security/ir.model.access.csv",
         "views/res_config_settings.xml",

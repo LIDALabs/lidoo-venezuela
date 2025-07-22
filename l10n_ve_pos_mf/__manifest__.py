@@ -13,6 +13,7 @@
         "l10n_ve_pos",
         "pos_iot",
         "l10n_ve_iot_mf",
+        "lida_NOT_SUPPORTED"
     ],
     "data": [
         "security/ir.model.access.csv",
