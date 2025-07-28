@@ -15,6 +15,16 @@ class ResPartner(models.Model):
     l10n_ve_vat = fields.Char('Venezuelan VAT', index=True, compute="_compute_l10n_ve_vat", store=True)
     l10n_ve_vat_formatted = fields.Char('Venezuelan VAT Formatted', index=True, compute="_compute_l10n_ve_vat", store=True)
 
+    @api.onchange("prefix_vat")
+    def _onchange_prefix_vat(self):
+        if not self.prefix_vat:
+            return
+
+        if self.prefix_vat in ('J', 'G', 'C'):
+            self.company_type = 'company'
+        else:
+            self.company_type = 'person'
+
     @api.constrains('vat', 'country_id', 'prefix_vat')
     def check_vat(self):
         """ Since we validate more documents than the vat for Venezuelan partners (RIF, CI) we
