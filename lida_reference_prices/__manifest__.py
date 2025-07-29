@@ -7,7 +7,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Sales",
-    "version": "17.0.1.1.0",
+    "version": "17.0.1.1.1",
     "depends": [
         "product",
         "sale",

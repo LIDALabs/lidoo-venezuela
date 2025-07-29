@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools import float_round
+from odoo.tools import float_round, float_is_zero
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -14,7 +17,7 @@ class ProductTemplate(models.Model):
         string="Lista de Precios Referenciales",
         comodel_name='product.pricelist',
         compute='_compute_reference_pricelist_id',
-        store=True,
+        store=True
     )
 
     reference_currency_id = fields.Many2one(
@@ -37,6 +40,21 @@ class ProductTemplate(models.Model):
         help="This is the reference price of the product in the reference pricelist. "
     )
 
+
+    @api.onchange('list_price')
+    def _onchange_list_price(self):
+        prices = self._convert_using_reference_currency(self.list_price, inverse=True)
+        self.reference_price = prices['reference_price']
+
+        return
+
+    @api.onchange('reference_price')
+    def _onchange_reference_price(self):
+        prices = self._convert_using_reference_currency(self.reference_price)
+        self.list_price = prices['list_price']
+
+        return
+    
     @api.model_create_multi
     def create(self, vals_list):
         """
@@ -50,7 +68,21 @@ class ProductTemplate(models.Model):
                 vals['reference_pricelist_id'] = reference_pricelist.id
                 vals['reference_currency_id'] = reference_pricelist.currency_id.id
 
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        records._inverse_reference_price()
+
+        return records
+    
+    # @api.model_create_multi
+    # def write(self, vals_list):
+    #     """
+    #     Override write method to ensure that the reference pricelist item is created
+    #     when a product template is created.
+    #     """
+    #     records = super().write(vals_list)
+    #     records._inverse_reference_price()
+
+    #     return records
 
     def _get_product_attr_for_reference_price_list(self):
         """ Returns the product attributes to be used in the reference price list. """
@@ -67,29 +99,23 @@ class ProductTemplate(models.Model):
     def _compute_reference_pricelist_id(self):
         """ Compute the reference pricelist for the product template."""
         PricelistItem = self.env['product.pricelist.item']
-        Rate = self.env['res.currency.rate']
+        # Rate = self.env['res.currency.rate']
         pricelist = self.env.company.reference_pricelist_id
         if not pricelist:
             return
 
-        today = fields.Date.today()
+        # today = fields.Date.today()
         for tmpl in self:
-            item_id = PricelistItem.search([
+            domain = [
                 ('pricelist_id', '=', pricelist.id),
                 ('applied_on', '=', '1_product'),
                 ('compute_price', '=', 'fixed'),
-                ('product_tmpl_id', '=', tmpl.id),
-            ], limit=1)
+                ('product_tmpl_id', 'in', tmpl.ids),
+            ]
+            item_id = tmpl.reference_pricelist_item_id or PricelistItem.search(domain, limit=1)
 
             tmpl.reference_pricelist_id = pricelist
             tmpl.reference_pricelist_item_id = item_id
-            if item_id:
-                reference_price = item_id.fixed_price if item_id else 0.0
-            else:
-                rate = Rate.compute_rate(pricelist.currency_id.id, today)['foreign_inverse_rate']
-                reference_price = float_round(tmpl.list_price * rate, pricelist.currency_id.decimal_places)
-
-            tmpl.reference_price = reference_price
 
     @api.depends('reference_pricelist_id', 'reference_currency_id', 'reference_pricelist_item_id')
     def _compute_reference_price(self):
@@ -109,14 +135,31 @@ class ProductTemplate(models.Model):
 
             tmpl.reference_price = reference_price
 
-    def _convert_to_reference_currency(self, reference):
+    def _convert_using_reference_currency(self, reference, inverse=False):
         """
         Convert the given price to the reference currency using the current rate.
         """
+        reference_pricelist_id = self.reference_pricelist_id or self.env.company.reference_pricelist_id
+        if not reference_pricelist_id:
+            return {
+                'reference_price': reference,
+                'list_price': self.list_price,
+            }
+        
         Rate = self.env['res.currency.rate']
         today = fields.Date.today()
-        rate = Rate.compute_rate(self.reference_currency_id.id, today)['foreign_rate']
-        reference = float_round(reference, precision_rounding=self.reference_currency_id.rounding)
+        rates = Rate.compute_rate(reference_pricelist_id.currency_id.id, today)
+        if inverse:
+            rate = rates['foreign_inverse_rate']
+            price = float_round(reference, precision_rounding=self.currency_id.rounding)
+            reference = float_round(reference * rate, precision_rounding=reference_pricelist_id.currency_id.rounding)
+            return {
+                'reference_price': reference,
+                'list_price': price,
+            }    
+        
+        rate = rates['foreign_rate']
+        reference = float_round(reference, precision_rounding=reference_pricelist_id.currency_id.rounding)
         price = float_round(reference * rate, precision_rounding=self.currency_id.rounding)
         return {
             'reference_price': reference,
@@ -130,18 +173,21 @@ class ProductTemplate(models.Model):
         This method updates the reference price in the reference pricelist item.
         """
 
-        self.ensure_one()
+        for tmpl in self:
+            if not tmpl.reference_pricelist_id:
+                continue
 
-        if self.reference_price == 0:
-            return
+            if float_is_zero(tmpl.reference_price, precision_rounding=tmpl.reference_currency_id.rounding):
+                prices = tmpl._convert_using_reference_currency(tmpl.list_price, inverse=True)
+            else:
+                prices = tmpl._convert_using_reference_currency(tmpl.reference_price)
 
-        prices = self._convert_to_reference_currency(self.reference_price)
-        if not self.reference_pricelist_item_id:
-            attrs = self._get_product_attr_for_reference_price_list()
-            attrs['pricelist_id'] = self.reference_pricelist_id.id
-            attrs['fixed_price'] = prices['reference_price']
-            item_id = self.env['product.pricelist.item'].create(attrs)
-            self.reference_pricelist_item_id = item_id
-        else:
-            self.reference_pricelist_item_id.fixed_price = prices['reference_price']
-        self.list_price = prices['list_price']
+            if not tmpl.reference_pricelist_item_id:
+                attrs = tmpl._get_product_attr_for_reference_price_list()
+                attrs['pricelist_id'] = tmpl.reference_pricelist_id.id
+                attrs['fixed_price'] = prices['reference_price']
+                item_id = tmpl.env['product.pricelist.item'].create(attrs)
+                tmpl.reference_pricelist_item_id = item_id
+            else:
+                tmpl.reference_pricelist_item_id.fixed_price = prices['reference_price']
+            tmpl.list_price = prices['list_price']
