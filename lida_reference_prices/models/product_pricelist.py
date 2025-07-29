@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import float_round
+
+_logger = logging.getLogger(__name__)
 
 
 class Pricelist(models.Model):
@@ -112,14 +115,15 @@ class Pricelist(models.Model):
                 attrs['fixed_price'] = float_round(p.lst_price * rate, pricelist.currency_id.decimal_places)
                 items.append(attrs)
 
-        # products = self.env['product.product'].search([
-        #     '&', ('sale_ok', '=', True), ('active', '=', True)])
-
         item_vals = [Command.clear()]
         item_vals += [Command.create(item) for item in items]
         pricelist.write({
             'item_ids': item_vals
         })
+
+        # Debemos actualizar después de crear la lista nueva
+        product_tmpls._compute_reference_pricelist_id()
+        product_tmpls.product_variant_ids._compute_ref_pricelist_id()
 
         return {
             'type': 'ir.actions.client',
@@ -135,17 +139,23 @@ class Pricelist(models.Model):
     def _update_product_prices(self):
         ref_pricelist = self.env.company.reference_pricelist_id
         if not ref_pricelist:
+            _logger.info("No hay una lista de precios referencial")
             return False
-
+        
         Rate = self.env['res.currency.rate']
         today = fields.Date.today()
         rate = Rate.compute_rate(ref_pricelist.currency_id.id, today)['foreign_rate']
 
-        item_ids = self.item_ids
-        prices_for_variants = item_ids.filtered(lambda p: not p.product_tmpl_id)
+        item_ids = ref_pricelist.item_ids
+        # print("#" *20, "Actualizando precios")
+        prices_for_variants = item_ids.filtered(lambda p: p.applied_on == '0_product_variant')
         for price in (item_ids - prices_for_variants):
-            price.product_tmpl_id.list_price = float_round(price.fixed_price * rate, self.env.company.currency_id.decimal_places)
+            # print("#" *20, "Actualizando template %s" % (price.product_tmpl_id.name))
+            price.product_tmpl_id.list_price = float_round(
+                price.fixed_price * rate, self.env.company.currency_id.decimal_places)
         for price in prices_for_variants:
-            price.product_id.lst_price = float_round(price.fixed_price * rate, self.env.company.currency_id.decimal_places)
+            # print("#" *20, "Actualizando producto %s" % (price.product_id.name))
+            price.product_id.lst_price = float_round(
+                price.fixed_price * rate, self.env.company.currency_id.decimal_places)
 
         return True
