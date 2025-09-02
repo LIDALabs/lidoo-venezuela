@@ -165,7 +165,8 @@ class RetentionIslrReport(models.TransientModel):
 
         fpi = datetime.strptime(pi, "%Y-%m-%d")
 
-        document_number = str(ret_line_id.move_id.l10n_latam_document_number or ret_line_id.move_id.name)
+        # CAMBIOS LIDA/SH
+        document_number = str(ret_line_id.move_id.l10n_latam_document_number or ret_line_id.move_id.name).replace('-', '')
         if " " in document_number:
             s = str().split(" ", 2)
             document_number = s[1]
@@ -173,10 +174,11 @@ class RetentionIslrReport(models.TransientModel):
             document_number = document_number[-10:]
         new_row["Número factura"] = document_number
 
-        correlative = str(ret_line_id.move_id.correlative)
+        correlative = str(ret_line_id.move_id.correlative).replace('-', '')
         if len(correlative) > 10:
             correlative = correlative[-10:]
         new_row["Control Número"] = correlative
+        # CAMBIOS LIDA/SH
 
         new_row["Fecha Operación"] = fpi.strftime("%d/%m/%Y")
 

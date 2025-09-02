@@ -15,6 +15,8 @@ class ResPartner(models.Model):
     l10n_ve_vat = fields.Char('Venezuelan VAT', index=True, compute="_compute_l10n_ve_vat", store=True)
     l10n_ve_vat_formatted = fields.Char('Venezuelan VAT Formatted', index=True, compute="_compute_l10n_ve_vat", store=True)
 
+    identity_document = fields.Char("Identify Document", compute="_compute_l10n_ve_vat")
+
     @api.onchange("prefix_vat")
     def _onchange_prefix_vat(self):
         if not self.prefix_vat:
@@ -89,6 +91,7 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.country_code == 'VE' and partner.prefix_vat and partner.vat:
                 partner.l10n_ve_vat = "%s%s" % (partner.prefix_vat, partner.vat)
+                partner.identity_document = partner.vat
                 if len(partner.vat) < 9:
                     partner.l10n_ve_vat_formatted = "%s-%s" % (partner.prefix_vat, partner.vat)
                 else:

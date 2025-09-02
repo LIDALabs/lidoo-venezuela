@@ -77,6 +77,12 @@
                 <field name="reversed_entry_id" invisible="not reversed_entry_id" readonly="1" />
                 <field name="free_form_copy_number" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="1" />
             </xpath>
+             <xpath expr="//header" position="after">
+                <field name="display_date_warning" invisible="1"/>
+                <div class="alert alert-warning mb-0" role="alert" invisible="not display_date_warning">
+                    Note: the invoice date is prior to the current date.
+                </div>
+            </xpath>
         </field>
     </record>
     <!-- <record id="view_account_move_od_journal_sequence" model="ir.ui.view">
