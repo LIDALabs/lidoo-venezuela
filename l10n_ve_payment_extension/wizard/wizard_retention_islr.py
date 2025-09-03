@@ -94,7 +94,9 @@ class RetentionIslrReport(models.TransientModel):
             {"bold": 1, "border": 1, "align": "center", "valign": "vcenter", "fg_color": "gray"}
         )
         datos = table
-        company_vat = company.vat if company.vat else ""
+        # --- MODIFICATION
+        company_vat = company.partner_id.l10n_ve_vat if company.partner_id.l10n_ve_vat else ""
+        # --- MODIFICATION
         range_month = datetime.strptime(start, "%Y-%m-%d").strftime("%Y%m")
 
         worksheet2 = workbook.add_worksheet(name)
