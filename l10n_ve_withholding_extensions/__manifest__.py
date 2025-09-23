@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Extensiones de Venezuela - Retenciones",
+    "name": "Venezuela - Retenciones extensiones",
     "summary": """Extiende el Módulo de Retenciones Venezuela""",
     "author": "LIDALabs",
     "website": "https://lidalabs.com",

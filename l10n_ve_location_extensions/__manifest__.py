@@ -1,5 +1,5 @@
 {
-    "name": "Extensiones de Venezuela - DPT",
+    "name": "Venezuela - DPT extensiones",
     "summary": """
        Módulo para extender Venezuela - DPT
     """,

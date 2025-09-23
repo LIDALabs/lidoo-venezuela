@@ -1,5 +1,5 @@
 {
-    "name": "Extensiones de Venezuela - Contactos",
+    "name": "Venezuela - Contactos extensiones",
     "summary": """
        Módulo para información de contactos de Venezuela
     """,
