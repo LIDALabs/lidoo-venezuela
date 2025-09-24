@@ -1,0 +1,32 @@
+<odoo>
+    <record id="invoice_payments_report_form" model="ir.ui.view">
+        <field name="name">invoice.payments.report.wizard.view</field>
+        <field name="model">invoice.payments.report.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Reporte de Cierre del Día">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_from" widget="date" />
+                            <!-- <field name="date_to" widget="date"/> -->
+                            <!-- <field name="show_documents"/> -->
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="%(l10n_ve_invoice_extensions.invoice_payments_report)d"
+                        type="action" string="Imprimir" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_invoice_payments_report_wizard" model="ir.actions.act_window">
+        <field name="name">Generar un Reporte de Cierre del Día</field>
+        <field name="res_model">invoice.payments.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="l10n_ve_invoice_extensions.invoice_payments_report_form" />
+    </record>
+</odoo>

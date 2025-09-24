@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem
+            id="invoice_payments_report_menu"
+            name="Reporte de Cierre de otro día"
+            parent="account.menu_finance_reports"
+            action="l10n_ve_invoice_extensions.action_invoice_payments_report_wizard"
+        />
+        <menuitem
+            id="invoice_payments_report_today_menu"
+            name="Reporte de Cierre de hoy"
+            parent="account.menu_finance_reports"
+            action="invoice_payments_report"
+        />
+    </data>
+</odoo>

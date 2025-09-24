@@ -2,6 +2,7 @@
 
 from . import models
 from . import wizard
+from . import report
 
 
 # def assign_correlative_sequence(env):

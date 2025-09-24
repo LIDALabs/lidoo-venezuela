@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_payments">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Cierre Diario</h2>
+                    <div class="mb-4">
+                        <strong>Fecha: </strong>
+                        <span t-out="report_date_formatted" />
+                    </div>
+
+                    <t t-foreach="invoices" t-as="invoice">
+                        <div class="mb-2" style="page-break-inside: avoid;">
+                            <div class="row mb-1">
+                                <div class="col-auto">
+                                    <h4 t-out="invoice.name"></h4>
+                                </div>
+                                <div class="col-auto">
+                                    <strong>Total: </strong>
+                                    <span t-field="invoice.amount_total_in_currency_signed" />
+                                </div>
+                                <div class="col-auto">
+                                    <strong>Cliente: </strong>
+                                    <span t-field="invoice.partner_id.name" />
+                                </div>
+                                <div class="col-auto">
+                                    <strong>CI/RIF: </strong>
+                                    <span t-field="invoice.partner_id.l10n_ve_vat" />
+                                </div>
+
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%">Fecha</th>
+                                        <th>Método de pago</th>
+                                        <th style="width: 20%">Referencia</th>
+                                        <th style="width: 25%">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="payment_data" t-value="invoice_payments_data[invoice.id]" />
+                                    <t t-set="payments" t-value="payment_data['payments']" />
+                                    <tr t-foreach="payments" t-as="payment">
+                                        <td>
+                                            <span t-out="payment['date']" />
+                                        </td>
+                                        <td>
+                                            <span t-out="payment['payment_method']" />
+                                        </td>
+                                        <td>
+                                            <span t-out="payment['reference']" />
+                                        </td>
+                                        <td>
+                                            <div t-if="payment['is_igtf']">
+                                                <div t-out="payment['amount']"></div>
+                                                <div>(<span t-out="payment['amount_original']"></span> x <span
+                                                        t-out="payment['exchange_rate']"></span>)</div>
+                                            </div>
+                                            <span t-else="" t-out="payment['amount']" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
