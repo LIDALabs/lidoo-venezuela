@@ -196,6 +196,10 @@ class ResPartner(models.Model):
         """This function checks that if a VAT is being added and the identity_document field is empty,
         the identity_document field is assigned the same value as the VAT.
         """
+
+        if 'identity_document' not in self._fields:
+            return
+
         for record in self:
             if not record.identity_document:
                 record.identity_document = record.vat
