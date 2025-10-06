@@ -1,10 +1,9 @@
+import logging
 from datetime import datetime
 
 import xlsxwriter
 from odoo import _, api, models
 from odoo.osv import expression
-
-import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -165,8 +164,10 @@ class WizardAccountingReports(models.TransientModel):
                         "total_sales_not_iva": 0,
                         "amount_reduced_aliquot": 0,
                         "amount_general_aliquot": 0,
+                        "amount_extend_aliquot": 0,
                         "tax_base_reduced_aliquot": 0,
                         "tax_base_general_aliquot": 0,
+                        "tax_base_extend_aliquot": 0,
                     }
                 )
             retention_data = self.get_retention_iva_values(move.get("_id"))
@@ -207,14 +208,14 @@ class WizardAccountingReports(models.TransientModel):
         )
         retention = ret_lines.mapped("retention_id")
         ret_vals = {
-                    "date_retention": "",
-                    "number_retention": "",
-                    "iva_retained": 0,
-                }
+            "date_retention": "",
+            "number_retention": "",
+            "iva_retained": 0,
+        }
 
         if not ret_lines:
             return ret_vals
-        
+
         for ret_line in ret_lines:
 
             if ret_line and self._check_future_retention_dates(ret_line.retention_id.date_accounting):
