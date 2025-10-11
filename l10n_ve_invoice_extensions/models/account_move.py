@@ -17,6 +17,9 @@ class AccountMove(models.Model):
 
     is_debit = fields.Boolean(compute='_computed_is_debit')
 
+    def _is_manual_document_number(self):
+        return self.journal_id.type == 'purchase' or self.is_contingency
+
     @api.depends('l10n_latam_document_type_id')
     def _computed_is_debit(self):
         for move in self:
