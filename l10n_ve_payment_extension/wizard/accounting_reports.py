@@ -146,7 +146,7 @@ class WizardAccountingReports(models.TransientModel):
         moves = retention_ids.mapped("retention_line_ids.move_id")
         res_moves |= moves
 
-        return res_moves
+        return res_moves.sorted('date')
 
     def parse_sale_book_data(self):
         data = super().parse_sale_book_data()
@@ -160,6 +160,7 @@ class WizardAccountingReports(models.TransientModel):
             ):
                 move.update(
                     {
+                        "move_type": 'RET',
                         "total_sales_iva": 0,
                         "total_sales_not_iva": 0,
                         "amount_reduced_aliquot": 0,
@@ -182,6 +183,7 @@ class WizardAccountingReports(models.TransientModel):
             if self._check_future_retention_dates(move_date):
                 move.update(
                     {
+                        "move_type": 'RET',
                         "total_purchases_iva": 0,
                         "total_purchases_not_iva": 0,
                         "amount_reduced_aliquot": 0,

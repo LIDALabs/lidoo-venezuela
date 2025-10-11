@@ -70,6 +70,11 @@ class AccountingReportsWizard(models.TransientModel):
 
         return fields_purchase_book_line
 
+    def _determinate_transaction_type(self, move):
+        if move.debit_origin_id:
+            return "02-REG"
+        return super()._determinate_transaction_type(move)
+
     def _determinate_type_for_move(self, move):
         """Corrige número de factura afectada"""
         move_type = move.move_type
@@ -82,4 +87,3 @@ class AccountingReportsWizard(models.TransientModel):
         type_for_move = self._determinate_type(move_type)
 
         return type_for_move
-    
