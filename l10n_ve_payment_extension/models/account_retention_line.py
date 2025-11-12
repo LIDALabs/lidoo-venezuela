@@ -1,6 +1,10 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
 import logging
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
+from .tax_unit import SENIAT_FACTOR_PN
+
 _logger = logging.getLogger(__name__)
 
 
@@ -64,10 +68,10 @@ class AccountRetentionLine(models.Model):
     payment_concept_id = fields.Many2one(
         "payment.concept", "Payment concept", ondelete="cascade", index=True
     )
-    code=fields.Char(
+    code = fields.Char(
         related="payment_concept_id.line_payment_concept_ids.code"
     )
-    code_visible=fields.Boolean(
+    code_visible = fields.Boolean(
         related='company_id.code_visible')
     economic_activity_id = fields.Many2one(
         "economic.activity",
@@ -121,7 +125,7 @@ class AccountRetentionLine(models.Model):
     )
     foreign_invoice_total = fields.Float(string="Foreign total invoiced")
     foreign_iva_amount = fields.Float(string="Foreign IVA")
-    foreign_retention_amount = fields.Float()
+    # foreign_retention_amount = fields.Float()
     foreign_currency_rate = fields.Float(string="Rate")
 
     @api.depends("retention_id.type_retention", "move_id")
@@ -171,6 +175,9 @@ class AccountRetentionLine(models.Model):
             lambda l: l.payment_concept_id
             and (not l.retention_id or l.retention_id.type_retention == "islr")
         )
+
+        tax_unit = self.env['tax.unit'].search_fetch([('status', '=', True)], ['value'])
+
         for record in lines_from_islr_retention:
             # Payment concept of the line
             payment_concept = record.payment_concept_id.line_payment_concept_ids
@@ -183,9 +190,12 @@ class AccountRetentionLine(models.Model):
                     # payment concept and set the related fields.
                     record.invoice_total = record.move_id.tax_totals["amount_total"]
                     record.foreign_invoice_total = record.move_id.tax_totals["foreign_amount_total"]
-                    record.related_pay_from = line.pay_from
+                    # FIXME: El calculo del PAY_FROM depende de la unidad TRIBUTARIA, pero en este caso se introduce manualmente por razones que desconozco. Se debería almacenar el valor de la UT en la retención en lugar de que este enlazada a la tarifa.
+                    # record.related_pay_from = line.pay_from
+                    record.related_pay_from = tax_unit.value * SENIAT_FACTOR_PN
                     record.related_percentage_tax_base = line.percentage_tax_base
                     record.related_percentage_fees = line.tariff_id.percentage
+                    # FIXME: Al cambiar la unidad tributaria, no se cambia de este sustraendo automáticamente
                     record.related_amount_subtract_fees = line.tariff_id.amount_subtract
                     record.foreign_currency_rate = record.move_id.foreign_rate
 
@@ -239,12 +249,18 @@ class AccountRetentionLine(models.Model):
             foreign_rate = record.move_id.foreign_rate
             if not foreign_rate:
                 foreign_rate = 1
+
+            if record.invoice_amount < record.related_pay_from:
+                record.retention_amount = 0
+                record.foreign_retention_amount = 0
+                continue
+
             if not base_currency_is_vef:
-                record.retention_amount = (
+                record.retention_amount = ((
                     record.invoice_amount
                     * (record.related_percentage_tax_base / 100)
                     * (record.related_percentage_fees / 100)
-                ) - record.related_amount_subtract_fees / foreign_rate
+                ) - record.related_amount_subtract_fees) / foreign_rate
             else:
                 record.retention_amount = (
                     record.invoice_amount
@@ -252,11 +268,11 @@ class AccountRetentionLine(models.Model):
                     * (record.related_percentage_fees / 100)
                 ) - record.related_amount_subtract_fees
 
-            record.foreign_retention_amount = abs((
+            record.foreign_retention_amount = ((
                 record.foreign_invoice_amount
                 * (record.related_percentage_tax_base / 100)
                 * (record.related_percentage_fees / 100)
-            ) - record.related_amount_subtract_fees)
+            ) - (record.related_amount_subtract_fees * record.foreign_currency_rate))
 
     @api.onchange("economic_activity_id", "move_id")
     def onchange_economic_activity_id(self):
@@ -371,11 +387,11 @@ class AccountRetentionLine(models.Model):
         for record in self:
             if any(
                 (
-                    record.retention_amount == 0,
-                    record.invoice_total == 0,
-                    record.foreign_retention_amount == 0,
-                    record.invoice_amount == 0,
-                    record.foreign_invoice_amount == 0,
+                    record.retention_amount <= 0,
+                    record.invoice_total <= 0,
+                    # record.foreign_retention_amount <= 0,
+                    record.invoice_amount <= 0,
+                    # record.foreign_invoice_amount <= 0,
                 )
             ):
                 raise ValidationError(_("You can not create a retention with 0 amount."))

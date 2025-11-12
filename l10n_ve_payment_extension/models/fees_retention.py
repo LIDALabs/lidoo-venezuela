@@ -1,5 +1,7 @@
-from odoo import api, models, fields, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+from .tax_unit import SENIAT_FACTOR_PN
 
 
 class FeesRetention(models.Model):
@@ -34,7 +36,7 @@ class FeesRetention(models.Model):
         for record in self:
             if record.apply_subtracting:
                 record.amount_subtract = (
-                    record.tax_unit_ids.value * 83.3334 * record.percentage / 100
+                    record.tax_unit_ids.value * SENIAT_FACTOR_PN * record.percentage / 100
                 )
             else:
                 record.amount_subtract = 0
