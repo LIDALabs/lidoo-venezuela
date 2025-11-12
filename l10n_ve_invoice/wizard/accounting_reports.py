@@ -976,7 +976,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
         # header
         worksheet.merge_range(
             "C1:M1",
-            f"{self.company_id.name} - {self.company_id.vat}",
+            f"{self.company_id.name} - {self.company_id.l10n_ve_vat}",
             workbook.add_format({"bold": True, "center_across": True, "font_size": 18, "locked": True}),
         )
         worksheet.merge_range(
@@ -1049,7 +1049,7 @@ class WizardAccountingReportsBinauralInvoice(models.TransientModel):
         # header
         worksheet.merge_range(
             "C1:M1",
-            f"{self.company_id.name} - {self.company_id.vat}",
+            f"{self.company_id.name} - {self.company_id.l10n_ve_vat}",
             workbook.add_format({"bold": True, "center_across": True, "font_size": 18, "locked": True}),
         )
         worksheet.merge_range(
