@@ -16,8 +16,8 @@
         "stock",
         "lida_NOT_SUPPORTED"
     ],
-    
-    "images": ["static/description/icon.png"],
+
+    "images": ["static/description/l10n_ve.png"],
     "application": False,
     "installable": True,
     "auto_install": False,

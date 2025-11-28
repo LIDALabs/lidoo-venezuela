@@ -15,5 +15,5 @@
     "data": [
         "views/res_config_settings.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
 }

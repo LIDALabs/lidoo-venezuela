@@ -13,6 +13,7 @@
         "sale",
         "l10n_ve_sale",
     ],
+    "images": ["static/description/l10n_ve.png"],
     "data": [
         # 'security/ir.model.access.csv',
         'data/product_pricelist_data.xml',

@@ -10,6 +10,6 @@
     "data": [
         "views/res_partner.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "application": True,
 }

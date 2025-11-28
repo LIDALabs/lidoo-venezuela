@@ -14,7 +14,7 @@
         "views/res_config_settings.xml",
         "views/account_move.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "application": True,
     "assets": {
         "web.assets_backend": ["l10n_ve_tax/static/src/components/**/*"],

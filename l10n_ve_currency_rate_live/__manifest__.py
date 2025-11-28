@@ -7,6 +7,7 @@
     "category": "Technical",
     "version": "17.0.1.1.1",
     "depends": ["l10n_ve_rate", "currency_rate_live"],
+    "images": ["static/description/l10n_ve.png"],
     "data": [
         "views/res_config_settings.xml",
     ],

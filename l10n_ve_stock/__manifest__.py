@@ -20,6 +20,7 @@
         "stock",
         "l10n_ve_base",
     ],
+    "images": ["static/description/l10n_ve.png"],
     "data": [
         "security/ir.model.access.csv",
         "security/security_l10n_ve_stock.xml",

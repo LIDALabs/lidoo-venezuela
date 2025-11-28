@@ -7,6 +7,7 @@
     "category": "Accounting/Accounting",
     "version": "17.0.0.0.2",
     "depends": ["base", "contacts"],
+    "images": ["static/description/l10n_ve.png"],
     "data": [
         "security/ir.model.access.csv",
         "data/res_country_state_data.xml",

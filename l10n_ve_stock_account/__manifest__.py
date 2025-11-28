@@ -15,6 +15,7 @@
         "l10n_ve_sale",
         "web",
     ],
+    "images": ["static/description/l10n_ve.png"],
     "data": [
         "security/res_groups.xml",
         "security/ir.model.access.csv",

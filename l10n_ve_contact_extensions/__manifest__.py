@@ -12,6 +12,6 @@
     "auto_install": True,
     "data": [
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "application": False,
 }

@@ -12,7 +12,7 @@
     "data": [
         "views/res_partner_views.xml"
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "auto_install": True,
     "application": False,
 }

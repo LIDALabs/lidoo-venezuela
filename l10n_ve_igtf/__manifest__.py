@@ -23,7 +23,7 @@
         "wizard/account_payment_register.xml",
         "data/ir_actions_server.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "assets": {
         "web.assets_backend": ["l10n_ve_igtf/static/src/components/**/*"],
     },

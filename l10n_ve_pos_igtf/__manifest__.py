@@ -17,7 +17,7 @@
         "views/pos_payment_views.xml",
         "views/pos_order.xml",
     ],
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/l10n_ve.png"],
     "assets": {
         "point_of_sale._assets_pos": [
             "l10n_ve_pos_igtf/static/src/**/*",
