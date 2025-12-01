@@ -9,10 +9,11 @@
     "author": "binaural-dev",
     "website": "https://binauraldev.com/",
     "category": "Purchase",
-    "depends": ["purchase", "account"],
+    "depends": ["account", "stock", "product", "purchase"],
     'auto_install': True,
     "data": [
         "security/ir.model.access.csv",
+        "views/product_view.xml",
     ],
     "application": True,
     "images": ["static/description/icon.png"],

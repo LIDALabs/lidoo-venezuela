@@ -1,0 +1,6 @@
+[[config]]
+name = "LIDA"
+extends = "base_setup"
+addons_paths = [
+    "D:/Proyectis/odoo/lidoo-venezuela",
+]
