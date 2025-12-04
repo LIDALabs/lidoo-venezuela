@@ -11,8 +11,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_title')]/h1" position="attributes">
-                <attribute name="invisible">move_type not in ('in_invoice', 'in_refund',
-                    'in_receipt') and not posted_before and not is_contingency</attribute>
+                <attribute name="invisible">move_type not in ('in_invoice', 'in_refund', 'in_receipt') and not posted_before and not is_contingency</attribute>
             </xpath>
             <field name="name" position="attributes">
                 <attribute name="readonly">(move_type in ('out_invoice', 'out_refund') or not is_contingency) and state == 'posted'</attribute>
