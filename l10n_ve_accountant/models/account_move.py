@@ -34,25 +34,6 @@ class AccountMove(models.Model):
         default=default_alternate_currency,
     )
 
-    """
-    Añadiendo el Total de todos los items
-    """
-
-    total_custom = fields.Float(
-        string="Total", 
-        compute='_compute_total_custom',
-        store=True,
-        digits='Account'
-    )
-
-
-    @api.depends('invoice_line_ids.price_subtotal')
-    def _compute_total_custom(self):
-        for record in self: 
-            total_acumulado = sum(line.price_subtotal for line in record.invoice_line_ids)
-            record.total_custom = total_acumulado
-        ...
-
     @api.onchange("move_type")
     def _onchange_move_type(self):
         self.invoice_date = False if self.move_type == "entry" else fields.Date.today()
