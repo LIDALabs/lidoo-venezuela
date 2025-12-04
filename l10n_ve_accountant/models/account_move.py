@@ -5,7 +5,7 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import drop_index, float_compare, index_exists
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
@@ -126,7 +126,6 @@ class AccountMove(models.Model):
             move.foreign_credit = sum(move.line_ids.mapped("foreign_credit"))
             move.foreign_balance = move.foreign_debit - move.foreign_credit
 
-
     def _get_journal_income_account(self, journal):
         """
             Retrieve the default income account associated with a given journal.
@@ -142,8 +141,8 @@ class AccountMove(models.Model):
             :return: An `account.account` record representing the journal's income account,
                      or False if none is set.
         """
-        return(
-            getattr(journal, 'revenue_account_id', False) or getattr(journal,'income_account_id', False) or journal.default_account_id
+        return (
+            getattr(journal, 'revenue_account_id', False) or getattr(journal, 'income_account_id', False) or journal.default_account_id
         )
 
     def _update_invoice_lines_with_new_journal(self, old_journal_id, new_journal_id):
@@ -179,17 +178,16 @@ class AccountMove(models.Model):
         lines_to_update = None
         for move in moves:
             lines_to_update = move.line_ids.filtered(
-                lambda l: (l.display_type == 'product' and not l.tax_line_id 
-                    and l.account_id.id == old_income.id )
+                lambda l: (l.display_type == 'product' and not l.tax_line_id
+                           and l.account_id.id == old_income.id)
             )
-        
+
         if lines_to_update:
             for line in lines_to_update:
                 line.write({'account_id': new_income.id})
-        if moves: 
+        if moves:
             container = {'records': moves}
             moves._sync_dynamic_lines(container)
-
 
     @api.depends("invoice_line_ids", "tax_totals")
     def _compute_detailed_amounts(self):
@@ -288,50 +286,50 @@ class AccountMove(models.Model):
             )
         return res
 
-    @api.model
-    def get_view(self, view_id=None, view_type="form", **options):
-        """
-        This method is used to get the view of the account move form and add the foreign currency
-        symbol to the page title.
+    # @api.model
+    # def get_view(self, view_id=None, view_type="form", **options):
+    #     """
+    #     This method is used to get the view of the account move form and add the foreign currency
+    #     symbol to the page title.
 
-        Parameters
-        ----------
-        view_id : int
-            The id of the view
+    #     Parameters
+    #     ----------
+    #     view_id : int
+    #         The id of the view
 
-        view_type : str
-            The type of the view
+    #     view_type : str
+    #         The type of the view
 
-        options : dict
-            The options of the view
+    #     options : dict
+    #         The options of the view
 
-        Returns
-        -------
-        type = dict
-            The view of the account move form with the foreign currency symbol added to the page
-            title.
-        """
-        foreign_currency_id = self.env.company.currency_foreign_id.id
+    #     Returns
+    #     -------
+    #     type = dict
+    #         The view of the account move form with the foreign currency symbol added to the page
+    #         title.
+    #     """
+    #     foreign_currency_id = self.env.company.currency_foreign_id.id
 
-        res = super().get_view(view_id, view_type, **options)
+    #     res = super().get_view(view_id, view_type, **options)
 
-        if foreign_currency_id:
-            foreign_currency_record = self.env["res.currency"].search(
-                [("id", "=", int(foreign_currency_id))]
-            )
-            foreign_currency_symbol = foreign_currency_record.symbol or ""
-            if view_type == "form":
-                view_id = self.env.ref(
-                    "l10n_ve_accountant.view_account_move_form_l10n_ve_accountant"
-                ).id
-                doc = etree.XML(res["arch"])
-                page = doc.xpath("//page[@name='foreign_currency']")
-                if page:
-                    page[0].set(
-                        "string", _("Foreign Currency ") + " " + foreign_currency_symbol
-                    )
-                    res["arch"] = etree.tostring(doc, encoding="unicode")
-        return res
+    #     if foreign_currency_id:
+    #         foreign_currency_record = self.env["res.currency"].search(
+    #             [("id", "=", int(foreign_currency_id))]
+    #         )
+    #         foreign_currency_symbol = foreign_currency_record.symbol or ""
+    #         if view_type == "form":
+    #             view_id = self.env.ref(
+    #                 "l10n_ve_accountant.view_account_move_form_l10n_ve_accountant"
+    #             ).id
+    #             doc = etree.XML(res["arch"])
+    #             page = doc.xpath("//page[@name='foreign_currency']")
+    #             if page:
+    #                 page[0].set(
+    #                     "string", _("Foreign Currency ") + " " + foreign_currency_symbol
+    #                 )
+    #                 res["arch"] = etree.tostring(doc, encoding="unicode")
+    #     return res
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -342,13 +340,13 @@ class AccountMove(models.Model):
         for vals in vals_list:
 
             if 'name' in vals and vals['name'] != "/":
-                
+
                 domain = [
                     ('name', '=', vals['name']),
                     ('partner_id', '=', vals.get('partner_id'))
                 ]
                 existing_record = self.search(domain, limit=1)
-                
+
                 if existing_record:
                     raise ValidationError(_("The operation cannot be completed: Another entry with the same name already exists."))
 
@@ -384,29 +382,28 @@ class AccountMove(models.Model):
         if 'name' in vals and vals['name'] != "/":
             for move in self:
                 partner_id = vals.get('partner_id', move.partner_id.id)
-                
+
                 domain = [
                     ('name', '=', vals['name']),
                     ('partner_id', '=', partner_id),
-                    ('id', '!=', move.id) 
+                    ('id', '!=', move.id)
                 ]
-                
+
                 existing_record = self.search(domain, limit=1)
-                
+
                 if existing_record:
                     raise ValidationError(_("The operation cannot be completed: Another entry with the same name already exists."))
-                
+
         if vals.get("foreign_rate", False):
             for move in self:
                 vals.update({"last_foreign_rate": move.foreign_rate})
-                
-        if 'journal_id' in vals:    
+
+        if 'journal_id' in vals:
             for move in self:
                 old_journal_id = move.journal_id.id
         else:
             old_journal_id = None
 
-            
         res = super().write(vals)
         for move in self:
             if (
@@ -423,7 +420,7 @@ class AccountMove(models.Model):
             new_journal_id = move.journal_id.id
             if old_journal_id and new_journal_id and old_journal_id != new_journal_id:
                 if move.is_invoice(include_receipts=True) and move.move_type in ('out_invoice', 'out_refund', 'out_receipt'):
-                        move._update_invoice_lines_with_new_journal(old_journal_id, new_journal_id)
+                    move._update_invoice_lines_with_new_journal(old_journal_id, new_journal_id)
         return res
 
     @api.constrains("invoice_line_ids")
@@ -770,7 +767,7 @@ class AccountMove(models.Model):
         "foreign_rate",
     )
     def _compute_tax_totals(self):
-        return super()._compute_tax_totals()
+        return super(AccountMove, self.with_context(foreign_currency_id=self.foreign_currency_id))._compute_tax_totals()
 
     @api.onchange("foreign_rate")
     def _onchange_foreign_rate(self):
