@@ -1,7 +1,7 @@
 
 <odoo>
 
-    <data>
+    <data noupdate="1">
         <record id="action_invoice_free_form_l10n_ve_invoice" model="ir.actions.report">
             <field name="name">Free Form</field>
             <field name="model">account.move</field>
