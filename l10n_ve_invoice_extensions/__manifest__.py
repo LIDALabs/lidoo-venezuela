@@ -20,6 +20,7 @@
         "report/invoice_payments_report.xml",
         "wizard/invoice_payments_reports_wizard.xml",
         "views/menu.xml",
+        "views/res_config_settings.xml",
     ],
     "demo": [
     ],

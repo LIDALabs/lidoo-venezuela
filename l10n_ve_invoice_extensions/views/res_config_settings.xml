@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit_l10n_ve_invoice_extensions" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n.ve.invoice.extensions</field>
+            <field name="model">res.config.settings</field>
+
+            <!-- IMPORTANTE: Aquí debes poner el ID externo del módulo que me mostraste en el ejemplo.
+                 Asumo que ese módulo se llama 'l10n_ve_invoice'. Si tiene otro nombre, ajusta la parte antes del punto. -->
+            <field name="inherit_id" ref="l10n_ve_invoice.view_res_config_settings_l10n_ve_invoice"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='l10n_ve_invoice_block']" position="inside">
+
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_ve_invoice_div_report_show_invoice_details">
+                        <div class="o_setting_left_pane">
+                            <field name="report_show_invoice_details"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="report_show_invoice_details"/>
+                            <div class="text-muted">
+                                Incluir tabla con lista de productos en el reporte de Cierre Diario de Pagos.
+                            </div>
+                        </div>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

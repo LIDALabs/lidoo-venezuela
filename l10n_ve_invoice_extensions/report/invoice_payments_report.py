@@ -11,6 +11,7 @@ class InvoicePaymentsReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         # get the report action back as we will need its data
         report = self.env['ir.actions.report']._get_report_from_name('module.report_name')
+        show_details = self.env.company.report_show_invoice_details
 
         report_date = False
         wizard_instance = self.env['invoice.payments.report.wizard'].browse(docids)
@@ -32,7 +33,23 @@ class InvoicePaymentsReport(models.AbstractModel):
             invoice_payments_data[invoice.id] = {
                 'payments': [],
                 'total_payments': 0.0,
+                'items': [],
+                'show_details': show_details,
             }
+
+            if show_details:
+                for line in invoice.invoice_line_ids:
+                    # Omitimos secciones y notas, solo queremos productos/servicios
+                    if line.display_type in ('line_section', 'line_note'):
+                        continue
+
+                    invoice_payments_data[invoice.id]['items'].append({
+                        'product': line.product_id.display_name or line.name,
+                        'description': line.name,
+                        'quantity': line.quantity,
+                        'price_unit': formatLang(self.env, line.price_unit, currency_obj=invoice.currency_id),
+                        'subtotal': formatLang(self.env, line.price_subtotal, currency_obj=invoice.currency_id),
+                    })
 
             if not invoice.invoice_payments_widget:
                 continue
