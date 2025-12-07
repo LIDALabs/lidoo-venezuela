@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from odoo import api, fields, models
-from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError
+from odoo.tools.misc import formatLang
 
 
 class InvoicePaymentsReport(models.AbstractModel):
@@ -49,6 +49,7 @@ class InvoicePaymentsReport(models.AbstractModel):
                         'quantity': line.quantity,
                         'price_unit': formatLang(self.env, line.price_unit, currency_obj=invoice.currency_id),
                         'subtotal': formatLang(self.env, line.price_subtotal, currency_obj=invoice.currency_id),
+                        'iva_amount': formatLang(self.env, line.price_total-line.price_subtotal, currency_obj=invoice.currency_id),
                     })
 
             if not invoice.invoice_payments_widget:

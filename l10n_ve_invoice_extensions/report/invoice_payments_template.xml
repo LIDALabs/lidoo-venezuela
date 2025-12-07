@@ -15,6 +15,7 @@
                             <div class="row mb-1" style="margin-top:20px !important;">
                                 <div class="col-auto">
                                     <h4 t-out="invoice.name"></h4>
+                                    <p t-out="invoice.correlative"></p>
                                 </div>
                                 <div class="col-auto">
                                     <strong>Total: </strong>
@@ -36,10 +37,11 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th style="width: 40%">Producto</th>
+                                                <th style="width: 35%">Producto</th>
                                                 <th class="text-end">Cant.</th>
                                                 <th class="text-end">Precio Unitario</th>
-                                                <th class="text-end">Precio Total</th>
+                                                <th class="text-end">Subtotal</th>
+                                                <th class="text-end">IVA</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -56,14 +58,24 @@
                                                 <td class="text-end">
                                                     <span t-out="item['subtotal']"/>
                                                 </td>
+                                                <td class="text-end">
+                                                    <span t-out="item['iva_amount']"/>
+                                                </td>
                                             </tr>
                                         </tbody>
                                         <tfoot class="mb-0">
                                             <tr>
-                                                <td colspan="3"></td>
+                                                <td colspan="4"></td>
                                                 <td class="text-end">
-                                                    <span>Monto Total</span><br></br>
-                                                    <span t-field="invoice.total_custom"/>
+                                                    <span>Subtotal</span><br></br>
+                                                    <span t-field="invoice.amount_subtotal"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-end">
+                                                    <span>IVA</span><br></br>
+                                                    <span t-field="invoice.amount_tax"/>
                                                 </td>
                                             </tr>
                                         </tfoot>
@@ -99,6 +111,11 @@
                                                         t-out="payment['exchange_rate']"></span>)</div>
                                             </div>
                                             <span t-else="" t-out="payment['amount']" />
+                                        </td>
+                                    </tr>
+                                    <tr t-if="len(payment_data['payments']) &lt; 1">
+                                        <td colspan="4">
+                                            No hay pagos registrados para esta factura
                                         </td>
                                     </tr>
                                 </tbody>

@@ -17,6 +17,30 @@ class AccountMove(models.Model):
 
     is_debit = fields.Boolean(compute='_computed_is_debit')
 
+    amount_subtotal = fields.Float(
+        string="Subtotal",
+        compute='_compute_total_custom',
+        # store=True,
+        digits='Account'
+    )
+
+    @api.depends('invoice_line_ids.price_subtotal')
+    def _compute_total_custom(self):
+        raw_data = self.env['account.move.line']._read_group(
+            [('move_id', 'in', self.ids)],
+            ['move_id'],
+            ['price_subtotal:sum']
+        )
+
+        subtotal_data = {
+            move.id: price_subtotal_sum
+            for move, price_subtotal_sum in raw_data
+        }
+
+        for record in self:
+            # total_acumulado = sum(line.price_subtotal for line in record.invoice_line_ids)
+            record.amount_subtotal = subtotal_data.get(record.id, 0)
+
     def _is_manual_document_number(self):
         return self.journal_id.type == 'purchase' or self.is_contingency
 
