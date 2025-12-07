@@ -23,16 +23,25 @@ class ProductProduct(models.Model):
 
     @api.depends('purchased_product_qty')  # Dependemos del campo original de Odoo
     def _compute_purchased_net_qty(self):
-        for product in self:
-            domain = [
-                ('product_id', '=', product.id),
+        raw_data = self.env['stock.move']._read_group(
+            [
+                ('product_id', 'in', self.ids),
                 ('state', '=', 'done'),
                 ('location_dest_id.usage', '=', 'supplier'),
                 ('location_id.usage', '=', 'internal'),
                 ('purchase_line_id', '!=', False)
-            ]
-            moves = self.env['stock.move'].search(domain)
-            returned_qty = sum(move.product_uom_qty for move in moves)
+            ],
+            ['product_id'],
+            ['product_uom_qty:sum']
+        )
+
+        product_returned_qty_data = {
+            product.id: qty_sum
+            for product, qty_sum in raw_data
+        }
+
+        for product in self:
+            returned_qty = product_returned_qty_data.get(product.id, 0)
 
             # Guardamos la devolución
             product.purchased_returned_qty = float_round(
