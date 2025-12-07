@@ -37,7 +37,7 @@
                     <field name="date" string="Fecha"/>
                     <field name="picking_id" string="Referencia"/>
                     <field name="qty_net_signed" string="Cantidad (+/-)" sum="Total Neto"/>
-                    <field name="compute_price_unit" string="Precio Unitario" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="product_price_unit" string="Precio Unitario" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </tree>
             </field>
         </record>
