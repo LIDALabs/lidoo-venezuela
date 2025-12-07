@@ -1,6 +1,6 @@
 {
     "name": "Venezuela - Compras",
-    "version": "17.0.0.0.0",
+    "version": "17.0.0.0.1",
     "license": "LGPL-3",
     "summary": "Módulo para gestionar compras en Venezuela",
     "description": """
@@ -9,10 +9,11 @@
     "author": "binaural-dev",
     "website": "https://binauraldev.com/",
     "category": "Purchase",
-    "depends": ["purchase", "account"],
+    "depends": ["account", "stock", "product", "purchase"],
     'auto_install': True,
     "data": [
         "security/ir.model.access.csv",
+        "views/product_view.xml",
     ],
     "application": True,
     "images": ["static/description/l10n_ve.png"],
