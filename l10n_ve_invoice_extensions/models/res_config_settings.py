@@ -13,3 +13,9 @@ class ResConfigSettings(models.TransientModel):
         readonly=True,
         implied_group="l10n_ve_invoice.group_sales_invoicing_series",
     )
+
+    report_show_invoice_details = fields.Boolean(
+        related="company_id.report_show_invoice_details",
+        readonly=False,
+        string="Mostrar detalles (ítems) en reporte de Cierre Diario",
+    )

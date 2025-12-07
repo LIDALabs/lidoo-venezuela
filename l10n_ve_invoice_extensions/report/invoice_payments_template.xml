@@ -11,10 +11,11 @@
                     </div>
 
                     <t t-foreach="invoices" t-as="invoice">
-                        <div class="mb-2" style="page-break-inside: avoid;">
-                            <div class="row mb-1">
+                        <div class="mb-4" style="page-break-inside: avoid; margin-top:20px !important;">
+                            <div class="row mb-1" style="margin-top:20px !important;">
                                 <div class="col-auto">
                                     <h4 t-out="invoice.name"></h4>
+                                    <p t-out="invoice.correlative"></p>
                                 </div>
                                 <div class="col-auto">
                                     <strong>Total: </strong>
@@ -30,7 +31,58 @@
                                 </div>
 
                             </div>
-                            <table class="table">
+                            <t t-if="invoice_payments_data[invoice.id]['show_details']">
+                                <div>
+                                    <strong>Detalles de Factura:</strong>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 35%">Producto</th>
+                                                <th class="text-end">Cant.</th>
+                                                <th class="text-end">Precio Unitario</th>
+                                                <th class="text-end">Subtotal</th>
+                                                <th class="text-end">IVA</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="invoice_payments_data[invoice.id]['items']" t-as="item">
+                                                <td>
+                                                    <span t-out="item['product']"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-out="item['quantity']"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-out="item['price_unit']"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-out="item['subtotal']"/>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-out="item['iva_amount']"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot class="mb-0">
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-end">
+                                                    <span>Subtotal</span><br></br>
+                                                    <span t-field="invoice.amount_subtotal"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-end">
+                                                    <span>IVA</span><br></br>
+                                                    <span t-field="invoice.amount_tax"/>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </t>
+                            <table class="table" style="margin-bottom: 20px !important; ">
                                 <thead>
                                     <tr>
                                         <th style="width: 15%">Fecha</th>
@@ -43,22 +95,27 @@
                                     <t t-set="payment_data" t-value="invoice_payments_data[invoice.id]" />
                                     <t t-set="payments" t-value="payment_data['payments']" />
                                     <tr t-foreach="payments" t-as="payment">
-                                        <td>
+                                        <td class="text-center">
                                             <span t-out="payment['date']" />
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span t-out="payment['payment_method']" />
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span t-out="payment['reference']" />
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div t-if="payment['is_igtf']">
                                                 <div t-out="payment['amount']"></div>
                                                 <div>(<span t-out="payment['amount_original']"></span> x <span
                                                         t-out="payment['exchange_rate']"></span>)</div>
                                             </div>
                                             <span t-else="" t-out="payment['amount']" />
+                                        </td>
+                                    </tr>
+                                    <tr t-if="len(payment_data['payments']) &lt; 1">
+                                        <td colspan="4">
+                                            No hay pagos registrados para esta factura
                                         </td>
                                     </tr>
                                 </tbody>
