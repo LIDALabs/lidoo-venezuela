@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools import float_round, float_is_zero
+from odoo.tools import float_is_zero, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -30,39 +31,20 @@ class ProductProduct(models.Model):
 
     @api.onchange('lst_price')
     def _onchange_lst_price(self):
-        prices = self._convert_using_reference_currency(self.lst_price, inverse=True)
+        prices = self.product_tmpl_id._convert_using_reference_currency(self.lst_price, inverse=True)
         self.ref_price = prices['reference_price']
 
-        return
+        return False
 
-    @api.onchange('ref_price')
-    def _onchange_ref_price(self):
-        prices = self.product_tmpl_id._convert_using_reference_currency(self.ref_price)
-        self.lst_price = prices['list_price']
+    # ocasiona doble edición
+    # @api.onchange('ref_price')
+    # def _onchange_ref_price(self):
+    #     if self.env.context.get('update_ref_price', False):
+    #         return False
+    #     prices = self.product_tmpl_id._convert_using_reference_currency(self.ref_price)
+    #     self.lst_price = prices['list_price']
 
-        return
-    
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        Override create method to ensure that the reference pricelist item is created
-        when a product is created.
-        """
-        records = super().create(vals_list)
-        records._inverse_ref_price()
-
-        return records
-    
-    # @api.model_create_multi
-    # def write(self, vals_list):
-    #     """
-    #     Override write method to ensure that the reference pricelist item is created
-    #     when a product template is created.
-    #     """
-    #     records = super().write(vals_list)
-    #     records._inverse_ref_price()
-
-    #     return records
+    #     return False
 
     def _get_product_attr_for_reference_price_list(self):
         """ Returns the product attributes to be used in the reference price list. """
@@ -148,3 +130,25 @@ class ProductProduct(models.Model):
             else:
                 p.ref_pricelist_item_id.fixed_price = prices['reference_price']
             p.lst_price = prices['list_price']
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override create method to ensure that the reference pricelist item is created
+        when a product is created.
+        """
+        records = super().create(vals_list)
+        records._inverse_ref_price()
+
+        return records
+
+    # @api.model_create_multi
+    # def write(self, vals_list):
+    #     """
+    #     Override write method to ensure that the reference pricelist item is created
+    #     when a product template is created.
+    #     """
+    #     records = super().write(vals_list)
+    #     records._inverse_ref_price()
+
+    #     return records

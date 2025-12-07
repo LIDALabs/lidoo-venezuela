@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools import float_round, float_is_zero
+from odoo.tools import float_is_zero, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,6 @@ class ProductTemplate(models.Model):
         help="This is the reference price of the product in the reference pricelist. "
     )
 
-
     @api.onchange('list_price')
     def _onchange_list_price(self):
         prices = self._convert_using_reference_currency(self.list_price, inverse=True)
@@ -48,41 +48,13 @@ class ProductTemplate(models.Model):
 
         return
 
-    @api.onchange('reference_price')
-    def _onchange_reference_price(self):
-        prices = self._convert_using_reference_currency(self.reference_price)
-        self.list_price = prices['list_price']
+    # ocasiona doble edición
+    # @api.onchange('reference_price')
+    # def _onchange_reference_price(self):
+    #     prices = self._convert_using_reference_currency(self.reference_price)
+    #     self.list_price = prices['list_price']
 
-        return
-    
-    @api.model_create_multi
-    def create(self, vals_list):
-        """
-        Override create method to ensure that the reference pricelist item is created
-        when a product template is created.
-        """
-        reference_pricelist = self.env.company.reference_pricelist_id
-
-        if reference_pricelist:
-            for vals in vals_list:
-                vals['reference_pricelist_id'] = reference_pricelist.id
-                vals['reference_currency_id'] = reference_pricelist.currency_id.id
-
-        records = super().create(vals_list)
-        records._inverse_reference_price()
-
-        return records
-    
-    # @api.model_create_multi
-    # def write(self, vals_list):
-    #     """
-    #     Override write method to ensure that the reference pricelist item is created
-    #     when a product template is created.
-    #     """
-    #     records = super().write(vals_list)
-    #     records._inverse_reference_price()
-
-    #     return records
+    #     return
 
     def _get_product_attr_for_reference_price_list(self):
         """ Returns the product attributes to be used in the reference price list. """
@@ -145,7 +117,7 @@ class ProductTemplate(models.Model):
                 'reference_price': reference,
                 'list_price': self.list_price,
             }
-        
+
         Rate = self.env['res.currency.rate']
         today = fields.Date.today()
         rates = Rate.compute_rate(reference_pricelist_id.currency_id.id, today)
@@ -156,8 +128,8 @@ class ProductTemplate(models.Model):
             return {
                 'reference_price': reference,
                 'list_price': price,
-            }    
-        
+            }
+
         rate = rates['foreign_rate']
         reference = float_round(reference, precision_rounding=reference_pricelist_id.currency_id.rounding)
         price = float_round(reference * rate, precision_rounding=self.currency_id.rounding)
@@ -191,3 +163,32 @@ class ProductTemplate(models.Model):
             else:
                 tmpl.reference_pricelist_item_id.fixed_price = prices['reference_price']
             tmpl.list_price = prices['list_price']
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override create method to ensure that the reference pricelist item is created
+        when a product template is created.
+        """
+        reference_pricelist = self.env.company.reference_pricelist_id
+
+        if reference_pricelist:
+            for vals in vals_list:
+                vals['reference_pricelist_id'] = reference_pricelist.id
+                vals['reference_currency_id'] = reference_pricelist.currency_id.id
+
+        records = super().create(vals_list)
+        records._inverse_reference_price()
+
+        return records
+
+    # @api.model_create_multi
+    # def write(self, vals_list):
+    #     """
+    #     Override write method to ensure that the reference pricelist item is created
+    #     when a product template is created.
+    #     """
+    #     records = super().write(vals_list)
+    #     records._inverse_reference_price()
+
+    #     return records
