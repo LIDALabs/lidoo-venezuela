@@ -10,4 +10,5 @@ class AccountJournal(models.Model):
     @api.depends('currency_id', 'type')
     def _compute_is_igtf(self):
         for rec in self:
-            rec.is_igtf = rec.type in ['cash', 'bank'] and not rec.currency_id.name.startswith("VE")
+            rec.is_igtf = rec.type and rec.currency_id and \
+                rec.type in ['cash', 'bank'] and not rec.currency_id.name.startswith("VE")
