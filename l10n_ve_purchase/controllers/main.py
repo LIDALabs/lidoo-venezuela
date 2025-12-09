@@ -7,6 +7,7 @@ from odoo.fields import Command
 
 _logger = logging.getLogger(__name__)
 
+
 class RegisterInvoiceController(http.Controller):
     """
     Estructura del JSON
@@ -22,26 +23,24 @@ class RegisterInvoiceController(http.Controller):
     @route('/api/invoice', type='http', auth='public', methods=['POST'], csrf=False)
     def register_invoice(self, **kw):
 
-        data = { }
-        try: 
+        data = {}
+        try:
             raw_data = request.httprequest.data
-            if not raw_data: 
+            if not raw_data:
                 return self._response({'satus': 'error', 'message': 'empty body'}, 400)
             try:
                 data = json.loads(raw_data)
             except ValueError:
                 return self._response({'satus': 'error', 'message': 'JSON invalid'}, 400)
-                ...
             # var catch
             vat = data.get('rif')
             lines = data.get('lines')
             payment_reference = data.get('payment_reference')
-            company_id  = request.env.company.id
+            company_id = request.env.company.id
 
             # validation for vat
             if not vat:
                 return self._response({'status': 'error', 'message': 'Falta el RIF'}, 400)
-                ...
             Contact = request.env['res.partner']
             clean_vat = str(vat).strip().upper().replace(' ', '')
             possible_vats = [clean_vat]
@@ -57,7 +56,6 @@ class RegisterInvoiceController(http.Controller):
                 ])
             contact = Contact.sudo().search([('vat', 'in', possible_vats)], limit=1, offset=0)
 
-
             Product = request.env['product.product']
             invoice_lines = []
 
@@ -68,14 +66,13 @@ class RegisterInvoiceController(http.Controller):
                     return self._response({'status': 'error', 'message': 'Falta SKU en una línea'}, 400)
 
                 product = Product.sudo().search([('default_code', '=', sku)], limit=1)
-                
-                if not product:
-                     return self._response({'status': 'error', 'message': f'Producto no encontrado: {sku}'}, 400)
 
-                
+                if not product:
+                    return self._response({'status': 'error', 'message': f'Producto no encontrado: {sku}'}, 400)
+
                 if 'price_unit' in line and 'price_total' in line:
                     return self._response({
-                        'status': 'error', 
+                        'status': 'error',
                         'message': f'Ambigüedad en producto {sku}: No puedes enviar "price_unit" y "price_total" al mismo tiempo.'
                     }, 400)
                 # ----------------------------------
@@ -86,24 +83,22 @@ class RegisterInvoiceController(http.Controller):
                 # Lógica de cálculo de precio
                 if 'price_unit' in line:
                     price_unit = float(line.get('price_unit'))
-                
+
                 elif 'price_total' in line:
                     if qty == 0:
                         return self._response({'status': 'error', 'message': 'Cantidad no puede ser 0 si usas precio total'}, 400)
                     price_total = float(line.get('price_total'))
                     price_unit = price_total / qty
-                
+
                 else:
                     price_unit = product.lst_price
 
-                
                 invoice_lines.append(Command.create({
                     'product_id': product.id,
                     'quantity': qty,
                     'price_unit': price_unit
                 }))
 
-            
             AccountMove = request.env['account.move']
 
             invoice = AccountMove.sudo().create({
@@ -123,16 +118,14 @@ class RegisterInvoiceController(http.Controller):
                 return self._response({'status': 'error', 'message': 'El cliente no tiene cuenta contable configurada'}, 400)
 
             return self._response({
-                    'status': 'success',
-                    'invoice': invoice.id,
-                    'message': 'factura creada'
-                })
+                'status': 'success',
+                'invoice': invoice.id,
+                'message': 'factura creada'
+            })
 
-        except Exception as e: 
+        except Exception as e:
             _logger.exception('Error en API HTTP')
             return self._response({'status': 'error', 'message': str(e)}, 500)
-            ...
-        ...
 
     @route('/api/payment', type='http', auth='public', methods=['POST'], csrf=False)
     def register_payment(self, **kw):
@@ -152,7 +145,7 @@ class RegisterInvoiceController(http.Controller):
             raw_data = request.httprequest.data
             if not raw_data:
                 return self._response({'status': 'error', 'message': 'Empty body'}, 400)
-            
+
             try:
                 data = json.loads(raw_data)
             except ValueError:
@@ -164,7 +157,7 @@ class RegisterInvoiceController(http.Controller):
             payment_date = data.get('date', fields.Date.today())
             reference = data.get('payment_reference')
             journal_code = data.get('journal_code')
-            
+
             # --- Validaciones Básicas ---
             if not vat:
                 return self._response({'status': 'error', 'message': 'Falta el RIF'}, 400)
@@ -176,10 +169,9 @@ class RegisterInvoiceController(http.Controller):
             # --- Buscar Cliente ---
             Contact = request.env['res.partner']
             clean_vat = str(vat).strip().upper().replace(' ', '')
-            
-            possible_vats = [clean_vat] 
 
-           
+            possible_vats = [clean_vat]
+
             if '-' in clean_vat:
                 possible_vats.append(clean_vat.replace('-', ''))
 
@@ -193,13 +185,11 @@ class RegisterInvoiceController(http.Controller):
                     f'J-{clean_vat}', f'J{clean_vat}',
                     f'E-{clean_vat}', f'G-{clean_vat}'
                 ])
-            
-            
 
             contact = Contact.sudo().search([('vat', 'in', possible_vats)], limit=1)
 
             if not contact:
-                 return self._response({'status': 'error', 'message': f'Cliente con RIF {vat} no encontrado'}, 404)
+                return self._response({'status': 'error', 'message': f'Cliente con RIF {vat} no encontrado'}, 404)
 
             # --- Buscar Diario (Banco/Caja) ---
             Journal = request.env['account.journal']
@@ -214,9 +204,9 @@ class RegisterInvoiceController(http.Controller):
 
             # --- Buscar Método de Pago (Payment Method Line) ---
             payment_method_line = journal.inbound_payment_method_line_ids.filtered(
-                lambda x: x.code == 'manual' # Por defecto usamos 'manual'
+                lambda x: x.code == 'manual'  # Por defecto usamos 'manual'
             )
-            
+
             # Si se envió un método específico en el JSON, intentamos buscarlo
             req_method_code = data.get('payment_method_code')
             if req_method_code:
@@ -227,11 +217,11 @@ class RegisterInvoiceController(http.Controller):
                     payment_method_line = custom_method
 
             if not payment_method_line:
-                 payment_method_line = journal.inbound_payment_method_line_ids[:1]
+                payment_method_line = journal.inbound_payment_method_line_ids[:1]
 
             # --- Crear el Pago ---
             AccountPayment = request.env['account.payment']
-            
+
             payment_vals = {
                 'partner_id': contact.id,
                 'amount': amount,
@@ -260,11 +250,10 @@ class RegisterInvoiceController(http.Controller):
             _logger.exception('Error registrando pago via API')
             return self._response({'status': 'error', 'message': str(e)}, 500)
 
-
     def _response(self, data, status=200):
         # * Helper para dar una respuesta JSON para el type='http'
         return request.make_response(
             json.dumps(data),
-            headers = [('Content-Type', 'application/json')],
+            headers=[('Content-Type', 'application/json')],
             status=status
         )
