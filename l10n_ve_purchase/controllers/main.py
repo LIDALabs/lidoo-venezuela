@@ -136,6 +136,7 @@ class RegisterInvoiceController(http.Controller):
             "amount": 150.00,
             "date": "2023-12-01",
             "payment_reference": "REF12345",
+            "bank_reference": "0102030405",
             "journal_code": "BNK1",       <-- Código corto del diario en Odoo
             "payment_method_code": "manual" <-- Opcional (manual, inbound_credit_card, etc)
         }
@@ -157,8 +158,12 @@ class RegisterInvoiceController(http.Controller):
             payment_date = data.get('date', fields.Date.today())
             reference = data.get('payment_reference')
             journal_code = data.get('journal_code')
+            bank_reference = data.get('bank_reference')
 
             # --- Validaciones Básicas ---
+
+            if not bank_reference:
+                return self._response({'status': 'error','message': 'Falta la referencia bancaria o pago móvil'}, 400)
             if not vat:
                 return self._response({'status': 'error', 'message': 'Falta el RIF'}, 400)
             if amount <= 0:
@@ -232,6 +237,7 @@ class RegisterInvoiceController(http.Controller):
                 'partner_type': 'customer',
                 'payment_method_line_id': payment_method_line.id,
                 'company_id': request.env.company.id,
+                'concept': bank_reference,
             }
 
             payment = AccountPayment.sudo().create(payment_vals)
