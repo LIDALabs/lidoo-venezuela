@@ -1,0 +1,44 @@
+<odoo>
+
+    <data>
+        <record id="view_net_amount_wizard_result_form" model="ir.ui.view">
+            <field name="name">net.amount.wizard.result.form</field>
+            <field name="model">net.amount.wizard.result</field>
+            <field name="arch" type="xml">
+                <form string="Resultados del Análisis">
+                    <div class="alert alert-info" role="alert" style="margin-bottom:10px;">
+                        Mostrando datos para <strong><field name="product_id" readonly="1" options="{'no_open': True}"/></strong> 
+                        en el periodo que va del <field name="date_from"/> al <field name="date_to"/>
+                    </div>
+                    <group>
+                        <group string="Flujo de Compras">
+                            <field name="qty_purchased" widget="statinfo" string=" Compras Realizadas"/>
+                            <field name="qty_purchased_return" widget="statinfo" string=" Compras Devueltas"/>
+                        </group>
+                        <group string="Flujo de Ventas">
+                            <field name="qty_sold" widget="statinfo" string=" Ventas Realizadas"/>
+                            <field name="qty_sold_return" widget="statinfo" string=" Ventas Devueltas"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Imprimir PDF" class="btn-primary" type="object" name="action_print_pdf"/>
+                        <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_net_amount_wizard_result_graph" model="ir.ui.view">
+            <field name="name">net.amount.wizard.result.graph.view</field>
+            <field name="model">net.amount.wizard.result</field>
+            <field name="arch" type="xml">
+                <graph string="Resultados del Análisis">
+                    <field name="qty_purchased" />
+                    <field name="qty_purchased_return" />
+                </graph>
+            </field>
+        </record>
+    </data>
+
+</odoo>
