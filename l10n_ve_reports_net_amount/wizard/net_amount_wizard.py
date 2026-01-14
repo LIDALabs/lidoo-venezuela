@@ -22,8 +22,8 @@ class NetAmountWizard(models.TransientModel):
         return {
             'name': 'Reporte de Movimiento',
             'type': 'ir.actions.act_window',
-            'res_model': 'net.amount.wizard.result',
-            'view_mode': 'form,graph',
+            'res_model': 'net.amount.result',
+            'view_mode': 'form',
             'target': 'new',
             'context': {
                 'default_product_id': self.product_id.id,

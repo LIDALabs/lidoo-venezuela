@@ -21,11 +21,10 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/net_amount_wizard.xml',
-        'wizard/net_amount_wizard_result.xml',
         'report/report_net_amount_templates.xml',
         'report/report_net_amount.xml',
+        'views/net_amount_result.xml',
     ],
     "application": True,
-    "pre_init_hook": "pre_init_hook",
 }
 

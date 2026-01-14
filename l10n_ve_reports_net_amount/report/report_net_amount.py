@@ -7,10 +7,10 @@ class NetAmountReport(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs= self.env['net.amount.wizard.result'].browse(docids).sudo()
+        docs= self.env['net.amount.result'].browse(docids).sudo()
 
         return {
             'doc_ids': docids,
-            'doc_model': 'net.amount.wizard.result',
+            'doc_model': 'net.amount.result',
             'docs': docs,
         }

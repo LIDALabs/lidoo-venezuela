@@ -1,9 +1,9 @@
 <odoo>
 
     <data>
-        <record id="view_net_amount_wizard_result_form" model="ir.ui.view">
-            <field name="name">net.amount.wizard.result.form</field>
-            <field name="model">net.amount.wizard.result</field>
+        <record id="view_net_amount_result_form" model="ir.ui.view">
+            <field name="name">net.amount.result.form</field>
+            <field name="model">net.amount.result</field>
             <field name="arch" type="xml">
                 <form string="Resultados del Análisis">
                     <div class="alert alert-info" role="alert" style="margin-bottom:10px;">
@@ -30,8 +30,8 @@
 
 
         <record id="view_net_amount_wizard_result_graph" model="ir.ui.view">
-            <field name="name">net.amount.wizard.result.graph.view</field>
-            <field name="model">net.amount.wizard.result</field>
+            <field name="name">net.amount.result.graph.view</field>
+            <field name="model">net.amount.result</field>
             <field name="arch" type="xml">
                 <graph string="Resultados del Análisis">
                     <field name="qty_purchased" />

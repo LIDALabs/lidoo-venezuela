@@ -2,8 +2,8 @@ from odoo import fields, api, models, _
 from odoo.tools.float_utils import float_round
 
 
-class NetAmountWizardResult(models.TransientModel):
-    _name = "net.amount.wizard.result"
+class NetAmountResult(models.Model):
+    _name = "net.amount.result"
 
     product_id = fields.Many2one('product.product', 'Producto', readonly=True)
 

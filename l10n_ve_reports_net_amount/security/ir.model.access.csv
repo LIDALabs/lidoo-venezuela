@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_net_amount_wizard,net.amount.wizard,model_net_amount_wizard,base.group_user,1,1,1,1
-access_net_amount_wizard_result,net.amount.wizard.result,model_net_amount_wizard_result,base.group_user,1,1,1,1
+access_net_amount_result,net.amount.result,model_net_amount_result,base.group_user,1,1,1,1
