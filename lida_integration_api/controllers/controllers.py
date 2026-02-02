@@ -45,17 +45,18 @@ class RegisterInvoiceController(http.Controller):
             clean_vat = str(vat).strip().upper().replace(' ', '')
             possible_vats = [clean_vat]
             if '-' in clean_vat:
-                possible_vats.append(clean_vat.replace('-', ''))
+                possible_vats.extend([clean_vat.replace('-', ''), clean_vat.replace('-', '')[1:]])
             elif clean_vat[0] in ['V', 'J', 'E', 'G', 'P'] and clean_vat[1:].isdigit():
-                possible_vats.append(f"{clean_vat[0]}-{clean_vat[1:]}")
+                possible_vats.extend([f"{clean_vat[0]}-{clean_vat[1:]}", f"{clean_vat[1:]}"])
             elif clean_vat.isdigit():
                 possible_vats.extend([
                     f'V-{clean_vat}', f'V{clean_vat}',
                     f'J-{clean_vat}', f'J{clean_vat}',
-                    f'E-{clean_vat}', f'G-{clean_vat}'
+                    f'E-{clean_vat}', f'E{clean_vat}', 
+                    f'G-{clean_vat}', f'G{clean_vat}',
+                    f'P-{clean_vat}', f'P{clean_vat}',
                 ])
             contact = Contact.sudo().search([('vat', 'in', possible_vats)], limit=1, offset=0)
-
             Product = request.env['product.product']
             invoice_lines = []
 
