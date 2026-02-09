@@ -2,8 +2,9 @@ from odoo import fields, api, models, _
 from odoo.tools.float_utils import float_round
 
 
-class NetAmountResult(models.Model):
-    _name = "net.amount.result"
+class FlowMetrics(models.Model):
+    _name = "flow.metrics"
+    _description = "Flow Metrics"
 
     product_id = fields.Many2one('product.product', 'Producto', readonly=True)
 
@@ -13,7 +14,7 @@ class NetAmountResult(models.Model):
     date_to = fields.Date('Hasta', readonly=True)
 
     qty_sold = fields.Float('Vendido', compute='_compute_sold')
-    qty_sold_return = fields.Float('Vendidos Devueltas', compute='_compute_sold_return')
+    qty_sold_return = fields.Float('Ventas Devueltas', compute='_compute_sold_return')
     qty_sold_net = fields.Float('Neto de las Vetas', compute='_compute_sold_net')
     
     qty_purchased = fields.Float('Comprado', compute='_compute_purchased')
@@ -158,6 +159,6 @@ class NetAmountResult(models.Model):
         
         self.ensure_one()
 
-        return self.env.ref('l10n_ve_reports_net_amount.action_report_net_amount').report_action(self)
+        return self.env.ref('l10n_ve_product_flow_metrics.action_report_flow_metrics').report_action(self)
 
 

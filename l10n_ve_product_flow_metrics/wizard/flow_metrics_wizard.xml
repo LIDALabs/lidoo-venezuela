@@ -1,8 +1,8 @@
 <odoo>
     <data>
-        <record id="view_net_amount_wizard_form" model="ir.ui.view">
-            <field name="name">net.amount.wizard.form</field>
-            <field name="model">net.amount.wizard</field>
+        <record id="view_flow_metrics_wizard_form" model="ir.ui.view">
+            <field name="name">flow.metrics.wizard.form</field>
+            <field name="model">flow.metrics.wizard</field>
             <field name="arch" type="xml">
                 <form string="Reporte de Producto por Periodo">
                     <group>
@@ -24,17 +24,17 @@
             </field>
         </record>
 
-        <record id="action_net_amount_wizard" model="ir.actions.act_window">
+        <record id="action_flow_metrics_wizard" model="ir.actions.act_window">
             <field name="name">Análisis de Movimientos</field>
-            <field name="res_model">net.amount.wizard</field>
+            <field name="res_model">flow.metrics.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_net_amount_wizard" 
+        <menuitem id="menu_flow_metrics_wizard" 
                 name="Reporte de Movimientos" 
                 parent="stock.menu_warehouse_report" 
-                action="action_net_amount_wizard" 
+                action="action_flow_metrics_wizard" 
                 sequence="100"/>
     </data>
 </odoo>

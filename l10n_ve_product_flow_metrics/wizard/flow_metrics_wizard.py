@@ -3,9 +3,9 @@ from odoo import fields, api, models, _
 from odoo.tools.float_utils import float_round
 from dateutil.relativedelta import relativedelta
 
-class NetAmountWizard(models.TransientModel): 
-    _name = "net.amount.wizard"
-    _description = "Asistente de reportes de las cantidades netas"
+class FlowMetricsWizard(models.TransientModel): 
+    _name = "flow.metrics.wizard"
+    _description = "Solo para seleccionar el producto, para posterior ver los datos e imprimir el PDF"
   
     # ------------------------------    
     # Valores por defectos de las fechas
@@ -37,7 +37,7 @@ class NetAmountWizard(models.TransientModel):
         return {
             'name': 'Reporte de Movimiento',
             'type': 'ir.actions.act_window',
-            'res_model': 'net.amount.result',
+            'res_model': 'flow.metrics',
             'view_mode': 'form',
             'target': 'current',
             'context': {
