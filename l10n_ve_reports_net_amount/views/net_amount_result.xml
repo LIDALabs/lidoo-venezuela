@@ -5,38 +5,59 @@
             <field name="name">net.amount.result.form</field>
             <field name="model">net.amount.result</field>
             <field name="arch" type="xml">
-                <form string="Resultados del Análisis">
-                    <div class="alert alert-info" role="alert" style="margin-bottom:10px;">
-                        Mostrando datos para <strong><field name="product_id" readonly="1" options="{'no_open': True}"/></strong> 
-                        en el periodo que va del <field name="date_from"/> al <field name="date_to"/>
-                    </div>
-                    <group>
-                        <group string="Flujo de Compras">
-                            <field name="qty_purchased" widget="statinfo" string=" Compras Realizadas"/>
-                            <field name="qty_purchased_return" widget="statinfo" string=" Compras Devueltas"/>
-                        </group>
-                        <group string="Flujo de Ventas">
-                            <field name="qty_sold" widget="statinfo" string=" Ventas Realizadas"/>
-                            <field name="qty_sold_return" widget="statinfo" string=" Ventas Devueltas"/>
-                        </group>
-                    </group>
-                    <footer>
+                <form string="Resultados del Análisis" create="0" edit="0" delete="0">
+                    <header>
                         <button string="Imprimir PDF" class="btn-primary" type="object" name="action_print_pdf"/>
                         <button string="Cerrar" class="btn-secondary" special="cancel"/>
-                    </footer>
+                    </header>
+                    <sheet>
+                        <div class="alert alert-info" role="alert" style="margin-bottom:10px;">
+                            Mostrando datos para <strong><field name="product_id" readonly="1" options="{'no_open': True}"/></strong> 
+                            en el periodo que va del <field name="date_from"/> al <field name="date_to"/>
+                        </div>
+                        <group>
+                            <group string="Flujo de Compras">
+                                <label for="qty_purchased"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_purchased" style="flex: none; width: 100%; margin-right: 1rem;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+                                
+                                <label for="qty_purchased_return"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_purchased_return" style="flex: none; width: 100%; margin-right: 1rem;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+
+                                <label for="qty_purchased_net"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_purchased_net" style="flex: none; width: 100%; margin-right: 1rem; font-weight: bold; color: #008784;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+                            </group>
+
+                            <group string="Flujo de Ventas">
+                                <label for="qty_sold"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_sold" style="flex: none; margin-right: 1rem; width: 100%;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+                                <label for="qty_sold_return"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_sold_return" style="flex: none; margin-right: 1rem; width: 100%;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+
+                                <label for="qty_sold_net"/>
+                                <div class="o_row" style="display: flex; justify-content: flex-start; gap: 2.5rem;">
+                                    <field name="qty_sold_net" style="flex: none; margin-right: 1rem; width: 100%; font-weight: bold; color: #008784;"/>
+                                    <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+
                 </form>
-            </field>
-        </record>
-
-
-        <record id="view_net_amount_wizard_result_graph" model="ir.ui.view">
-            <field name="name">net.amount.result.graph.view</field>
-            <field name="model">net.amount.result</field>
-            <field name="arch" type="xml">
-                <graph string="Resultados del Análisis">
-                    <field name="qty_purchased" />
-                    <field name="qty_purchased_return" />
-                </graph>
             </field>
         </record>
     </data>

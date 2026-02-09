@@ -7,14 +7,18 @@ class NetAmountResult(models.Model):
 
     product_id = fields.Many2one('product.product', 'Producto', readonly=True)
 
+    product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', string='Unidad', readonly=True)
+
     date_from = fields.Date('Desde', readonly=True)
     date_to = fields.Date('Hasta', readonly=True)
 
     qty_sold = fields.Float('Vendido', compute='_compute_sold')
     qty_sold_return = fields.Float('Vendidos Devueltas', compute='_compute_sold_return')
+    qty_sold_net = fields.Float('Neto de las Vetas', compute='_compute_sold_net')
     
     qty_purchased = fields.Float('Comprado', compute='_compute_purchased')
     qty_purchased_return = fields.Float('Compras Devueltas', compute='_compute_purchased_return')
+    qty_purchased_net = fields.Float('Neto de las Compras', compute="_compute_purchased_net")
 
     @api.depends('product_id', 'date_from', 'date_to')
     def _compute_purchased(self):
@@ -135,6 +139,20 @@ class NetAmountResult(models.Model):
             ...
         ...
     
+
+    @api.depends('qty_sold', 'qty_sold_return')
+    def _compute_sold_net(self):
+        for producto in self: 
+            net = producto.qty_sold - producto.qty_sold_return 
+            producto.qty_sold_net = float_round(net, precision_digits=0)
+        ...
+
+    @api.depends('qty_purchased', 'qty_purchased_return')
+    def _compute_purchased_net(self):
+        for producto in self: 
+            net = producto.qty_purchased - producto.qty_purchased_return
+            producto.qty_purchased_net = float_round(net, precision_digits=0)
+        ...
 
     def action_print_pdf(self):
         
