@@ -24,8 +24,8 @@ class LeadController(http.Controller):
                 return self._response({'status': 'error', 'message': 'JSON invalid'}, 400)
             
             # Validaciones
-            if not data.get('name') or not data.get('email'):
-                return self._response({'status': 'error', 'message': 'Missing Name or Email'}, 400)
+            if not data.get('name') or not data.get('phone'):
+                return self._response({'status': 'error', 'message': 'Missing Name or Phone'}, 400)
             
             country_id = False
             if data.get('country_code'):
@@ -53,21 +53,21 @@ class LeadController(http.Controller):
             # Preparando la Data
             vals = { 
                 'name': data.get('name'),
-                'contact_name': data.get('contact_name'),
-                'partner_name': data.get('partner_name'),
+                'contact_name': data.get('contact_name', ''),
+                'partner_name': data.get('partner_name', ''),
                 'partner_id': partner_id,
-                'email_from': data.get('email'),
+                'email_from': data.get('email', ''),
                 'phone': data.get('phone'),
-                'mobile': data.get('mobile'),
-                'function': data.get('function'),
-                'street': data.get('street'),
-                'city': data.get('city'),
-                'zip': data.get('zip'),
+                'mobile': data.get('mobile', ''),
+                'function': data.get('function', ''),
+                'street': data.get('street', ''),
+                'city': data.get('city', ''),
+                'zip': data.get('zip', ''),
                 'country_id': country_id,
                 'expected_revenue': data.get('expected_revenue', 0.0),
                 'priority': data.get('priority', 0),
                 'tag_ids': [(6, 0, tag_ids)],
-                'description': data.get('notes'),
+                'description': data.get('notes', ''),
                 'type': 'opportunity',
                 'user_id': request.env.ref('base.user_admin').id
             }
