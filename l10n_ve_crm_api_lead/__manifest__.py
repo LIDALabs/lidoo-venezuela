@@ -9,7 +9,8 @@
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
     'category': 'API',
-    'version': '0.1',
+    'version': '1.1.0',
+    "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
