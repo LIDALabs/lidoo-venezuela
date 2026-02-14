@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "l10n_ve_crm_api_lead",
-
-    'summary': "Endpoint integrations para crear leads",
-
-    'description': """""",
+    'name': "API REST para Creación de Leads CRM",
+    'summary': "Endpoint público para crear oportunidades en CRM vía API REST",
+    'description': """
+    Este módulo proporciona un endpoint API REST que permite la integración 
+    de sistemas externos con el CRM de Odoo.
+    
+    Características principales:
+    * Crear oportunidades/ leads mediante peticiones HTTP POST
+    * Validación de datos obligatorios (nombre y teléfono)
+    * Búsqueda automática de países por código
+    * Creación automática de etiquetas CRM
+    * Vinculación con socios existentes por email
+    * Respuestas JSON estandarizadas
+    """,
 
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
