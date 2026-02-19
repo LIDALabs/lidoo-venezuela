@@ -21,8 +21,8 @@ def require_api_key():
     Decorator to require valid API key for route
     
     Usage:
-        @route('/api/endpoint', type='http', auth='none', methods=['POST'])
         @require_api_key()
+        @route('/api/endpoint', type='http', auth='none', methods=['POST'])
         def my_endpoint(self, **kw):
             ...
     """
