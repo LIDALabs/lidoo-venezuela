@@ -18,11 +18,11 @@
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
     'category': 'API',
-    'version': '1.1.0',
+    'version': '17.0.1.2.0',
     "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'crm'],
 
     # always loaded
     'data': [
