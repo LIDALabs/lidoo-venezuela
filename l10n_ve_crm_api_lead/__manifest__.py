@@ -22,7 +22,7 @@
     "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'crm'],
+    'depends': ['base', 'crm', 'lida_api_auth'],
 
     # always loaded
     'data': [
