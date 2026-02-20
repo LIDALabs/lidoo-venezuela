@@ -4,6 +4,7 @@ import json
 from odoo import http, fields
 from odoo.http import request, route
 from odoo.fields import Command
+from odoo.addons.l10n_ve_api_auth.decorators import require_api_key
 
 _logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ class RegisterInvoiceController(http.Controller):
         ]
     }
     """
+    @require_api_key()
     @route('/api/invoice', type='http', auth='public', methods=['POST'], csrf=False)
     def register_invoice(self, **kw):
 
@@ -36,7 +38,8 @@ class RegisterInvoiceController(http.Controller):
             vat = data.get('rif')
             lines = data.get('lines')
             payment_reference = data.get('payment_reference')
-            company_id = request.env.company.id
+            Company = request.env['res.company'].sudo().search([], limit=1, order='id')
+            company_id = Company.id
 
             # validation for vat
             if not vat:
