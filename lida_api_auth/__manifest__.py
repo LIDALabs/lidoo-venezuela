@@ -12,7 +12,7 @@
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
     'category': 'API',
-    'version': '17.0.1.0.0',
+    'version': '17.0.1.1.0',
     'depends': ['base', 'web'],
     'license': 'LGPL-3',
     # always loaded
