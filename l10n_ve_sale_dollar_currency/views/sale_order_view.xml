@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_sale_order_pdf_currency_form" model="ir.ui.view">
+        <field name="name">sale.order.pdf.currency.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_term_id" position="after">
+                <field name="show_currency"/>
+            </field>
+        </field>
+    </record>
+
+
+    <template id="report_sale_order_pdf_currency" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//span[@t-field='doc.name']" position="before">
+            <t t-set="pdf_currency" t-value="doc.dollar_currency_id if doc.show_currency else doc.currency_id" />
+            <t t-set="doc" t-value="doc.with_context(pdf_currency=pdf_currency)"/>
+        </xpath>
+        <xpath expr="//span[@t-field='line.price_unit']" position="replace">
+            <t t-if="doc.show_currency">
+                <t t-set="pdf_rate" t-value="doc.dollar_currency_rate if doc.show_currency else 1"/>
+                <span t-esc="line.price_unit / pdf_rate" t-options="{'widget':'monetary', 'display_currency':doc.dollar_currency_id}"/>
+            </t>
+            <t t-else="">
+                <span t-field="line.price_unit"/>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']/span[@t-field='line.price_subtotal']" position="replace">
+            <t t-if="doc.show_currency">
+                <t t-set="pdf_rate" t-value="doc.dollar_currency_rate if doc.show_currency else 1"/>
+                <span t-esc="line.price_subtotal / pdf_rate" t-options="{'widget':'monetary', 'display_currency':doc.dollar_currency_id}"/>
+            </t>
+            <t t-else="">
+                <span t-field="line.price_subtotal"/>
+            </t>
+        </xpath>
+         <xpath expr="//div[@name='so_total_summary']" position="replace">
+            <t t-if="doc.show_currency">
+                <!-- Tabla en USD -->
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row" name="total">
+                        <div class="col-6 ms-auto">
+                            <table class="table table-sm table-borderless">
+                                <tr class="border-black">
+                                    <td><strong>Subtotal</strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="doc.dollar_amount_taxe_subtotal" 
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.dollar_currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IVA</td>
+                                    <td class="text-end">
+                                        <span t-esc="doc.dollar_amount_taxe_tax" 
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.dollar_currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_total">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="doc.dollar_amount_taxe_total" 
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.dollar_currency_id}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <!-- Tabla original en VEF -->
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row" name="total">
+                        <div class="col-6 ms-auto">
+                            <table class="table table-sm table-borderless">
+                                <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                <t t-call="sale.document_tax_totals"/>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
