@@ -25,6 +25,12 @@ class SaleOrder(models.Model):
         """
         return self.env.company.currency_foreign_id.id or False
 
+    show_currency = fields.Boolean(
+        default=False,
+        string="Cotizacion en USD",
+        help='Los precios de la cotizacion se mostran en dolares'        
+    )
+
     foreign_currency_id = fields.Many2one(
         "res.currency",
         default=default_alternate_currency,
@@ -86,6 +92,16 @@ class SaleOrder(models.Model):
     address = fields.Char(related="partner_id.street")
 
     mobile = fields.Char(related="partner_id.mobile")
+
+
+    @api.onchange('show_currency')
+    def _onchange_show_currency(self):
+        """
+            Cuando show_currency esta activo, se calcula la tasa si aun no esta modificada
+        """
+        for sale in self:
+            if sale.show_currency and not sale.foreign_rate:
+                sale._compute_rate()
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **kwargs):
@@ -245,6 +261,7 @@ class SaleOrder(models.Model):
                     sale.foreign_rate,
                     precision_rounding=self.env.company.currency_id.rounding,
                 )
+                and not sale.show_currency
             ):
                 continue
             rate_values = Rate.compute_rate(
