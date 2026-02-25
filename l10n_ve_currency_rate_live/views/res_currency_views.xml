@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button name="%(l10n_ve_rate_bcv_wizard.action_bcv_rate_wizard)d" string="Tasa Referencial BCV" type="action" class="btn-primary" groups="account.group_account_invoice" invisible="name not in ['USD', 'VEF']"/>
+                    <button name="%(l10n_ve_currency_rate_live.action_bcv_rate_wizard)d" string="Tasa Referencial BCV" type="action" class="btn-primary" groups="account.group_account_invoice" invisible="name not in ['USD', 'VEF']"/>
                 </header>
             </xpath>
         </field>
