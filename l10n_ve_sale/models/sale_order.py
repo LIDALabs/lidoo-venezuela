@@ -93,16 +93,6 @@ class SaleOrder(models.Model):
 
     mobile = fields.Char(related="partner_id.mobile")
 
-
-    @api.onchange('show_currency')
-    def _onchange_show_currency(self):
-        """
-            Cuando show_currency esta activo, se calcula la tasa si aun no esta modificada
-        """
-        for sale in self:
-            if sale.show_currency and not sale.foreign_rate:
-                sale._compute_rate()
-
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **kwargs):
         if 'load' in kwargs:
@@ -239,7 +229,7 @@ class SaleOrder(models.Model):
         """
         self._compute_rate()
 
-    @api.depends("foreign_currency_id", "date_order")
+    @api.depends("foreign_currency_id", "date_order", "show_currency")
     def _compute_rate(self):
         """
         Compute the rate of the sale order using the compute_rate method of the res.currency.rate

@@ -188,7 +188,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="payment_term_id" position="after">
-                <field name="show_currency"/>
+                <field name="show_currency" readonly="not id"/>
             </field>
         </field>
     </record>
@@ -235,7 +235,8 @@
                                 <tr>
                                     <td>IVA</td>
                                     <td class="text-end">
-                                        <span t-esc="doc.total_taxed" 
+                                        <t t-set="pdf_rate" t-value="doc.foreign_rate if doc.show_currency else 1"/>
+                                        <span t-esc="doc.amount_tax / pdf_rate" 
                                               t-options="{'widget': 'monetary', 'display_currency': doc.foreign_currency_id}"/>
                                     </td>
                                 </tr>
