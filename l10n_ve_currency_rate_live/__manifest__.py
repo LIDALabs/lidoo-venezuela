@@ -6,7 +6,7 @@
     "website": "https://binauraldev.com/",
     "category": "Technical",
     "version": "17.0.1.1.1",
-    "depends": ["l10n_ve_rate", "currency_rate_live", "lida_reference_prices"],
+    "depends": ["l10n_ve_rate", "currency_rate_live", "lida_reference_prices", 'account_accountant'],
     "images": ["static/description/l10n_ve.png"],
     "data": [
         "security/ir.model.access.csv",

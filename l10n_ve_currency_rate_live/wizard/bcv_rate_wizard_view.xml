@@ -41,7 +41,7 @@
     <!-- Menú en Contabilidad (Secuencia 34 para estar antes de Configuración que es 35) -->
     <menuitem id="menu_bcv_rate_wizard_account"
               name="Tasa BCV"
-          parent="account.menu_finance_entries"
+          parent="account_accountant.menu_accounting"
           action="action_bcv_rate_wizard"
           groups="account.group_account_readonly"
           sequence="34"/>
