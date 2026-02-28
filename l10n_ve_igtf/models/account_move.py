@@ -24,7 +24,7 @@ class AccountMove(models.Model):
             """)
         return super()._auto_init()
 
-    bi_igtf = fields.Monetary(string="BI IGTF", help="subtotal with igtf", copy=False)
+    legacy_bi_igtf = fields.Monetary(string="BI IGTF", help="subtotal with igtf", copy=True)
     amount_paid = fields.Monetary(string="Paid", default=0.00, help="Paid", copy=False)
 
 
@@ -104,16 +104,16 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = False
 
-    def recalculate_bi_igtf(self, line_id=None, initial_residual=0.0):
-        """This method can be used by ir.actions.server to update bi_igtf"""
+    def recalculate_legacy_bi_igtf(self, line_id=None, initial_residual=0.0):
+        """This method can be used by ir.actions.server to update legacy_bi_igtf"""
         for record in self:
-            if record.bi_igtf > 0 and any(
+            if record.legacy_bi_igtf > 0 and any(
             payment.get("account_payment_id", False) for payment in record.invoice_payments_widget.get("content", [])
             if payment.get("account_payment_id", False)
             ):
                 continue
             if not record.invoice_payments_widget:
-                record.bi_igtf = 0
+                record.legacy_bi_igtf = 0
                 continue
 
             payments = record.invoice_payments_widget.get("content", False)
@@ -123,12 +123,12 @@ class AccountMove(models.Model):
                 payment_id = line.move_id.payment_id
                 if payment_id and payment_id.is_igtf_on_foreign_exchange:
                     payment_id = line.move_id.payment_id
-                    bi_igtf = payment_id.get_bi_igtf()
-                    if initial_residual <= bi_igtf and bi_igtf >= record.amount_total:
-                        record.bi_igtf = min(record.bi_igtf + bi_igtf,record.amount_total)
-                        bi_igtf = 0
+                    legacy_bi_igtf = payment_id.get_legacy_bi_igtf()
+                    if initial_residual <= legacy_bi_igtf and legacy_bi_igtf >= record.amount_total:
+                        record.legacy_bi_igtf = min(record.legacy_bi_igtf + legacy_bi_igtf,record.amount_total)
+                        legacy_bi_igtf = 0
                         continue
-                    record.bi_igtf = min(record.bi_igtf + bi_igtf,record.amount_total)
+                    record.legacy_bi_igtf = min(record.legacy_bi_igtf + legacy_bi_igtf,record.amount_total)
                     continue
 
             for payment in payments:
@@ -138,10 +138,10 @@ class AccountMove(models.Model):
 
                 payment_id = record.env["account.payment"].browse([payment_id])
                 if payment_id.is_igtf_on_foreign_exchange:
-                    bi_igtf = payment_id.get_bi_igtf()
-                    if initial_residual < bi_igtf:
+                    legacy_bi_igtf = payment_id.get_legacy_bi_igtf()
+                    if initial_residual < legacy_bi_igtf:
                         continue
-                    amount += bi_igtf
+                    amount += legacy_bi_igtf
 
 
     def remove_igtf_from_move(self, partial_id):
@@ -169,67 +169,67 @@ class AccountMove(models.Model):
             if (
                 payment_credit.is_igtf_on_foreign_exchange
                 and move
-                and move.bi_igtf > 0
+                and move.legacy_bi_igtf > 0
             ):
                 amount = partial.credit_move_id.payment_id.amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
                     amount = amount * move.foreign_rate
-                result = move.bi_igtf - amount
+                result = move.legacy_bi_igtf - amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
-                    result = move.bi_igtf - (amount * self.foreign_rate)
+                    result = move.legacy_bi_igtf - (amount * self.foreign_rate)
                 if result < 0:
                     result = 0
-                move.write({"bi_igtf": result})
+                move.write({"legacy_bi_igtf": result})
 
         for move in move_debit:
             if (
                 payment_debit.is_igtf_on_foreign_exchange
                 and move
-                and move.bi_igtf > 0
+                and move.legacy_bi_igtf > 0
             ):
                 amount = partial.debit_move_id.payment_id.amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
                     amount = amount * move.foreign_rate
-                result = move.bi_igtf - amount
+                result = move.legacy_bi_igtf - amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
-                    result = move.bi_igtf - (amount * self.foreign_rate)
+                    result = move.legacy_bi_igtf - (amount * self.foreign_rate)
                 if result < 0:
                     result = 0
-                move.write({"bi_igtf": result})
+                move.write({"legacy_bi_igtf": result})
 
         for reverse_credit in reverse_move_credit:
             if (
 
                 payment_credit.is_igtf_on_foreign_exchange
                 and reverse_credit
-                and reverse_credit.bi_igtf > 0
+                and reverse_credit.legacy_bi_igtf > 0
             ):
                 amount = partial.credit_move_id.payment_id.amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
                     amount = amount * reverse_credit.foreign_rate
-                result = reverse_credit.bi_igtf - amount
+                result = reverse_credit.legacy_bi_igtf - amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
-                    result = reverse_credit.bi_igtf - (amount * self.foreign_rate)
+                    result = reverse_credit.legacy_bi_igtf - (amount * self.foreign_rate)
                 if result < 0:
                     result = 0
-                reverse_credit.write({"bi_igtf": result})
+                reverse_credit.write({"legacy_bi_igtf": result})
 
         for reverse_debit in reverse_move_debit:
             if (
                 
                 payment_debit.is_igtf_on_foreign_exchange
                 and reverse_debit
-                and reverse_debit.bi_igtf > 0
+                and reverse_debit.legacy_bi_igtf > 0
             ):
                 amount = partial.debit_move_id.payment_id.amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
                     amount = amount * reverse_debit.foreign_rate
-                result = reverse_debit.bi_igtf - amount
+                result = reverse_debit.legacy_bi_igtf - amount
                 if self.env.company.currency_id.id == self.env.ref("base.VEF").id:
-                    result = reverse_debit.bi_igtf - (amount * self.foreign_rate)
+                    result = reverse_debit.legacy_bi_igtf - (amount * self.foreign_rate)
                 if result < 0:
                     result = 0
-                reverse_debit.write({"bi_igtf": result})
+                reverse_debit.write({"legacy_bi_igtf": result})
 
     def js_remove_outstanding_partial(self, partial_id):
         for move in self:
@@ -242,7 +242,7 @@ class AccountMove(models.Model):
         self = self.with_context(from_widget=True)
         res = super().js_assign_outstanding_line(line_id)
 
-        self.recalculate_bi_igtf(
+        self.recalculate_legacy_bi_igtf(
             line_id,
             initial_residual=amount_residual
             if not self.currency_id.is_zero(amount_residual)
@@ -261,7 +261,7 @@ class AccountMove(models.Model):
                 move.amount_to_pay_igtf = move.tax_totals["igtf"]["igtf_amount"] - move.amount_paid
 
     @api.depends(
-        "amount_total", "amount_residual", "amount_residual_igtf", "amount_to_pay_igtf", "bi_igtf"
+        "amount_total", "amount_residual", "amount_residual_igtf", "amount_to_pay_igtf", "legacy_bi_igtf"
     )
     def _compute_amount_residual_igtf(self):
         for record in self:
@@ -269,7 +269,7 @@ class AccountMove(models.Model):
             # record.amount_residual_igtf = record.amount_residual + record.amount_to_pay_igtf
 
     @api.depends(
-        "bi_igtf",
+        "legacy_bi_igtf",
     )
     def _compute_tax_totals(self):
         return super()._compute_tax_totals()
@@ -279,5 +279,5 @@ class AccountMove(models.Model):
         When the user click on the button draft, we need to delete the igtf
         """
         for record in self:
-            record.bi_igtf = 0
+            record.legacy_bi_igtf = 0
         return super().button_draft()
