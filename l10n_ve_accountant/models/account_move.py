@@ -1035,9 +1035,9 @@ class AccountMove(models.Model):
         return res
 
     def button_draft(self):
-
-        if self.move_type == "in_invoice":
-            self.is_reset_to_draft_for_price_change = True
+        for move in self:
+            if move.move_type == "in_invoice":
+                move.is_reset_to_draft_for_price_change = True
 
         return super().button_draft()
 
