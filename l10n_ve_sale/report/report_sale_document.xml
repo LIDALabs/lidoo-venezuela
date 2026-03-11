@@ -4,12 +4,12 @@
     <xpath expr="//div[@class='page']" position="inside">
       <h3 t-if="doc.state == 'draft'"
         style="position:absolute;left:35px;top:250px;font-size:180px !important;opacity: 0.1;">
-        BORRADOR</h3>
+        COTIZACIÓN</h3>
     </xpath>
     <xpath expr="//div[@class='clearfix'][1]" position="after">
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <p class="fw-bold">SIN DERECHO A CRÉDITO FISCAL</p>
+          <p class="fw-bold">NO FISCAL</p>
         </div>
       </div>
     </xpath>
