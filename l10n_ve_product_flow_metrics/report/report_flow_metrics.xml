@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="action_report_flow_metrics" model="ir.actions.report">
+            <field name="name">Flow Metrics Report - External (PDF)</field>
+            <field name="model">flow.metrics</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ve_product_flow_metrics.report_metrics_template</field>
+            <field name="report_file">l10n_ve_product_flow_metrics.report_metrics_template</field>
+            <field name="print_report_name">'Flow Metrics %s' % object.product_id.name</field>
+            <field name="binding_model_id" ref="model_flow_metrics"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

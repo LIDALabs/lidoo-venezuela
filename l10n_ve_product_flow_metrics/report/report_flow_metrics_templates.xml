@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <template id="metrics_template">
+            <div class="page">
+                <div class="text-center" style="border-bottom: 2px solid black; margin-bottom: 20px;">
+                    <h2>Reporte de Movimientos</h2>
+                    <h3><t t-esc="o.product_id.name"/></h3>
+                    <p>Del <t t-esc="o.date_from"/> al <t t-esc="o.date_to"/></p>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <h4>Flujo de Compras</h4>
+                        <p><strong>Comprado: </strong> <t t-esc="o.qty_purchased"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
+                        <p><strong>Compras Devueltas:</strong> <t t-esc="o.qty_purchased_return"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
+
+                        <div>
+                            <strong>Balance Neto de las compras:</strong>
+                            <span> <t t-esc="o.qty_purchased_net"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4>Flujo de Ventas</h4>
+                        <p><strong>Vendido:</strong> <t t-esc="o.qty_sold"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
+                        <p><strong>Ventas Devueltas:</strong> <t t-esc="o.qty_sold_return"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
+                        
+                        <div>
+                            <strong>Balance Neto de las ventas:</strong>
+                            <span> <t t-esc="o.qty_sold_net"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></span>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </template>
+
+        
+        <template id="report_metrics_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <t t-call="l10n_ve_product_flow_metrics.metrics_template"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
