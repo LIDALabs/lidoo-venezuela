@@ -25,6 +25,12 @@ class SaleOrder(models.Model):
         """
         return self.env.company.currency_foreign_id.id or False
 
+    show_currency = fields.Boolean(
+        default=False,
+        string="Cotizacion en USD",
+        help='Los precios de la cotizacion se mostran en dolares'        
+    )
+
     foreign_currency_id = fields.Many2one(
         "res.currency",
         default=default_alternate_currency,
@@ -223,7 +229,7 @@ class SaleOrder(models.Model):
         """
         self._compute_rate()
 
-    @api.depends("foreign_currency_id", "date_order")
+    @api.depends("foreign_currency_id", "date_order", "show_currency")
     def _compute_rate(self):
         """
         Compute the rate of the sale order using the compute_rate method of the res.currency.rate
@@ -245,6 +251,7 @@ class SaleOrder(models.Model):
                     sale.foreign_rate,
                     precision_rounding=self.env.company.currency_id.rounding,
                 )
+                and not sale.show_currency
             ):
                 continue
             rate_values = Rate.compute_rate(
