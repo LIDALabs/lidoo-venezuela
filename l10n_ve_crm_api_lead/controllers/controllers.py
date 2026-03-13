@@ -4,12 +4,13 @@ import json
 
 from odoo import http
 from odoo.http import request, route
+from odoo.addons.lida_api_auth.decorators import require_api_key
 
 _logger = logging.getLogger(__name__)
 
 class LeadController(http.Controller):
     
-    
+    @require_api_key()
     @route('/api/lead/create', type='http', auth='public', methods=['POST'], csrf=False)
     def create_lead(self, **kw):
         data = {}
