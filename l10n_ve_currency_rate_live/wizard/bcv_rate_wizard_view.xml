@@ -15,7 +15,7 @@
                 </sheet>
                 <footer>
                     <button name="action_get_bcv_rate" string="Consultar BCV" type="object" class="btn-secondary" data-hotkey="q"/>
-                    <button name="action_update_prices" string="Actualizar Precios" type="object" class="btn-primary" data-hotkey="w" groups="account.group_account_readonly"/>
+                    <button name="action_update_prices" string="Actualizar Precios" type="object" class="btn-primary" data-hotkey="w"/>
                     <button string="Cerrar" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
@@ -43,7 +43,6 @@
               name="Tasa BCV"
           parent="account_accountant.menu_accounting"
           action="action_bcv_rate_wizard"
-          groups="account.group_account_readonly"
           sequence="34"/>
 
     <!-- Menú en Ventas -->
