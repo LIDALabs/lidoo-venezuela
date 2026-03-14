@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import SUPERUSER_ID, api
 
 from . import models
-
+from . import wizard
 
 def setup_currency_update(env):
     env = api.Environment(env.cr, SUPERUSER_ID, {})
