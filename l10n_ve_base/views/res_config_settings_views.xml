@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="Binaural Settings" string="Binaural Settings" name="l10n_ve_base">
+                <app data-string="Localization Settings" string="Localization Settings" name="l10n_ve_base">
                     <block name="l10n_ve_base_block">
                         <setting name="l10n_ve_base_setting"/>
                     </block>
