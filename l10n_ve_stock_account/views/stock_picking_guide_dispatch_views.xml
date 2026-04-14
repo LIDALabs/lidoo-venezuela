@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="stock_picking_guide_dispatch_views" model="ir.ui.view">
+    <data>
+<record id="stock_picking_guide_dispatch_views" model="ir.ui.view">
         <field name="name">stock.picking.guide.dispatch.account.views</field>
         <field name="model">stock.picking</field>
         <field name="priority" eval="17"/>
@@ -100,4 +102,5 @@
         <field name="search_view_id" ref="stock_picking_guide_dispatch_view_search"/>
         <field name="domain">[('match_guide_dispatch_domain','=',True)]</field>
     </record>
+    </data>
 </odoo>

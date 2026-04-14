@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_stock_picking_self_consumption_wizard" model="ir.ui.view">
+    <data>
+<record id="view_stock_picking_self_consumption_wizard" model="ir.ui.view">
         <field name="name">stock.picking.self.consumption.wizard.form</field>
         <field name="model">stock.picking.self.consumption.wizard</field>
         <field name="arch" type="xml">
@@ -15,4 +17,5 @@
             </form>
         </field>
     </record>
+    </data>
 </odoo>

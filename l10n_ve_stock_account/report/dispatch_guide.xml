@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    <record id="action_dispatch_guide" model="ir.actions.report">
+    <data>
+<record id="action_dispatch_guide" model="ir.actions.report">
         <field name="name">Dispatch Guide</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
@@ -12,4 +13,5 @@
         <!-- <field name="binding_model_id" eval="False" /> -->
         <!-- <field name="binding_type">report</rield> -->
     </record>
+    </data>
 </odoo>

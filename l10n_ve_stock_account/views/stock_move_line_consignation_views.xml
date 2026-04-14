@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="stock_move_line_consignation_report_tree" model="ir.ui.view">
+    <data>
+<record id="stock_move_line_consignation_report_tree" model="ir.ui.view">
         <field name="name">stock.move.line.consignation.report.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
@@ -45,4 +47,5 @@
             ]
         </field>
     </record>
+    </data>
 </odoo>
