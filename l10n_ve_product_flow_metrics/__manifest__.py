@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "l10n_ve_product_flow_metrics",
+    'name': "Venezuela - Métricas de flujo de productos",
 
-    'summary': "Metricas del flujo de compras y ventas de un producto",
+    'summary': "Métricas del flujo de compras y ventas de un producto",
 
     'description': """
         Muestra las metricas (Vendido, Ventas devueltas, Comprado, Compras devuelta) de un producto seleccionado, 
