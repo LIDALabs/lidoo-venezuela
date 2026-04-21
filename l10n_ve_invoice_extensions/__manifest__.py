@@ -21,6 +21,7 @@
         "wizard/invoice_payments_reports_wizard.xml",
         "views/menu.xml",
         "views/res_config_settings.xml",
+        "views/account_move_views.xml",
     ],
     "demo": [
     ],

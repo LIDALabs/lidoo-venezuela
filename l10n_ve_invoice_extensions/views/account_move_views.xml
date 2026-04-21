@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_lidalabs_invoice" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.lidalabs.invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <!-- 1. Ocultar "Enviar e imprimir" SOLO para Facturas de Clientes -->
+            <xpath expr="//header/button[@name='action_invoice_sent'][1]" position="attributes">
+                <attribute name="invisible">state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type != 'out_refund'</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_invoice_sent'][2]" position="attributes">
+                <attribute name="invisible">state != 'posted' or not is_being_sent and not invoice_pdf_report_id or move_type != 'out_refund'</attribute>
+            </xpath>
+
+            <!-- 2. Ocultar el botón Forma Libre original de Binaural (para no tener errores de dependencias al borrarlo) -->
+            <xpath expr="//header/button[@name='print_invoice_free_form']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- 3. Crear el nuevo botón Forma Libre al principio del todo -->
+            <xpath expr="//header/button[@name='action_invoice_sent'][1]" position="before">
+                <button
+                    name="print_invoice_free_form" string="Forma Libre"
+                    type="object" class="o_btn_validate oe_highlight"
+                    invisible="(move_type not in ('out_invoice', 'out_refund')) or state != 'posted' or correlative == False"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
