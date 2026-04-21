@@ -1,0 +1,2567 @@
+[
+  {
+    "estado": "Amazonas",
+    "municipio": "Alto Orinoco",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Atabapo",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Atures",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Autana",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Manapiare",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Maroa",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Amazonas",
+    "municipio": "Río Negro",
+    "codigos_postales": [
+      "7101"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Anaco",
+    "codigos_postales": [
+      "6003"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Aragua",
+    "codigos_postales": [
+      "6002"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Fernando de Peñalver",
+    "codigos_postales": [
+      "6022"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Francisco de Miranda",
+    "codigos_postales": [
+      "6052"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Francisco del Carmen Carvajal",
+    "codigos_postales": [
+      "6032"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Guanta",
+    "codigos_postales": [
+      "6014"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Independencia",
+    "codigos_postales": [
+      "8013"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "José Gregorio Monagas",
+    "codigos_postales": [
+      "6057"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Juan Antonio Sotillo",
+    "codigos_postales": [
+      "6032",
+      "6009",
+      "6023"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Juan Manuel Cajigal",
+    "codigos_postales": [
+      "6020"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Libertad",
+    "codigos_postales": [
+      "6048"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Manuel Ezequiel Bruzual",
+    "codigos_postales": [
+      "6008",
+      "6005"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Pedro María Freites",
+    "codigos_postales": [
+      "6007"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Píritu",
+    "codigos_postales": [
+      "6020",
+      "6022"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "San José de Guanipa",
+    "codigos_postales": [
+      "6054"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "San Juan de Capistrano",
+    "codigos_postales": [
+      "6005"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Santa Ana",
+    "codigos_postales": [
+      "6027"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Simón Bolívar",
+    "codigos_postales": [
+      "6001"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Simón Rodríguez",
+    "codigos_postales": [
+      "6050"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Sir Arthur Mc Gregor",
+    "codigos_postales": [
+      "2350"
+    ]
+  },
+  {
+    "estado": "Anzoátegui",
+    "municipio": "Turístico Diego Bautista Urbaneja",
+    "codigos_postales": [
+      "6016"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Achaguas",
+    "codigos_postales": [
+      "7002",
+      "7003"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Biruaca",
+    "codigos_postales": [
+      "7007",
+      "7005"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Muñoz",
+    "codigos_postales": [
+      "7010",
+      "7005"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Páez",
+    "codigos_postales": [
+      "5062",
+      "5032",
+      "5063"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Pedro Camejo",
+    "codigos_postales": [
+      "7004"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "Rómulo Gallegos",
+    "codigos_postales": [
+      "7011"
+    ]
+  },
+  {
+    "estado": "Apure",
+    "municipio": "San Fernando",
+    "codigos_postales": [
+      "7001"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "2120"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Camatagua",
+    "codigos_postales": [
+      "2335"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Francisco Linares Alcántara",
+    "codigos_postales": [
+      "2106",
+      "2103"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Girardot",
+    "codigos_postales": [
+      "2110",
+      "2103",
+      "2101"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "José Angel Lamas",
+    "codigos_postales": [
+      "2123"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "José Félix Ribas",
+    "codigos_postales": [
+      "2121"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "José Rafael Revenga",
+    "codigos_postales": [
+      "2118"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "2117"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Mario Briceño Iragorry",
+    "codigos_postales": [
+      "2105"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Ocumare de La Costa de Oro",
+    "codigos_postales": [
+      "2112"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "San Casimiro",
+    "codigos_postales": [
+      "2338"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "San Sebastián",
+    "codigos_postales": [
+      "2340"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Santiago Mariño",
+    "codigos_postales": [
+      "2107",
+      "2115"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Santos Michelena",
+    "codigos_postales": [
+      "2119"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "2122"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Tovar",
+    "codigos_postales": [
+      "1030"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Urdaneta",
+    "codigos_postales": [
+      "2301",
+      "2334"
+    ]
+  },
+  {
+    "estado": "Aragua",
+    "municipio": "Zamora",
+    "codigos_postales": [
+      "2126",
+      "2128"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Alberto Arvelo Torrealba",
+    "codigos_postales": [
+      "5224"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Andrés Eloy Blanco",
+    "codigos_postales": [
+      "5201"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Antonio José de Sucre",
+    "codigos_postales": [
+      "5216"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Arismendi",
+    "codigos_postales": [
+      "5201"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Barinas",
+    "codigos_postales": [
+      "5201",
+      "5203",
+      "5204",
+      "5205",
+      "5202"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "5208",
+      "5206",
+      "5207"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Cruz Paredes",
+    "codigos_postales": [
+      "5211"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Ezequiel Zamora",
+    "codigos_postales": [
+      "5210"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Obispos",
+    "codigos_postales": [
+      "5213",
+      "5212"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Pedraza",
+    "codigos_postales": [
+      "5214"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Rojas",
+    "codigos_postales": [
+      "5217",
+      "5218",
+      "5219",
+      "5220"
+    ]
+  },
+  {
+    "estado": "Barinas",
+    "municipio": "Sosa",
+    "codigos_postales": [
+      "5221",
+      "5222",
+      "5223"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Bolivariano Angostura",
+    "codigos_postales": [
+      "8003"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Caroní",
+    "codigos_postales": [
+      "8050",
+      "8051"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Cedeño",
+    "codigos_postales": [
+      "8007"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "El Callao",
+    "codigos_postales": [
+      "8056"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Gran Sabana",
+    "codigos_postales": [
+      "8011"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Heres",
+    "codigos_postales": [
+      "8001"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Padre Pedro Chien",
+    "codigos_postales": [
+      "8050"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Piar",
+    "codigos_postales": [
+      "8052"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Roscio",
+    "codigos_postales": [
+      "8055"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Sifontes",
+    "codigos_postales": [
+      "8057"
+    ]
+  },
+  {
+    "estado": "Bolívar",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "8001"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Bejuma",
+    "codigos_postales": [
+      "2040",
+      "2044"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Carlos Arvelo",
+    "codigos_postales": [
+      "2038",
+      "2003",
+      "2010"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Diego Ibarra",
+    "codigos_postales": [
+      "2017"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Guacara",
+    "codigos_postales": [
+      "2016",
+      "2015"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Juan José Mora",
+    "codigos_postales": [
+      "2051"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "2035"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Los Guayos",
+    "codigos_postales": [
+      "2011"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Miranda",
+    "codigos_postales": [
+      "2041"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Montalbán",
+    "codigos_postales": [
+      "2042"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Naguanagua",
+    "codigos_postales": [
+      "2005"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Puerto Cabello",
+    "codigos_postales": [
+      "2050"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "San Diego",
+    "codigos_postales": [
+      "2006"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "San Joaquín",
+    "codigos_postales": [
+      "2018"
+    ]
+  },
+  {
+    "estado": "Carabobo",
+    "municipio": "Valencia",
+    "codigos_postales": [
+      "2001",
+      "2003"
+    ]
+  },
+  {
+    "estado": "Distrito Capital",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "1030",
+      "1010",
+      "1000",
+      "1012",
+      "1090",
+      "1030",
+      "1020",
+      "1050",
+      "1053",
+      "1052",
+      "1040",
+      "1011",
+      "1014",
+      "1015",
+      "1041"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Anzoátegui",
+    "codigos_postales": [
+      "2202"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Falcón",
+    "codigos_postales": [
+      "2209"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Girardot",
+    "codigos_postales": [
+      "2213",
+      "2212"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Lima Blanco",
+    "codigos_postales": [
+      "2208",
+      "2207"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Pao de San Juan Bautista",
+    "codigos_postales": [
+      "2214"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Ricaurte",
+    "codigos_postales": [
+      "2216"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Rómulo Gallegos",
+    "codigos_postales": [
+      "2204"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "San Carlos",
+    "codigos_postales": [
+      "2205",
+      "2203",
+      "2201"
+    ]
+  },
+  {
+    "estado": "Cojedes",
+    "municipio": "Tinaco",
+    "codigos_postales": [
+      "2206"
+    ]
+  },
+  {
+    "estado": "Delta Amacuro",
+    "municipio": "Antonio Díaz",
+    "codigos_postales": [
+      "6401"
+    ]
+  },
+  {
+    "estado": "Delta Amacuro",
+    "municipio": "Casacoima",
+    "codigos_postales": [
+      "6401"
+    ]
+  },
+  {
+    "estado": "Delta Amacuro",
+    "municipio": "Pedernales",
+    "codigos_postales": [
+      "6401"
+    ]
+  },
+  {
+    "estado": "Delta Amacuro",
+    "municipio": "Tucupita",
+    "codigos_postales": [
+      "6401"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Acosta",
+    "codigos_postales": [
+      "4106",
+      "4112",
+      "4111",
+      "4108"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "4113",
+      "4114",
+      "4116"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Buchivacoa",
+    "codigos_postales": [
+      "4117",
+      "4119",
+      "4121"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Cacique Manaure",
+    "codigos_postales": [
+      "4110"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Carirubana",
+    "codigos_postales": [
+      "4125",
+      "4123",
+      "4102",
+      "4122",
+      "4126"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Colina",
+    "codigos_postales": [
+      "4134",
+      "4130",
+      "4133",
+      "4132"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Dabajuro",
+    "codigos_postales": [
+      "4118"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Democracia",
+    "codigos_postales": [
+      "4135",
+      "4136",
+      "4137"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Falcón",
+    "codigos_postales": [
+      "4150",
+      "4142",
+      "4144",
+      "4145",
+      "4146",
+      "4151",
+      "4149"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Federación",
+    "codigos_postales": [
+      "4136",
+      "4152",
+      "4153"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Jacura",
+    "codigos_postales": [
+      "4103",
+      "4107"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Los Taques",
+    "codigos_postales": [
+      "4147",
+      "4148"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Mauroa",
+    "codigos_postales": [
+      "4155",
+      "4157",
+      "4158"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Miranda",
+    "codigos_postales": [
+      "4159",
+      "4160",
+      "4161",
+      "4101"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Monseñor Iturriza",
+    "codigos_postales": [
+      "2048",
+      "2061",
+      "2050"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Palmasola",
+    "codigos_postales": [
+      "2052"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Petit",
+    "codigos_postales": [
+      "4163",
+      "4162",
+      "4164"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Píritu",
+    "codigos_postales": [
+      "4165",
+      "4168"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Silva",
+    "codigos_postales": [
+      "2047",
+      "2055"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "4114",
+      "4115"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Tocópero",
+    "codigos_postales": [
+      "4169"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Unión",
+    "codigos_postales": [
+      "4154"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Urumaco",
+    "codigos_postales": [
+      "4141"
+    ]
+  },
+  {
+    "estado": "Falcón",
+    "municipio": "Zamora",
+    "codigos_postales": [
+      "4167",
+      "4166"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Camaguán",
+    "codigos_postales": [
+      "2313",
+      "2335"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Chaguaramas",
+    "codigos_postales": [
+      "2358"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "El Socorro",
+    "codigos_postales": [
+      "2355"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Francisco de Miranda",
+    "codigos_postales": [
+      "2312",
+      "2314",
+      "2315",
+      "2316"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "José Félix Ribas",
+    "codigos_postales": [
+      "2306",
+      "2330"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "José Tadeo Monagas",
+    "codigos_postales": [
+      "2320",
+      "2328",
+      "2326",
+      "2325",
+      "2321",
+      "2324",
+      "2322"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Juan Germán Roscio",
+    "codigos_postales": [
+      "2301",
+      "2303"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Julián Mellado",
+    "codigos_postales": [
+      "2319"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Las Mercedes",
+    "codigos_postales": [
+      "2356"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Leonardo Infante",
+    "codigos_postales": [
+      "2311",
+      "2350"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Ortíz",
+    "codigos_postales": [
+      "2302",
+      "2304",
+      "2305"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Pedro Zaraza",
+    "codigos_postales": [
+      "2332"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "San Gerónimo de Guayabal",
+    "codigos_postales": [
+      "2327",
+      "2317"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "San José de Guaribe",
+    "codigos_postales": [
+      "2323"
+    ]
+  },
+  {
+    "estado": "Guárico",
+    "municipio": "Santa María de Ipire",
+    "codigos_postales": [
+      "2354"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Andrés Eloy Blanco",
+    "codigos_postales": [
+      "3028",
+      "3032"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Crespo",
+    "codigos_postales": [
+      "3025",
+      "3028"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Iribarren",
+    "codigos_postales": [
+      "3001",
+      "3004",
+      "3044",
+      "3016",
+      "3009",
+      "3015"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Jiménez",
+    "codigos_postales": [
+      "3061",
+      "3063"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Morán",
+    "codigos_postales": [
+      "3017",
+      "3022",
+      "3018",
+      "3057",
+      "3058",
+      "3023"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Palavecino",
+    "codigos_postales": [
+      "3023",
+      "3025"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Simón Planas",
+    "codigos_postales": [
+      "3015",
+      "3018"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Torres",
+    "codigos_postales": [
+      "3050",
+      "3061",
+      "3052",
+      "3055"
+    ]
+  },
+  {
+    "estado": "Lara",
+    "municipio": "Urdaneta",
+    "codigos_postales": [
+      "3031",
+      "3050"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Alberto Adriani",
+    "codigos_postales": [
+      "5145"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Andrés Bello",
+    "codigos_postales": [
+      "5102"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Antonio Pinto Salinas",
+    "codigos_postales": [
+      "5141",
+      "5142"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Aricagua",
+    "codigos_postales": [
+      "5119"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Arzobispo Chacón",
+    "codigos_postales": [
+      "5103",
+      "5105",
+      "5106"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Campo Elías",
+    "codigos_postales": [
+      "5110",
+      "5111",
+      "5107"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Caracciolo Parra Olmedo",
+    "codigos_postales": [
+      "5146"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Cardenal Quintero",
+    "codigos_postales": [
+      "5131"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Guaraque",
+    "codigos_postales": [
+      "5134"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Julio César Salas",
+    "codigos_postales": [
+      "3164"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Justo Briceño",
+    "codigos_postales": [
+      "3158"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "5101",
+      "5115"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Miranda",
+    "codigos_postales": [
+      "3112",
+      "5114"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Obispo Ramos de Lora",
+    "codigos_postales": [
+      "5146"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Padre Noguera",
+    "codigos_postales": [
+      "5002"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Pueblo Llano",
+    "codigos_postales": [
+      "5124"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Rangel",
+    "codigos_postales": [
+      "5129",
+      "5130"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Rivas Dávila",
+    "codigos_postales": [
+      "5133",
+      "5135"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Santos Marquina",
+    "codigos_postales": [
+      "5116"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "5136",
+      "5138",
+      "5139"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Tovar",
+    "codigos_postales": [
+      "5143"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Tulio Febres Cordero",
+    "codigos_postales": [
+      "3158"
+    ]
+  },
+  {
+    "estado": "Mérida",
+    "municipio": "Zea",
+    "codigos_postales": [
+      "5144"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Acevedo",
+    "codigos_postales": [
+      "1241",
+      "1223",
+      "1225",
+      "1246",
+      "1226",
+      "1224"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Andrés Bello",
+    "codigos_postales": [
+      "1236",
+      "1235"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Baruta",
+    "codigos_postales": [
+      "1080",
+      "1061"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Brión",
+    "codigos_postales": [
+      "1232",
+      "1231",
+      "1228"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Buroz",
+    "codigos_postales": [
+      "1228"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Carrizal",
+    "codigos_postales": [
+      "1203",
+      "1202"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Chacao",
+    "codigos_postales": [
+      "1064",
+      "1060",
+      "1062"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Cristóbal Rojas",
+    "codigos_postales": [
+      "1210"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "El Hatillo",
+    "codigos_postales": [
+      "1083"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Guaicaipuro",
+    "codigos_postales": [
+      "1211",
+      "1201"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Independencia",
+    "codigos_postales": [
+      "1215"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Lander",
+    "codigos_postales": [
+      "1209"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Los Salias",
+    "codigos_postales": [
+      "1204"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Páez",
+    "codigos_postales": [
+      "1243",
+      "1236"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Paz Castillo",
+    "codigos_postales": [
+      "1214"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Pedro Gual",
+    "codigos_postales": [
+      "1238"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Plaza",
+    "codigos_postales": [
+      "1220"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Simón Bolívar",
+    "codigos_postales": [
+      "1212"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "1073",
+      "1071"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Urdaneta",
+    "codigos_postales": [
+      "1211"
+    ]
+  },
+  {
+    "estado": "Miranda",
+    "municipio": "Zamora",
+    "codigos_postales": [
+      "1221"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Acosta",
+    "codigos_postales": [
+      "6219"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Aguasay",
+    "codigos_postales": [
+      "6205"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "6211"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Caripe",
+    "codigos_postales": [
+      "6210",
+      "6224"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Cedeño",
+    "codigos_postales": [
+      "6209"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Ezequiel Zamora",
+    "codigos_postales": [
+      "6213",
+      "6217"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "6223"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Maturín",
+    "codigos_postales": [
+      "6201"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Piar",
+    "codigos_postales": [
+      "6206"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Púnceres",
+    "codigos_postales": [
+      "6216",
+      "6218"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Santa Bárbara",
+    "codigos_postales": [
+      "6221"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Sotillo",
+    "codigos_postales": [
+      "6208"
+    ]
+  },
+  {
+    "estado": "Monagas",
+    "municipio": "Uracoa",
+    "codigos_postales": [
+      "6223"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Antolín del Campo",
+    "codigos_postales": [
+      "6317",
+      "6324"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Arismendi",
+    "codigos_postales": [
+      "6311"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Díaz",
+    "codigos_postales": [
+      "6312",
+      "6320"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "García",
+    "codigos_postales": [
+      "6308",
+      "6301"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Gómez",
+    "codigos_postales": [
+      "6302",
+      "6305",
+      "6314",
+      "6310",
+      "6322",
+      "6323"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Maneiro",
+    "codigos_postales": [
+      "6316"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Marcano",
+    "codigos_postales": [
+      "6309",
+      "6315"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Mariño",
+    "codigos_postales": [
+      "6301"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Península de Macanao",
+    "codigos_postales": [
+      "6303",
+      "6304"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Tubores",
+    "codigos_postales": [
+      "6318",
+      "6326",
+      "6327"
+    ]
+  },
+  {
+    "estado": "Nueva Esparta",
+    "municipio": "Villalba",
+    "codigos_postales": [
+      "6321"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Agua Blanca",
+    "codigos_postales": [
+      "3302"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Araure",
+    "codigos_postales": [
+      "3303"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Esteller",
+    "codigos_postales": [
+      "3305"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Guanare",
+    "codigos_postales": [
+      "3350",
+      "3357"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Guanarito",
+    "codigos_postales": [
+      "3354"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Monseñor José Vicente de Unda",
+    "codigos_postales": [
+      "3357"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Ospino",
+    "codigos_postales": [
+      "3352"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Páez",
+    "codigos_postales": [
+      "3301",
+      "3304"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Papelón",
+    "codigos_postales": [
+      "3353",
+      "3355"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "San Génaro de Boconoito",
+    "codigos_postales": [
+      "3355"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "San Rafael de Onoto",
+    "codigos_postales": [
+      "3306"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Santa Rosalía",
+    "codigos_postales": [
+      "3307"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "3351"
+    ]
+  },
+  {
+    "estado": "Portuguesa",
+    "municipio": "Turén",
+    "codigos_postales": [
+      "3317",
+      "3309"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Andrés Eloy Blanco",
+    "codigos_postales": [
+      "6168"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Andrés Mata",
+    "codigos_postales": [
+      "6167"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Arismendi",
+    "codigos_postales": [
+      "6163",
+      "6164"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Benítez",
+    "codigos_postales": [
+      "6152"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Bermúdez",
+    "codigos_postales": [
+      "6150"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "6107"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Cajigal",
+    "codigos_postales": [
+      "6155"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Cruz Salmerón Acosta",
+    "codigos_postales": [
+      "6102"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "6154"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Mariño",
+    "codigos_postales": [
+      "6156"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Mejía",
+    "codigos_postales": [
+      "6110"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Montes",
+    "codigos_postales": [
+      "6106"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Ribero",
+    "codigos_postales": [
+      "6126"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "6101"
+    ]
+  },
+  {
+    "estado": "Sucre",
+    "municipio": "Valdez",
+    "codigos_postales": [
+      "6161"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Andrés Bello",
+    "codigos_postales": [
+      "5012"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Antonio Rómulo Costa",
+    "codigos_postales": [
+      "5020"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Ayacucho",
+    "codigos_postales": [
+      "5003",
+      "5005"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "5007"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Cárdenas",
+    "codigos_postales": [
+      "5017",
+      "5012",
+      "5001"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Córdoba",
+    "codigos_postales": [
+      "5051"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Fernández Feo",
+    "codigos_postales": [
+      "5032"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Francisco de Miranda",
+    "codigos_postales": [
+      "5026"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "García de Hevia",
+    "codigos_postales": [
+      "5020"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Guásimos",
+    "codigos_postales": [
+      "5015"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Independencia",
+    "codigos_postales": [
+      "5009",
+      "5001",
+      "5017"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Jáuregui",
+    "codigos_postales": [
+      "5022"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "José María Vargas",
+    "codigos_postales": [
+      "5021"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Junín",
+    "codigos_postales": [
+      "5029",
+      "5030"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Libertad",
+    "codigos_postales": [
+      "5010"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Libertador",
+    "codigos_postales": [
+      "5002"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Lobatera",
+    "codigos_postales": [
+      "5033",
+      "5036"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Michelena",
+    "codigos_postales": [
+      "5037"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Panamericano",
+    "codigos_postales": [
+      "5038"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Pedro María Ureña",
+    "codigos_postales": [
+      "5048"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Rafael Urdaneta",
+    "codigos_postales": [
+      "5028"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Samuel Darío Maldonado",
+    "codigos_postales": [
+      "5039",
+      "5043",
+      "5040"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "San Cristóbal",
+    "codigos_postales": [
+      "5001",
+      "5017"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "San Judas Tadeo",
+    "codigos_postales": [
+      "5044"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Seboruco",
+    "codigos_postales": [
+      "5027"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Simón Rodríguez",
+    "codigos_postales": [
+      "5043"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "5054"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Torbes",
+    "codigos_postales": [
+      "5034"
+    ]
+  },
+  {
+    "estado": "Táchira",
+    "municipio": "Uribante",
+    "codigos_postales": [
+      "5058"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Andrés Bello",
+    "codigos_postales": [
+      "3113"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Boconó",
+    "codigos_postales": [
+      "3103",
+      "3115",
+      "3101",
+      "3118",
+      "3119"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "3110"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Candelaria",
+    "codigos_postales": [
+      "3157",
+      "3124",
+      "3129"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Carache",
+    "codigos_postales": [
+      "3123",
+      "3125"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Escuque",
+    "codigos_postales": [
+      "3105",
+      "3135"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "José Felipe Márquez Cañizales",
+    "codigos_postales": [
+      "3156"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Juan Vicente Campo Elías",
+    "codigos_postales": [
+      "3116"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "La Ceiba",
+    "codigos_postales": [
+      "3108",
+      "3127"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Miranda",
+    "codigos_postales": [
+      "3110",
+      "3107"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Monte Carmelo",
+    "codigos_postales": [
+      "3134"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Motatán",
+    "codigos_postales": [
+      "3140"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Pampán",
+    "codigos_postales": [
+      "3151",
+      "3153",
+      "3156"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Pampanito",
+    "codigos_postales": [
+      "3150",
+      "3152"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Rafael Rangel",
+    "codigos_postales": [
+      "3104",
+      "3109"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "San Rafael de Carvajal",
+    "codigos_postales": [
+      "3101",
+      "3102",
+      "3149"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "3110"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Trujillo",
+    "codigos_postales": [
+      "3150",
+      "3154"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Urdaneta",
+    "codigos_postales": [
+      "3147",
+      "3145",
+      "3146",
+      "3101"
+    ]
+  },
+  {
+    "estado": "Trujillo",
+    "municipio": "Valera",
+    "codigos_postales": [
+      "3101",
+      "3106"
+    ]
+  },
+  {
+    "estado": "Vargas",
+    "municipio": "Vargas",
+    "codigos_postales": [
+      "1165",
+      "1167",
+      "1162",
+      "1160",
+      "1168",
+      "1164",
+      "1161",
+      "1166"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Arístides Bastidas",
+    "codigos_postales": [
+      "3212"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Bolívar",
+    "codigos_postales": [
+      "3210"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Bruzual",
+    "codigos_postales": [
+      "3209",
+      "3202"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Cocorote",
+    "codigos_postales": [
+      "3208"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Independencia",
+    "codigos_postales": [
+      "3221"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "José Antonio Páez",
+    "codigos_postales": [
+      "3211"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "La Trinidad",
+    "codigos_postales": [
+      "3219"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Manuel Monge",
+    "codigos_postales": [
+      "3216"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Nirgua",
+    "codigos_postales": [
+      "3205",
+      "3214",
+      "3218"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Peña",
+    "codigos_postales": [
+      "3203"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "San Felipe",
+    "codigos_postales": [
+      "3213",
+      "3206",
+      "3201"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "3207"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Urachiche",
+    "codigos_postales": [
+      "3204"
+    ]
+  },
+  {
+    "estado": "Yaracuy",
+    "municipio": "Veroes",
+    "codigos_postales": [
+      "3223",
+      "3222"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Almirante Padilla",
+    "codigos_postales": [
+      "4030"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Baralt",
+    "codigos_postales": [
+      "4015"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Cabimas",
+    "codigos_postales": [
+      "4013"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Catatumbo",
+    "codigos_postales": [
+      "5101"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Colón",
+    "codigos_postales": [
+      "5147",
+      "5148",
+      "5149"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Francisco Javier Pulgar",
+    "codigos_postales": [
+      "5145"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Indigena Bolivariano Guajira",
+    "codigos_postales": [
+      "4037",
+      "4053"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Jesús Enrique Lossada",
+    "codigos_postales": [
+      "4032"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Jesús María Semprún",
+    "codigos_postales": [
+      "5068"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "La Cañada de Urdaneta",
+    "codigos_postales": [
+      "4033"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Lagunillas",
+    "codigos_postales": [
+      "4019",
+      "4016"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Machiques de Perijá",
+    "codigos_postales": [
+      "4035",
+      "4021",
+      "4040"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Mara",
+    "codigos_postales": [
+      "4027",
+      "4048",
+      "4044",
+      "4045"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Maracaibo",
+    "codigos_postales": [
+      "4005",
+      "4001",
+      "4002"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Miranda",
+    "codigos_postales": [
+      "4036"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Rosario de Perijá",
+    "codigos_postales": [
+      "4047"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "San Francisco",
+    "codigos_postales": [
+      "4004"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Santa Rita",
+    "codigos_postales": [
+      "4020"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Simón Bolívar",
+    "codigos_postales": [
+      "4017"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Sucre",
+    "codigos_postales": [
+      "3158",
+      "3166"
+    ]
+  },
+  {
+    "estado": "Zulia",
+    "municipio": "Valmore Rodríguez",
+    "codigos_postales": [
+      "4014"
+    ]
+  }
+]
