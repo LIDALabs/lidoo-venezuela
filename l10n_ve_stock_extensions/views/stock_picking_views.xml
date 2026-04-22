@@ -4,14 +4,27 @@
         <field name="name">stock.picking.form.inherit.lidalabs.stock</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="l10n_ve_stock_account.stock_view_picking_form" />
+        <field name="priority">99</field>
         <field name="arch" type="xml">
-            <!-- Ocultamos los botones "Validar" redundantes que aparecen en borrador -->
-            <!-- Apuntamos a los botones agregados por l10n_ve_stock_account que usan la clase o_btn_validate -->
+            <!-- Ocultamos los botones "Validar" redundantes que aparecen en borrador (inventario) -->
             <xpath expr="//header/button[@name='button_validate'][@class='o_btn_validate'][1]" position="attributes">
                 <attribute name="invisible">state in ('draft', 'waiting', 'assigned', 'done', 'cancel')</attribute>
             </xpath>
             <xpath expr="//header/button[@name='button_validate'][@class='o_btn_validate'][2]" position="attributes">
                 <attribute name="invisible">state in ('draft', 'waiting', 'assigned', 'done', 'cancel')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Fix para Compras: ocultar el botón que agrega l10n_ve_stock en recepciones -->
+    <record id="fix_purchase_receipt_validate" model="ir.ui.view">
+        <field name="name">stock.picking.fix.purchase.receipt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="l10n_ve_stock.view_picking_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='do_print_picking']/preceding-sibling::button[@name='button_validate'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
