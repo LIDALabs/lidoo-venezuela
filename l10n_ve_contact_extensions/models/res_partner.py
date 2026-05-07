@@ -27,6 +27,39 @@ class ResPartner(models.Model):
         else:
             self.company_type = 'person'
 
+    def _check_required_address_ve(self):
+        for partner in self:
+            if partner.parent_id:
+                continue
+
+            missing = []
+            if not partner.street:
+                missing.append(_("Calle"))
+            if not partner.state_id:
+                missing.append(_("Estado"))
+            if 'zip_code_id' in partner._fields and not partner.zip_code_id:
+                missing.append(_("C.P."))
+
+            if missing:
+                raise ValidationError(
+                    _("Debe completar los campos obligatorios de dirección: %s") % ", ".join(missing)
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        partners = super().create(vals_list)
+        partners._check_required_address_ve()
+        return partners
+
+    def write(self, vals):
+        result = super().write(vals)
+        self._check_required_address_ve()
+        return result
+
+    @api.constrains('street', 'state_id', 'zip_code_id', 'parent_id')
+    def _constrain_required_address_ve(self):
+        self._check_required_address_ve()
+
     @api.constrains('vat', 'country_id', 'prefix_vat')
     def check_vat(self):
         """ Since we validate more documents than the vat for Venezuelan partners (RIF, CI) we

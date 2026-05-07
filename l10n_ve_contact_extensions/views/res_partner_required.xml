@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="view_form_res_partner_required_fields" model="ir.ui.view">
+            <field name="name">res.partner.l10n_ve.required.fields</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="l10n_ve_location_extensions.view_partner_form_inherited_extensions" />
+            <field name="priority">200</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_address_format')]/field[@name='street']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('o_address_format')]/field[@name='state_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('o_address_format')]/field[@name='zip_code_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
