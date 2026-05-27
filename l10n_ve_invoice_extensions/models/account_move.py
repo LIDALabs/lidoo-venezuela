@@ -62,13 +62,30 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.name
 
-    @api.depends('posted_before', 'move_type')
+    @api.depends('restrict_mode_hash_table', 'state', 'posted_before', 'move_type')
     def _compute_show_reset_to_draft_button(self):
-        """ Previene que un movimiento sea regresado a  """
+        """ Controla visibilidad del botón reset-to-draft.
+        - out_invoice/out_receipt: nunca mostrar si ya fue posteada.
+        - out_refund posteada: solo mostrar para administradores. """
         super()._compute_show_reset_to_draft_button()
         for move in self:
             if move.move_type in ('out_invoice', 'out_receipt') and move.posted_before:
                 move.show_reset_to_draft_button = False
+            if move.move_type == 'out_refund' and move.state == 'posted' and move.posted_before:
+                if not self.env.user.has_group('base.group_erp_manager'):
+                    move.show_reset_to_draft_button = False
+
+    def button_draft(self):
+        """ Restringe reset-to-draft de notas de crédito posteadas solo a administradores. """
+        for move in self:
+            if move.move_type == 'out_refund' and move.state == 'posted':
+                if not self.env.user.has_group('base.group_erp_manager'):
+                    raise UserError(_(
+                        "Solo un administrador puede regresar una nota de crédito "
+                        "contabilizada a borrador.\n"
+                        "Por favor contacte a su administrador del sistema."
+                    ))
+        return super().button_draft()
 
     @api.model
     def get_sequence(self):
