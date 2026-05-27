@@ -46,10 +46,9 @@
                 <attribute name="readonly">move_type in ['out_refund', 'out_invoice'] and debit_origin_id</attribute>
             </xpath>
             <!-- Usa show_reset_to_draft_button para evitar acción -->
-            <!-- <button name="button_draft" position="attributes">
-                <attribute name="invisible">1</attribute>
-                <attribute name="invisible">not show_reset_to_draft_button or (state in ['posted', 'cancel'] and move_type in ['out_invoice', 'out_refund'])</attribute>
-            </button> -->
+            <button name="button_draft" position="attributes">
+                <attribute name="invisible">not show_reset_to_draft_button or (state in ['posted', 'cancel'] and move_type == 'out_invoice')</attribute>
+            </button>
 
             <button name="action_reverse" position="attributes">
                 <attribute name="invisible">move_type in ['in_invoice', 'in_refund'] or (correlative == False or debit_origin_id or reversed_entry_id)</attribute>
