@@ -67,7 +67,7 @@ class AccountMove(models.Model):
         """ Previene que un movimiento sea regresado a  """
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.move_type in ('out_invoice', 'out_refund', 'out_receipt') and move.posted_before:
+            if move.move_type in ('out_invoice', 'out_receipt') and move.posted_before:
                 move.show_reset_to_draft_button = False
 
     @api.model
