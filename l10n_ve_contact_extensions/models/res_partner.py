@@ -8,6 +8,8 @@ from odoo.exceptions import UserError, ValidationError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    _required_address_validation_fields = {'street', 'state_id', 'zip_code_id', 'parent_id'}
+
     country_id = fields.Many2one(
         'res.country',
         default=lambda self: self.env.ref('base.ve')
@@ -53,7 +55,8 @@ class ResPartner(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        self._check_required_address_ve()
+        if self._required_address_validation_fields.intersection(vals):
+            self._check_required_address_ve()
         return result
 
     @api.constrains('street', 'state_id', 'zip_code_id', 'parent_id')
