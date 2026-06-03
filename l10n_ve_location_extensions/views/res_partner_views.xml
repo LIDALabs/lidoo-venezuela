@@ -20,7 +20,7 @@
                         
                         <field name="municipality" class="o_address_street" placeholder="Municipio" required="1"/>
                         
-                        <field name="zip_code_id" class="o_address_street" placeholder="C.P" options="{'no_create': True, 'no_open': True}" readonly="type == 'contact' and parent_id"/>
+                        <field name="zip_code_id" class="o_address_street" placeholder="C.P" options="{'no_open': True, 'no_quick_create': False}" context="{'default_municipality_id': municipality}" readonly="type == 'contact' and parent_id"/>
                         <field name="zip" invisible="1"/>
                         
                         <field name="country_id" placeholder="País" class="o_address_street" options='{"no_open": True, "no_create": True}' readonly="type == 'contact' and parent_id"/>

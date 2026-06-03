@@ -24,6 +24,18 @@ class ResCountryMunicipalityZipCode(models.Model):
     )
 
     @api.model
+    def name_create(self, name):
+        """Override name_create to support quick creation with municipality context."""
+        municipality_id = self._context.get('default_municipality_id')
+        if municipality_id:
+            record = self.create({
+                'name': name,
+                'municipality_id': municipality_id,
+            })
+            return record.name_get()[0]
+        return super(ResCountryMunicipalityZipCode, self).name_create(name)
+
+    @api.model
     def load_zip_codes_from_json(self):
         _logger.info("Cargando códigos postales desde zip.json (via XML function)")
         try:
