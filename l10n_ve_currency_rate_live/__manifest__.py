@@ -11,6 +11,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/res_config_settings.xml",
+        "views/bcv_rate_log_views.xml",
         "wizard/bcv_rate_wizard_view.xml"
     ],
     "post_init_hook": "setup_currency_update",

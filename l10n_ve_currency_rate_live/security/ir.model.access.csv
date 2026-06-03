@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_bcv_rate_wizard_all,bcv.rate.wizard.all,model_bcv_rate_wizard,base.group_user,1,1,1,1
+access_bcv_rate_log_all,bcv.rate.log.all,model_bcv_rate_log,base.group_user,1,1,1,1
+access_bcv_rate_helper_all,bcv.rate.helper.all,model_bcv_rate_helper,base.group_user,1,1,1,1

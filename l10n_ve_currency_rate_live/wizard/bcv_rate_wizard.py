@@ -1,5 +1,4 @@
 from odoo import api, fields, models, _
-from ...tools import binaural_bcv_query
 
 class BcvRateWizard(models.TransientModel):
     _name = 'bcv.rate.wizard'
@@ -9,6 +8,8 @@ class BcvRateWizard(models.TransientModel):
     rate_usd = fields.Float(string='Tasa BCV (USD)', digits=(12, 4), readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     date = fields.Date(string='Fecha de Tasa', readonly=True)
+    used_fallback = fields.Boolean(string='Usó tasa anterior', readonly=True)
+    error_message = fields.Text(string='Mensaje de error', readonly=True)
 
     @api.model
     def default_get(self, fields_list):
@@ -22,12 +23,15 @@ class BcvRateWizard(models.TransientModel):
             menu.sudo().write({'parent_id': ent_menu.id})
 
         try:
-            rates, rate_day = binaural_bcv_query.get_bcv_rate_of_the_day(self)
-            if rate_day:
+            helper = self.env['bcv.rate.helper']
+            result = helper.get_bcv_rate_with_fallback()
+            if result.get('rates') and result.get('date'):
                 res.update({
-                    'rate_usd': rates.get('USD', 0.0),
-                    'date': rate_day,
-                    'name': f"Tasa BCV del {rate_day}"
+                    'rate_usd': result['rates'].get('USD', 0.0),
+                    'date': result['date'],
+                    'name': f"Tasa BCV del {result['date']}",
+                    'used_fallback': result.get('used_fallback', False),
+                    'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
                 })
         except Exception:
             pass
@@ -35,12 +39,16 @@ class BcvRateWizard(models.TransientModel):
 
     def action_get_bcv_rate(self):
         self.ensure_one()
-        rates, rate_day = binaural_bcv_query.get_bcv_rate_of_the_day(self)
-        if rate_day:
+        helper = self.env['bcv.rate.helper']
+        result = helper.get_bcv_rate_with_fallback()
+        
+        if result.get('rates') and result.get('date'):
             self.write({
-                'rate_usd': rates.get('USD', 0.0),
-                'date': rate_day,
-                'name': f"Tasa BCV del {rate_day}"
+                'rate_usd': result['rates'].get('USD', 0.0),
+                'date': result['date'],
+                'name': f"Tasa BCV del {result['date']}",
+                'used_fallback': result.get('used_fallback', False),
+                'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
             })
         
         return {
@@ -49,6 +57,16 @@ class BcvRateWizard(models.TransientModel):
             'view_mode': 'form',
             'res_id': self.id,
             'target': 'new',
+        }
+
+    def action_view_history(self):
+        """Open BCV rate history log"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Historial BCV',
+            'res_model': 'bcv.rate.log',
+            'view_mode': 'tree,form',
+            'target': 'current',
         }
 
     def action_update_prices(self):
