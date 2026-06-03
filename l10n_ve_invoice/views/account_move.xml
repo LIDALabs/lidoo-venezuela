@@ -56,7 +56,7 @@
 
             <button name="action_reverse" position="after">
                 <button
-                    name="action_debit_note_button" string="Add Debit note"
+                    name="action_debit_note_button" string="Agregar Nota de Débito"
                     type="object" class="o_btn_validate"
                     invisible="correlative == False or debit_origin_id or reversed_entry_id"
                 />

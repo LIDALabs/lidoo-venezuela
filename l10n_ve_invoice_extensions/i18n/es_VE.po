@@ -18,4 +18,4 @@ msgstr ""
 #. module: l10n_ve_invoice
 #: model_terms:ir.ui.view,arch_db:l10n_ve_invoice.view_account_move_form_l10n_ve_invoice
 msgid "Add Debit note"
-msgstr "Agregar nota de débito"
+msgstr "Agregar Nota de Débito"
