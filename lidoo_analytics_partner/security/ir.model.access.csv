@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lidoo_analytics_client_manager,lidoo.analytics.client.manager,model_lidoo_analytics_client,group_lidoo_analytics_manager,1,1,1,1
+access_lidoo_analytics_client_user,lidoo.analytics.client.user,model_lidoo_analytics_client,base.group_user,1,0,0,0
+access_lidoo_analytics_report_manager,lidoo.analytics.report.manager,model_lidoo_analytics_report,group_lidoo_analytics_manager,1,1,1,1
+access_lidoo_analytics_report_user,lidoo.analytics.report.user,model_lidoo_analytics_report,base.group_user,1,0,0,0
+access_lidoo_analytics_alert_manager,lidoo.analytics.alert.manager,model_lidoo_analytics_alert,group_lidoo_analytics_manager,1,1,1,1
+access_lidoo_analytics_report_modules_manager,lidoo.analytics.report.modules.manager,model_lidoo_analytics_report_modules,group_lidoo_analytics_manager,1,1,1,1
+access_lidoo_analytics_report_modules_user,lidoo.analytics.report.modules.user,model_lidoo_analytics_report_modules,base.group_user,1,0,0,0

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== TREE VIEW ==================== -->
+    <record id="view_lidoo_analytics_alert_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.alert.tree</field>
+        <field name="model">lidoo.analytics.alert</field>
+        <field name="arch" type="xml">
+            <tree string="Alerts">
+                <field name="name" />
+                <field name="client_id" />
+                <field name="alert_type" />
+                <field name="threshold_value" />
+                <field name="threshold_version" />
+                <field name="active" />
+                <field name="last_triggered" />
+            </tree>
+        </field>
+    </record>
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_lidoo_analytics_alert_form" model="ir.ui.view">
+        <field name="name">lidoo.analytics.alert.form</field>
+        <field name="model">lidoo.analytics.alert</field>
+        <field name="arch" type="xml">
+            <form string="Alert Rule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="client_id" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="alert_type" />
+                            <field name="threshold_value" invisible="alert_type == 'version_below'" />
+                            <field name="threshold_version" invisible="alert_type != 'version_below'" />
+                            <field name="last_triggered" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Additional notes about this alert rule..." />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_lidoo_analytics_alert_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.alert.search</field>
+        <field name="model">lidoo.analytics.alert</field>
+        <field name="arch" type="xml">
+            <search string="Alerts">
+                <field name="name" />
+                <field name="client_id" />
+                <filter name="active_alerts" string="Active" domain="[('active', '=', True)]" />
+                <group string="Group By" expand="0">
+                    <filter name="group_client" string="Client" context="{'group_by': 'client_id'}" />
+                    <filter name="group_type" string="Alert Type" context="{'group_by': 'alert_type'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- ==================== ACTION ==================== -->
+    <record id="action_lidoo_analytics_alert" model="ir.actions.act_window">
+        <field name="name">Alerts</field>
+        <field name="res_model">lidoo.analytics.alert</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_lidoo_analytics_alert_search" />
+    </record>
+</odoo>

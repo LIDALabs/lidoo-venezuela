@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_analytics" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.lidoo.analytics</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app name="lidoo_analytics_client" string="Partner Analytics" data-string="Partner Analytics">
+                    <block title="Partner Analytics Reporting">
+                        <setting id="lidoo_analytics_enabled" string="Enable Analytics Reporting" title="Enable Partner Analytics" help="When enabled, this instance will periodically send analytics data to the partner.">
+                            <field name="lidoo_analytics_enabled" />
+                            <div class="content-group" invisible="not lidoo_analytics_enabled">
+                                <div class="row mt16">
+                                    <label string="Partner Endpoint URL" for="lidoo_analytics_endpoint_url" class="col-lg-3 o_light_label" />
+                                    <field name="lidoo_analytics_endpoint_url" placeholder="https://partner.example.com/lidoo/analytics/report" />
+                                </div>
+                                <div class="row mt8">
+                                    <label string="API Key" for="lidoo_analytics_api_key" class="col-lg-3 o_light_label" />
+                                    <field name="lidoo_analytics_api_key" password="True" />
+                                </div>
+                                <div class="row mt8">
+                                    <label string="Reporting Interval (hours)" for="lidoo_analytics_interval_hours" class="col-lg-3 o_light_label" />
+                                    <field name="lidoo_analytics_interval_hours" />
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="lidoo_analytics_collect_hw" string="Collect Hardware Metrics" title="Collect Hardware Metrics" help="When enabled, CPU and memory usage will be collected. Requires the psutil Python package.">
+                            <field name="lidoo_analytics_collect_hw" />
+                        </setting>
+                        <setting id="lidoo_analytics_pull_mode" string="Allow Partner Pull" title="Allow Partner Pull" help="Enable the partner instance to pull data from this instance.">
+                            <field name="lidoo_analytics_enable_pull" />
+                        </setting>
+                        <div class="content-group" invisible="not lidoo_analytics_enable_pull">
+                            <div class="row mt16">
+                                <label string="Pull API Key" for="lidoo_analytics_pull_api_key" class="col-lg-3 o_light_label" />
+                                <field name="lidoo_analytics_pull_api_key" />
+                                <button name="action_generate_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
+                            </div>
+                        </div>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

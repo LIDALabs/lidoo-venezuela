@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== TREE VIEW ==================== -->
+    <record id="view_lidoo_analytics_report_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.tree</field>
+        <field name="model">lidoo.analytics.report</field>
+        <field name="arch" type="xml">
+            <tree string="Reports" default_order="report_date desc">
+                <field name="client_id" />
+                <field name="report_date" />
+                <field name="odoo_version" />
+                <field name="active_user_count" />
+                <field name="database_size_display" string="DB Size" />
+                <field name="uptime_display" string="Uptime" />
+                <field name="custom_module_count" />
+                <field name="cpu_usage" optional="hide" />
+                <field name="memory_usage" optional="hide" />
+            </tree>
+        </field>
+    </record>
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_lidoo_analytics_report_form" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.form</field>
+        <field name="model">lidoo.analytics.report</field>
+        <field name="arch" type="xml">
+            <form string="Report" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="General">
+                            <field name="client_id" />
+                            <field name="report_date" />
+                            <field name="odoo_version" />
+                            <field name="uptime_display" string="Uptime" />
+                        </group>
+                        <group string="Instance">
+                            <field name="os_info" />
+                            <field name="python_version" />
+                            <field name="database_size_display" string="DB Size" />
+                            <field name="active_user_count" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Modules">
+                            <field name="custom_module_count" />
+                        </group>
+                        <group string="Hardware">
+                            <field name="cpu_usage" widget="progressbar" />
+                            <field name="memory_usage" widget="progressbar" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="modules" string="Installed Modules">
+                            <field name="module_ids" />
+                        </page>
+                        <page name="raw" string="Raw Payload">
+                            <field name="raw_payload" widget="text" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_lidoo_analytics_report_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.search</field>
+        <field name="model">lidoo.analytics.report</field>
+        <field name="arch" type="xml">
+            <search string="Reports">
+                <field name="client_id" />
+                <field name="odoo_version" />
+                <group string="Group By" expand="0">
+                    <filter name="group_client" string="Client" context="{'group_by': 'client_id'}" />
+                    <filter name="group_version" string="Odoo Version" context="{'group_by': 'odoo_version'}" />
+                    <filter name="group_date" string="Report Date" context="{'group_by': 'report_date:day'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- ==================== ACTION ==================== -->
+    <record id="action_lidoo_analytics_report" model="ir.actions.act_window">
+        <field name="name">Reports</field>
+        <field name="res_model">lidoo.analytics.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_lidoo_analytics_report_search" />
+    </record>
+</odoo>

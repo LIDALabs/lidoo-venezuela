@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lidoo_analytics_report_modules_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.modules.tree</field>
+        <field name="model">lidoo.analytics.report.modules</field>
+        <field name="arch" type="xml">
+            <tree string="Modules" 
+                create="false" 
+                edit="false" 
+                delete="false" 
+                limit="20" 
+                default_order="name asc">
+                <field name="name" string="Module Name"/>
+                <field name="version" string="Version"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

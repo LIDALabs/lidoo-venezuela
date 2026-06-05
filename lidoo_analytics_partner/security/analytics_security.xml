@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security category -->
+    <record id="module_category_lidoo_analytics" model="ir.module.category">
+        <field name="name">Partner Analytics</field>
+        <field name="sequence">100</field>
+    </record>
+    <!-- Manager group -->
+    <record id="group_lidoo_analytics_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_lidoo_analytics" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="base.group_no_one" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_lidoo_analytics_manager'))]" />
+    </record>
+</odoo>

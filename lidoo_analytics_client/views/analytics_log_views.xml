@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== TREE VIEW ==================== -->
+    <record id="view_lidoo_analytics_log_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.log.tree</field>
+        <field name="model">lidoo.analytics.log</field>
+        <field name="arch" type="xml">
+            <tree string="Analytics Logs" default_order="send_date desc" create="false" edit="false" delete="false">
+                <field name="send_date" />
+                <field name="status" widget="badge" decoration-success="status == 'success'" decoration-danger="status == 'error'" />
+                <field name="payload_hash" />
+                <field name="error_message" optional="show" />
+            </tree>
+        </field>
+    </record>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_lidoo_analytics_log_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.log.search</field>
+        <field name="model">lidoo.analytics.log</field>
+        <field name="arch" type="xml">
+            <search string="Analytics Logs">
+                <filter name="success" string="Success" domain="[('status', '=', 'success')]" />
+                <filter name="error" string="Error" domain="[('status', '=', 'error')]" />
+                <group string="Group By" expand="0">
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}" />
+                    <filter name="group_date" string="Date" context="{'group_by': 'send_date:day'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- ==================== ACTION ==================== -->
+    <record id="action_lidoo_analytics_log" model="ir.actions.act_window">
+        <field name="name">Analytics Logs</field>
+        <field name="res_model">lidoo.analytics.log</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_lidoo_analytics_log_search" />
+    </record>
+    <!-- ==================== MENU (debug only) ==================== -->
+    <menuitem id="menu_lidoo_analytics_log" name="Analytics Logs" parent="base.menu_administration" action="action_lidoo_analytics_log" groups="base.group_no_one" sequence="100" />
+</odoo>

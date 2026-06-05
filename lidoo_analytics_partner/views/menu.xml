@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level menu -->
+    <menuitem id="menu_lidoo_analytics_root" name="Partner Analytics" web_icon="lidoo_analytics_partner,static/description/icon.png" sequence="100" />
+    <!-- Sub-menus -->
+    <menuitem id="menu_lidoo_analytics_clients" name="Clients" parent="menu_lidoo_analytics_root" action="action_lidoo_analytics_client" sequence="10" />
+
+    <menuitem id="menu_lidoo_analytics_reports" name="Reports" parent="menu_lidoo_analytics_root" action="action_lidoo_analytics_report" sequence="20" />
+
+    <menuitem id="menu_lidoo_analytics_alerts" name="Alerts" parent="menu_lidoo_analytics_root" action="action_lidoo_analytics_alert" sequence="30" />
+</odoo>

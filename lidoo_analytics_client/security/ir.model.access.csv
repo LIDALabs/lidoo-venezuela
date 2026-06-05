@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lidoo_analytics_log_system,lidoo.analytics.log.system,model_lidoo_analytics_log,base.group_system,1,1,1,1
+access_lidoo_analytics_log_user,lidoo.analytics.log.user,model_lidoo_analytics_log,base.group_user,1,0,0,0
