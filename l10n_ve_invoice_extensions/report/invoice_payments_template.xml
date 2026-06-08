@@ -1,124 +1,197 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_payments">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <div class="page">
-                    <h2>Cierre Diario</h2>
-                    <div class="mb-4">
-                        <strong>Fecha: </strong>
-                        <span t-out="report_date_formatted" />
+                <style>
+                    .cierre-page { font-family: 'Lato', 'Open Sans', sans-serif; color: #333; }
+                    .cierre-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 14px;
+                        font-size: 9.5px;
+                    }
+                    .cierre-table th, .cierre-table td {
+                        padding: 5px 8px;
+                        border: 1px solid #dee2e6;
+                        vertical-align: top;
+                    }
+                    .cierre-table th {
+                        font-weight: 600;
+                        text-align: left;
+                        font-size: 10px;
+                    }
+                    .cierre-table .thead-sub th {
+                        background-color: #e9ecef !important;
+                        color: #495057 !important;
+                        font-size: 9px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.3px;
+                    }
+                    .cierre-table tr:nth-child(even) { background-color: #f8f9fa; }
+                    .text-end { text-align: right; }
+                    .text-center { text-align: center; }
+                    .page-break { page-break-inside: avoid; }
+
+                    /* client info row */
+                    .cierre-inv-client td {
+                        background-color: #f1f3f5;
+                        font-size: 10px;
+                    }
+
+                    /* header card — dark slate */
+                    .cierre-header-card {
+                        background-color: #2c3e50;
+                        color: #fff;
+                        border-radius: 6px;
+                        padding: 16px 24px;
+                        margin-bottom: 18px;
+                    }
+                    .cierre-header-card h2 {
+                        margin: 0;
+                        font-size: 18px;
+                        font-weight: 700;
+                        letter-spacing: 0.5px;
+                    }
+                    .cierre-header-card .cierre-sub {
+                        font-size: 11px;
+                        font-weight: 500;
+                        margin-top: 10px;
+                    }
+                    .cierre-header-card .cierre-totals {
+                        font-size: 13px;
+                        font-weight: 600;
+                        margin-top: 8px;
+                        padding-top: 8px;
+                        border-top: 1px solid rgba(255,255,255,0.2);
+                    }
+                    .cierre-header-card .cierre-totals span { font-weight: 400; }
+
+                    /* invoice header cells — dark */
+                    .hdr-cell {
+                        width: 70%;
+                        font-weight: 700;
+                        font-size: 11px;
+                        background-color: #34495e;
+                        color: #fff;
+                    }
+                    .hdr-idx {
+                        width: 30%;
+                        font-weight: 700;
+                        font-size: 11px;
+                        background-color: #34495e;
+                        color: #fff;
+                    }
+
+                    /* total row — extra dark */
+                    .td-total-left {
+                        background-color: #2c3e50;
+                        color: #fff;
+                        font-size: 10px;
+                    }
+                    .td-total-right {
+                        background-color: #2c3e50;
+                        color: #fff;
+                        font-weight: 700;
+                        font-size: 11px;
+                    }
+                </style>
+
+                <div class="page cierre-page" style="padding-top: 10px;" >
+                    <!-- ===== HEADER ===== -->
+                    <div class="cierre-header-card">
+                        <h2>Cierre Diario</h2>
+                        <div class="cierre-sub">
+                            <span t-out="company_name"/> · RIF <span t-out="company_rif"/> · <span t-out="report_date_formatted"/>
+                        </div>
+                        <div class="cierre-totals">
+                            Total facturado:
+                            <span t-out="total_bs"/>
+                            <t t-if="rate_usd">
+                                 · <span t-out="total_usd"/> · Tasa: <t t-esc="'{:.2f}'.format(rate_usd)"/>
+                            </t>
+                        </div>
                     </div>
 
+                    <!-- ===== PER INVOICE ===== -->
                     <t t-foreach="invoices" t-as="invoice">
-                        <div class="mb-4" style="page-break-inside: avoid; margin-top:20px !important;">
-                            <div class="row mb-1" style="margin-top:20px !important;">
-                                <div class="col-auto">
-                                    <h4 t-out="invoice.name"></h4>
-                                    <p t-out="invoice.correlative"></p>
-                                </div>
-                                <div class="col-auto">
-                                    <strong>Total: </strong>
-                                    <span t-field="invoice.amount_total_in_currency_signed" />
-                                </div>
-                                <div class="col-auto">
-                                    <strong>Cliente: </strong>
-                                    <span t-field="invoice.partner_id.name" />
-                                </div>
-                                <div class="col-auto">
-                                    <strong>CI/RIF: </strong>
-                                    <span t-field="invoice.partner_id.l10n_ve_vat" />
-                                </div>
+                        <div class="page-break">
+                            <table class="cierre-table">
+                                <!-- Invoice header -->
+                                <tr>
+                                    <td colspan="3" class="hdr-cell">
+                                        <span t-out="invoice.name"/>
+                                        <t t-if="invoice.correlative"> - <span t-out="invoice.correlative"/></t>
+                                    </td>
+                                    <td class="hdr-idx text-end">
+                                        Índice <t t-esc="invoice_index + 1"/>
+                                    </td>
+                                </tr>
+                                <!-- Client row -->
+                                <tr class="cierre-inv-client">
+                                    <td colspan="2"><strong>Cliente:</strong> <span t-field="invoice.partner_id.name"/></td>
+                                    <td colspan="2"><strong>CI/RIF:</strong> <span t-field="invoice.partner_id.l10n_ve_vat"/></td>
+                                </tr>
 
-                            </div>
-                            <t t-if="invoice_payments_data[invoice.id]['show_details']">
-                                <div>
-                                    <strong>Detalles de Factura:</strong>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 35%">Producto</th>
-                                                <th class="text-end">Cant.</th>
-                                                <th class="text-end">Precio Unitario</th>
-                                                <th class="text-end">Subtotal</th>
-                                                <th class="text-end">IVA</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr t-foreach="invoice_payments_data[invoice.id]['items']" t-as="item">
-                                                <td>
-                                                    <span t-out="item['product']"/>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="item['quantity']"/>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="item['price_unit']"/>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="item['subtotal']"/>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="item['iva_amount']"/>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot class="mb-0">
-                                            <tr>
-                                                <td colspan="4"></td>
-                                                <td class="text-end">
-                                                    <span>Subtotal</span><br></br>
-                                                    <span t-field="invoice.amount_subtotal"/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4"></td>
-                                                <td class="text-end">
-                                                    <span>IVA</span><br></br>
-                                                    <span t-field="invoice.amount_tax"/>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </t>
-                            <table class="table" style="margin-bottom: 20px !important; ">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 15%">Fecha</th>
-                                        <th>Método de pago</th>
-                                        <th style="width: 20%">Referencia</th>
-                                        <th style="width: 25%">Monto</th>
+                                <!-- Items -->
+                                <t t-if="invoice_payments_data[invoice.id]['show_details'] and invoice_payments_data[invoice.id]['items']">
+                                    <tr class="thead-sub">
+                                        <th style="width: 34%;">Producto</th>
+                                        <th class="text-end" style="width: 10%;">Cant.</th>
+                                        <th class="text-end" style="width: 18%;">Precio Unitario</th>
+                                        <th class="text-end" style="width: 18%;">Subtotal</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-set="payment_data" t-value="invoice_payments_data[invoice.id]" />
-                                    <t t-set="payments" t-value="payment_data['payments']" />
-                                    <tr t-foreach="payments" t-as="payment">
-                                        <td class="text-center">
-                                            <span t-out="payment['date']" />
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-out="payment['payment_method']" />
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-out="payment['reference']" />
-                                        </td>
-                                        <td class="text-center">
-                                            <div t-if="payment['is_igtf']">
-                                                <div t-out="payment['amount']"></div>
-                                                <div>(<span t-out="payment['amount_original']"></span> x <span
-                                                        t-out="payment['exchange_rate']"></span>)</div>
+                                    <tr t-foreach="invoice_payments_data[invoice.id]['items']" t-as="item">
+                                        <td><span t-out="item['product']"/></td>
+                                        <td class="text-end"><span t-out="item['quantity']"/></td>
+                                        <td class="text-end"><span t-out="item['price_unit']"/></td>
+                                        <td class="text-end"><span t-out="item['subtotal']"/></td>
+                                    </tr>
+                                </t>
+
+                                <!-- Payments header -->
+                                <tr class="thead-sub">
+                                    <th style="width: 13%;">Fecha</th>
+                                    <th style="width: 25%;">Método de pago</th>
+                                    <th style="width: 25%;">Referencia</th>
+                                    <th class="text-end" style="width: 37%;">Monto</th>
+                                </tr>
+                                <!-- Payments body -->
+                                <t t-set="payment_data" t-value="invoice_payments_data[invoice.id]"/>
+                                <t t-set="payments" t-value="payment_data['payments']"/>
+                                <tr t-foreach="payments" t-as="payment">
+                                    <td class="text-center"><span t-out="payment['date']"/></td>
+                                    <td><span t-out="payment['payment_method']"/></td>
+                                    <td><span t-out="payment['reference']"/></td>
+                                    <td class="text-end">
+                                        <t t-if="payment['is_igtf']">
+                                            <span t-out="payment['amount']"/>
+                                            <div style="font-size:8px;">
+                                                (<span t-out="payment['amount_original']"/>
+                                                x <span t-out="payment['exchange_rate']"/>)
                                             </div>
-                                            <span t-else="" t-out="payment['amount']" />
-                                        </td>
-                                    </tr>
-                                    <tr t-if="len(payment_data['payments']) &lt; 1">
-                                        <td colspan="4">
-                                            No hay pagos registrados para esta factura
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                        </t>
+                                        <span t-else="" t-out="payment['amount']"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="len(payments) &lt; 1">
+                                    <td colspan="4" class="text-center" style="color: #999;">
+                                        No hay pagos registrados para esta factura
+                                    </td>
+                                </tr>
+
+                                <!-- Total row -->
+                                <tr>
+                                    <td colspan="2" class="td-total-left">
+                                        <t t-if="invoice_payments_data[invoice.id]['show_details'] and invoice_payments_data[invoice.id]['items']">
+                                            Subtotal: <span t-field="invoice.amount_subtotal"/>
+                                             | IVA: <span t-field="invoice.amount_tax"/>
+                                        </t>
+                                    </td>
+                                    <td colspan="2" class="td-total-right text-end">
+                                        TOTAL: <span t-field="invoice.amount_total_signed"/>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </t>

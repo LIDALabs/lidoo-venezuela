@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+        
         <record id="invoice_payments_report" model="ir.actions.report">
             <field name="name">Reporte de Cierre del Día</field>
             <field name="model">invoice.payments.report.wizard</field>
