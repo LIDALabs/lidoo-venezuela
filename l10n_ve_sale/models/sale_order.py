@@ -335,6 +335,14 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for sale in res:
+            if (
+                not sale.manually_set_rate
+                and float_is_zero(
+                    sale.foreign_rate,
+                    precision_rounding=self.env.company.currency_id.rounding,
+            )
+        ):
+                sale._compute_rate()
             Rate = self.env["res.currency.rate"]
             rate_values = Rate.compute_rate(
                 sale.foreign_currency_id.id, sale.date_order or fields.Date.today()
