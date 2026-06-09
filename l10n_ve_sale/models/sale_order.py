@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
         digits="Tasa",
         default=0.0,
         store=True,
-        readonly=False,
+        readonly=True,
         tracking=True,
     )
     foreign_inverse_rate = fields.Float(
@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
         digits=(16, 15),
         default=0.0,
         store=True,
-        readonly=False,
+        readonly=True,
     )
 
     last_foreign_rate = fields.Float(copy=False)
