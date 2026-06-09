@@ -4,7 +4,7 @@ import json
 from odoo import http, fields
 from odoo.http import request, route
 from odoo.fields import Command
-from odoo.addons.l10n_ve_api_auth.decorators import require_api_key
+from odoo.addons.lida_api_auth.decorators import require_api_key
 
 _logger = logging.getLogger(__name__)
 
