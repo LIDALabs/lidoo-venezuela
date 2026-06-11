@@ -18,7 +18,8 @@
                             BI IGTF
                         </td>
                         <td class="text-end o_price_total">
-                            <span t-out="tax_totals['igtf']['formatted_igtf_base_amount']" />
+                            <span t-esc="tax_totals['igtf']['igtf_base_amount']"
+                                  t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                         </td>
                     </tr>
                     <tr>
@@ -26,7 +27,8 @@
                             IGTF 3.0%
                         </td>
                         <td class="text-end o_price_total">
-                            <span t-out="tax_totals['igtf']['formatted_igtf_amount']" />
+                            <span t-esc="tax_totals['igtf']['igtf_amount']"
+                                  t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                         </td>
                     </tr>
                 </t>
@@ -40,7 +42,8 @@
                         <t t-if="has_rounding"><td>Total con IGTF</td></t>
                         <t t-else=""><td><strong>Total con IGTF</strong></td></t>
                         <td class="text-end o_price_total">
-                            <span t-out="tax_totals['formatted_amount_total_igtf']" />
+                            <span t-esc="tax_totals['amount_total_igtf']"
+                                  t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                         </td>
                     </tr>
                 </t>

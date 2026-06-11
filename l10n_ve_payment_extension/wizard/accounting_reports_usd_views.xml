@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+
+        <record id="action_accounting_report_purchase_usd" model="ir.actions.act_window">
+            <field name="name">Libro de compras $</field>
+            <field name="res_model">wizard.accounting.reports</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_report': 'purchase', 'usd_mode': True}</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="l10n_ve_invoice.wizard_binaural_facturacion_reportes_view"/>
+        </record>
+
+        <record id="action_accounting_report_sale_usd" model="ir.actions.act_window">
+            <field name="name">Libro de ventas $</field>
+            <field name="res_model">wizard.accounting.reports</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_report': 'sale', 'usd_mode': True}</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="l10n_ve_invoice.wizard_binaural_facturacion_reportes_view"/>
+        </record>
+
+        <!-- Menu items just below the existing Purchase Book and Sale Book -->
+        <menuitem
+            action="action_accounting_report_purchase_usd"
+            id="account_report_purchase_usd_menu"
+            parent="l10n_ve_invoice.account_report_menu"
+            sequence="6"
+            name="Libro de compras $"
+        />
+        <menuitem
+            action="action_accounting_report_sale_usd"
+            id="account_report_sale_usd_menu"
+            parent="l10n_ve_invoice.account_report_menu"
+            sequence="7"
+            name="Libro de ventas $"
+        />
+
+    </data>
+</odoo>

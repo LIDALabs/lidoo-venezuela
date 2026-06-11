@@ -268,6 +268,7 @@
             -->
             <t t-set="base_vef" t-value="o.currency_id.id == %(base.VEF)s"/>
             <t t-set="str_tax" t-value="'groups_by_subtotal' if base_vef else 'groups_by_foreign_subtotal'"/>
+            <t t-set="display_currency" t-value="o.currency_id if base_vef else o.foreign_currency_id"/>
             <t t-foreach="tax_totals[str_tax][subtotal_to_show]" t-as="amount_by_group">
                 <tr>
                     <td>
@@ -275,7 +276,9 @@
                         <span t-else="" t-out="amount_by_group['tax_group_name']"/>
                     </td>
                     <td class="text-end o_price_total">
-                        <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_base_amount']"/>
+                        <span class="text-nowrap"
+                              t-esc="amount_by_group['tax_group_base_amount']"
+                              t-options="{'widget': 'monetary', 'display_currency': display_currency, 'decimal_places': 2}"/>
                     </td>
                 </tr>
                 <tr t-if="amount_by_group['tax_group_amount'] != 0.0">
@@ -284,7 +287,9 @@
                             <span t-out="amount_by_group['tax_group_name']"/>
                         </td>
                         <td class="text-end o_price_total">
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']"/>
+                            <span class="text-nowrap"
+                                  t-esc="amount_by_group['tax_group_amount']"
+                                  t-options="{'widget': 'monetary', 'display_currency': display_currency, 'decimal_places': 2}"/>
                         </td>
                     </t>
                     <t t-else="">
@@ -292,12 +297,14 @@
                             <span class="text-nowrap" t-out="amount_by_group['tax_group_name']"/>
                         </td>
                         <td class="text-end o_price_total">
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']" />
+                            <span class="text-nowrap"
+                                  t-esc="amount_by_group['tax_group_amount']"
+                                  t-options="{'widget': 'monetary', 'display_currency': display_currency, 'decimal_places': 2}"/>
                         </td>
                     </t>
                 </tr>
             </t>
-            
+
         </template>
 
         <template id="document_tax_totals">
@@ -310,6 +317,8 @@
             -->
             <t t-set="base_vef" t-value="o.currency_id.id == %(base.VEF)s"/>
             <t t-set="str_tax" t-value="'subtotals' if base_vef else 'foreign_subtotals'"/>
+            <t t-set="cur_vef" t-value="o.currency_id if base_vef else o.foreign_currency_id"/>
+            <t t-set="cur_usd" t-value="o.foreign_currency_id if base_vef else o.currency_id"/>
             <t t-foreach="tax_totals[str_tax]" t-as="subtotal">
                 <tr class="border-black o_subtotal">
                     <td>
@@ -317,10 +326,9 @@
                     </td>
 
                     <td class="text-end">
-                        <span
-                            t-att-class="oe_subtotal_footer_separator"
-                            t-out="subtotal['formatted_amount']"
-                        />
+                        <span t-att-class="oe_subtotal_footer_separator"
+                              t-esc="subtotal['amount']"
+                              t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                     </td>
                 </tr>
 
@@ -328,17 +336,19 @@
                 <t t-call="l10n_ve_invoice.tax_groups_totals" t-lang="lang"/>
             </t>
 
-            <t t-set="has_rounding" t-value="'formatted_amount_total_rounded' in tax_totals"/>
+            <t t-set="has_rounding" t-value="'amount_total_rounded' in tax_totals or 'formatted_amount_total_rounded' in tax_totals"/>
             <!--Total amount with all taxes-->
             <tr id="invoice_total" class="border-black o_total">
                 <t t-if="has_rounding"><td>Total</td></t>
                 <t t-else=""><td><strong>Total</strong></td></t>
                 <td id="invoice_total_amount" class="text-end">
                     <t t-if="base_vef">
-                        <span t-out="tax_totals['formatted_amount_total']"/>
+                        <span t-esc="tax_totals['amount_total']"
+                              t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                     </t>
                     <t t-else="">
-                        <span t-out="tax_totals['foreign_formatted_amount_total']"/>
+                        <span t-esc="tax_totals['foreign_amount_total']"
+                              t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                     </t>
                 </td>
             </tr>
@@ -347,17 +357,20 @@
                 <t t-else=""><td><strong>Total en USD</strong></td></t>
                 <td id="invoice_total_in_usd_amount" class="text-end">
                     <t t-if="base_vef">
-                        <span t-out="tax_totals['foreign_formatted_amount_total']"/>
+                        <span t-esc="tax_totals['foreign_amount_total']"
+                              t-options="{'widget': 'monetary', 'display_currency': cur_usd, 'decimal_places': 2}"/>
                     </t>
                     <t t-else="">
-                        <span t-out="tax_totals['formatted_amount_total']"/>
+                        <span t-esc="tax_totals['amount_total']"
+                              t-options="{'widget': 'monetary', 'display_currency': cur_usd, 'decimal_places': 2}"/>
                     </t>
                 </td>
             </tr>
             <tr t-if="has_rounding">
                 <td><strong>Total redondeado</strong></td>
                 <td class="text-end">
-                    <span t-out="tax_totals['formatted_amount_total_rounded']"/>
+                    <span t-esc="tax_totals['amount_total_rounded']"
+                          t-options="{'widget': 'monetary', 'display_currency': cur_vef, 'decimal_places': 2}"/>
                 </td>
             </tr>
         </template>
