@@ -33,6 +33,9 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.parent_id:
                 continue
+            # Skip validation for the main company partner
+            if partner.is_company:
+                continue
 
             missing = []
             if not partner.street:

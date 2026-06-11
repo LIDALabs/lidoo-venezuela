@@ -159,10 +159,27 @@ class AccountRetentionLine(models.Model):
             if line.move_id and line.id in line.move_id.retention_municipal_line_ids.ids:
                 line.economic_activity_id = line.move_id.partner_id.economic_activity_id
 
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res._sync_payment_amount()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if any(f in vals for f in ("retention_amount", "foreign_retention_amount", "payment_id")):
+            self._sync_payment_amount()
+        return res
+
     def unlink(self):
         for record in self:
             record.payment_id.unlink()
         return super().unlink()
+
+    def _sync_payment_amount(self):
+        """Update the amount on all related retention payments."""
+        payments = self.mapped("payment_id")
+        if payments:
+            payments.compute_retention_amount_from_retention_lines()
 
     @api.onchange("payment_concept_id")
     @api.depends("payment_concept_id", "move_id")

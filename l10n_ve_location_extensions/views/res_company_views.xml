@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="view_company_form_inherited_extensions" model="ir.ui.view">
+            <field name="name">res.company.form.inherit.extensions</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="priority" eval="99"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="widget">char</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('o_address_format')]" position="replace">
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Calle..." class="o_address_street"/>
+                        <field name="street2" placeholder="Calle 2..." class="o_address_street"/>
+                        
+                        <field name="city" invisible="1"/>
+                        
+                        <field name="state_id" class="o_address_street" placeholder="Estado" options="{'no_open': True, 'no_quick_create': True}"/>
+                        
+                        <field name="municipality" class="o_address_street" placeholder="Municipio"/>
+                        
+                        <field name="zip_code_id" class="o_address_street" placeholder="C.P" options="{'no_open': True, 'no_quick_create': False}" context="{'default_municipality_id': municipality}"/>
+                        <field name="zip" invisible="1"/>
+                        
+                        <field name="country_id" placeholder="País" class="o_address_street" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

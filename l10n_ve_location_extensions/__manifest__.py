@@ -13,6 +13,7 @@
         "security/ir.model.access.csv",
         "data/load_zip_data.xml",
         "views/res_partner_views.xml",
+        "views/res_company_views.xml",
     ],
     "post_init_hook": "_migrate_zip_codes",
     "images": ["static/description/l10n_ve.png"],
