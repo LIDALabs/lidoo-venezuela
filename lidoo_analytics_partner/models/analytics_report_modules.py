@@ -21,3 +21,7 @@ class LidooAnalyticsReportModules(models.Model):
     version=fields.Char(
         string="Version"
     )
+    is_custom=fields.Boolean(
+        string="Custom Module",
+        default=False,
+    )

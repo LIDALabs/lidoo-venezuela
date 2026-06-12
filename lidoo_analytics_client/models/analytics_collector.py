@@ -75,15 +75,18 @@ class LidooAnalyticsCollector(models.AbstractModel):
 
         # Installed modules
         installed_modules = Module.search([("state", "=", "installed")])
-        modules_list = [
-            {"name": m.name, "version": m.installed_version or ""}
-            for m in installed_modules
-        ]
 
         # Custom modules (author is not Odoo SA / empty)
         custom_modules = installed_modules.filtered(
             lambda m: m.author and "Odoo" not in (m.author or "")
         )
+        custom_module_names = set(custom_modules.mapped('name'))
+
+        modules_list = [
+            {"name": m.name, "version": m.installed_version or "",
+             "is_custom": m.name in custom_module_names}
+            for m in installed_modules
+        ]
 
         # Uptime
         uptime_seconds = int(time.time() - _server_start_time)

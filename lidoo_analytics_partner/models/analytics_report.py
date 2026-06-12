@@ -128,11 +128,10 @@ class LidooAnalyticsReport(models.Model):
                     'report_id': record.id,
                     'name': mod.get('name', ''),
                     'version': mod.get('version', ''),
+                    'is_custom': mod.get('is_custom', False),
                 })
 
     @api.depends('module_ids')
     def _compute_lidoo_module_ids(self):
         for record in self:
-            record.lidoo_module_ids = record.module_ids.filtered(
-                lambda m: m.name.startswith('l10n_ve_') or m.name.startswith('lidoo_')
-            )
+            record.lidoo_module_ids = record.module_ids.filtered('is_custom')
