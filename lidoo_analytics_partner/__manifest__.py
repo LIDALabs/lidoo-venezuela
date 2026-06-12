@@ -13,7 +13,7 @@
     "author": "LIDALabs",
     "website": "https://lidalabs.com",
     "category": "Technical",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "depends": ["base", "mail"],
     "data": [
         "security/analytics_security.xml",
