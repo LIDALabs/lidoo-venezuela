@@ -13,6 +13,7 @@
                 <field name="database_size_display" string="DB Size" />
                 <field name="uptime_display" string="Uptime" />
                 <field name="custom_module_count" />
+                <field name="lidoo_commit_hash" optional="show" />
                 <field name="cpu_usage" optional="hide" />
                 <field name="memory_usage" optional="hide" />
             </tree>
@@ -47,6 +48,9 @@
                             <field name="cpu_usage" widget="progressbar" />
                             <field name="memory_usage" widget="progressbar" />
                         </group>
+                    </group>
+                    <group string="Code Version">
+                        <field name="lidoo_commit_hash" />
                     </group>
                     <notebook>
                         <page name="modules" string="Installed Modules">

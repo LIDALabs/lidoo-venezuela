@@ -64,6 +64,11 @@ class LidooAnalyticsReport(models.Model):
         string="Raw Payload (JSON)",
         readonly=True,
     )
+    lidoo_commit_hash = fields.Char(
+        string="Lidoo Commit",
+        readonly=True,
+        help="Último commit del repo lidoo (hash - mensaje | fecha)",
+    )
 
     # Formatted helpers for UI
     uptime_display = fields.Char(

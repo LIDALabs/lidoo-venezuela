@@ -1,7 +1,9 @@
 import hashlib
 import json
 import logging
+import os
 import platform
+import subprocess
 import sys
 import time
 
@@ -19,6 +21,44 @@ _server_start_time = time.time()
 class LidooAnalyticsCollector(models.AbstractModel):
     _name = "lidoo.analytics.collector"
     _description = "Analytics Data Collector"
+
+    @api.model
+    def _get_git_commit_info(self, repo_path):
+        """
+        Obtiene hash + mensaje + fecha del último commit de un repo local.
+        Usa git si está disponible, fallback a lectura directa de .git.
+        Returns: string like "abc1234 - Mensaje | 2025-06-10" o "N/A"
+        """
+        git_dir = os.path.join(repo_path, '.git')
+        if not os.path.isdir(git_dir):
+            return "N/A"
+
+        # Plan A: git instalado (via Dockerfile) → datos completos
+        try:
+            output = subprocess.check_output(
+                ['git', '-C', repo_path,
+                 '-c', 'safe.directory=*',
+                 'log', '-1', '--format=%h - %s | %ai'],
+                stderr=subprocess.STDOUT, timeout=10
+            ).decode('utf-8').strip()
+            if output:
+                return output
+        except Exception:
+            pass
+
+        # Plan B: lectura directa de .git → solo hash
+        try:
+            with open(os.path.join(git_dir, 'HEAD')) as f:
+                ref = f.read().strip()
+            if ref.startswith('ref: '):
+                ref_path = os.path.join(git_dir, ref[5:])
+                with open(ref_path) as f:
+                    full_hash = f.read().strip()
+            else:
+                full_hash = ref
+            return full_hash[:7]
+        except Exception:
+            return "N/A"
 
     @api.model
     def _collect_data(self):
@@ -71,6 +111,7 @@ class LidooAnalyticsCollector(models.AbstractModel):
         active_crons = Cron.search_count([("active", "=", True)])
 
         data = {
+            "lidoo_commit_hash": self._get_git_commit_info("/mnt/l10n_ve_fiscal"),
             "database_uuid": db_uuid,
             "odoo_version": odoo_version,
             "installed_modules": modules_list,

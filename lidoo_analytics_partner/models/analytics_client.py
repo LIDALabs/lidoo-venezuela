@@ -186,6 +186,7 @@ class LidooAnalyticsClient(models.Model):
                 "cpu_usage": data.get("cpu_usage", 0.0),
                 "memory_usage": data.get("memory_usage", 0.0),
                 "raw_payload": json.dumps(data, default=str),
+                "lidoo_commit_hash": data.get("lidoo_commit_hash", ""),
             }
             res = self.env["lidoo.analytics.report"].create(report_vals)
 
