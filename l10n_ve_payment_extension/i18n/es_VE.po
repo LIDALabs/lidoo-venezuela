@@ -35,7 +35,7 @@ msgstr ""
 #. module: l10n_ve_payment_extension
 #: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__related_percentage_fees
 msgid "% tariffs"
-msgstr "% tarifa"
+msgstr "% Tarifa"
 
 #. module: l10n_ve_payment_extension
 #: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__related_percentage_tax_base
@@ -2953,3 +2953,39 @@ msgstr "Reportes contables"
 #: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_res_config_settings__hide_patent_columns_extra
 msgid "Hide extra columns in Patent Municipal Report related to advances"
 msgstr "Ocultar columnas adicionales en el reporte de Patente Municipal relacionadas con anticipos"
+
+#. module: l10n_ve_payment_extension
+#. odoo-python
+#: code:addons/l10n_ve_payment_extension/models/account_retention_line.py:0
+#, python-format
+msgid ""
+"The payment concept '{concept}' has no line configured for the type of "
+"person '{person_type}' of partner '{partner}'.\n"
+"\n"
+"Please go to Accounting > Configuration > Payment Concept and add a line "
+"for the type of person '{person_type}' on the concept '{concept}'.\n"
+"\n"
+"Types of person currently configured on this concept: {configured}."
+msgstr ""
+"El concepto de pago '{concept}' no tiene una línea configurada para el tipo "
+"de persona '{person_type}' del parceiro '{partner}'.\n"
+"\n"
+"Por favor vaya a Contabilidad > Configuración > Concepto de Pago y agregue "
+"una línea para el tipo de persona '{person_type}' en el concepto "
+"'{concept}'.\n"
+"\n"
+"Tipos de persona actualmente configurados en este concepto: {configured}."
+
+#. module: l10n_ve_payment_extension
+#. odoo-python
+#: code:addons/l10n_ve_payment_extension/models/account_retention_line.py:0
+#, python-format
+msgid "(not set)"
+msgstr "(no establecido)"
+
+#. module: l10n_ve_payment_extension
+#. odoo-python
+#: code:addons/l10n_ve_payment_extension/models/account_retention_line.py:0
+#, python-format
+msgid "(none)"
+msgstr "(ninguno)"

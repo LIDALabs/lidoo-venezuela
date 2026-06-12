@@ -44,6 +44,7 @@ class AccountRetentionLine(models.Model):
     imp_ret = fields.Float(string="tax incurred", digits=(16, 2))
     retention_rate = fields.Float(store=True, digits="Tasa")
     move_id = fields.Many2one("account.move", "move", ondelete="cascade", store=True)
+    move_id_domain = fields.Char(compute="_compute_move_id_domain")
     is_retention_client = fields.Boolean(default=True)
     display_invoice_number = fields.Char(
         string="Invoice Number", compute="_compute_display_invoice_number", store=True
@@ -108,7 +109,7 @@ class AccountRetentionLine(models.Model):
     )
 
     related_percentage_fees = fields.Float(
-        string="% tariffs",
+        string="% Tarifa",
         compute="_compute_related_fields",
         store=True,
     )
@@ -198,6 +199,7 @@ class AccountRetentionLine(models.Model):
         for record in lines_from_islr_retention:
             # Payment concept of the line
             payment_concept = record.payment_concept_id.line_payment_concept_ids
+            matched_line = False
             for line in payment_concept:
                 # if not record.move_id.partner_id.type_person_id:
                 #     raise UserError(_("The partner does not have a type of person"))
@@ -216,23 +218,36 @@ class AccountRetentionLine(models.Model):
                     record.related_amount_subtract_fees = line.tariff_id.amount_subtract
                     record.foreign_currency_rate = record.move_id.foreign_rate
 
-                    if not record.retention_id or record.retention_id.type == "in_invoice":
-                        # We don't want this fields to be computed when the retention is
-                        # created from a customer invoice since they are filled by the user.
-                        record.invoice_amount = record.move_id.tax_totals["amount_untaxed"]
-                        record.foreign_invoice_amount = record.move_id.tax_totals[
-                            "foreign_amount_untaxed"
-                        ]
+                    record.invoice_amount = record.move_id.tax_totals["amount_untaxed"]
+                    record.foreign_invoice_amount = record.move_id.tax_totals[
+                        "foreign_amount_untaxed"
+                    ]
+                    matched_line = True
+                    break
+            if not matched_line:
+                partner = record.move_id.partner_id
+                configured_types = payment_concept.mapped("type_person_id.name")
+                raise UserError(_(
+                    "The payment concept '{concept}' has no line configured for the type of "
+                    "person '{person_type}' of partner '{partner}'.\n\n"
+                    "Please go to Accounting > Configuration > Payment Concept and add a line "
+                    "for the type of person '{person_type}' on the concept '{concept}'.\n\n"
+                    "Types of person currently configured on this concept: {configured}."
+                ).format(
+                    concept=record.payment_concept_id.name,
+                    person_type=partner.type_person_id.name
+                    if partner.type_person_id else _("(not set)"),
+                    partner=partner.name,
+                    configured=", ".join(configured_types) or _("(none)"),
+                ))
 
-    @api.depends("invoice_amount", "foreign_invoice_amount")
+    @api.depends("foreign_invoice_amount", "foreign_currency_rate")
     def _compute_amounts(self):
         base_currency_is_vef = self.env.company.currency_id == self.env.ref("base.VEF")
         if not base_currency_is_vef:
             for line in self:
-                if line.invoice_amount > 0 and line.foreign_invoice_amount > 0:
-                    line.invoice_amount = line.foreign_invoice_amount * (
-                        1 / line.foreign_currency_rate
-                    )
+                if not line.foreign_invoice_amount and line.invoice_amount > 0 and line.foreign_currency_rate:
+                    line.foreign_invoice_amount = line.invoice_amount * line.foreign_currency_rate
 
     @api.onchange(
         "invoice_amount",
@@ -258,11 +273,11 @@ class AccountRetentionLine(models.Model):
         """
         base_currency_is_vef = self.env.company.currency_id == self.env.ref("base.VEF")
 
-        islr_supplier_retention_lines = self.filtered(
+        islr_retention_lines = self.filtered(
             lambda l: (not l.retention_id and l.payment_concept_id)
-            or (l.retention_id.type_retention == "islr" and l.retention_id.type == "in_invoice")
+            or (l.retention_id.type_retention == "islr")
         )
-        for record in islr_supplier_retention_lines:
+        for record in islr_retention_lines:
             foreign_rate = record.move_id.foreign_rate
             if not foreign_rate:
                 foreign_rate = 1
@@ -472,3 +487,13 @@ class AccountRetentionLine(models.Model):
                 )
             )
             return invoice_paid_amount_not_related_with_retentions
+
+    @api.depends("retention_id.type")
+    def _compute_move_id_domain(self):
+        for line in self:
+            if line.retention_id.type == "out_invoice":
+                line.move_id_domain = "[('iva_voucher_number', '=', False), ('move_type', 'in', ('out_invoice', 'out_refund'))]"
+            elif line.retention_id.type == "in_invoice":
+                line.move_id_domain = "[('iva_voucher_number', '=', False), ('move_type', 'in', ('in_invoice', 'in_refund'))]"
+            else:
+                line.move_id_domain = "[('iva_voucher_number', '=', False)]"

@@ -132,7 +132,7 @@
                                 />
                                 <field name="related_pay_from" force_save="1" readonly="1"/>
                                 <field name="related_percentage_tax_base" force_save="1" readonly="1"/>
-                                <field name="related_percentage_fees" force_save="1" readonly="1"/>
+                                <field name="related_percentage_fees" string="Tarifa" force_save="1" readonly="1"/>
                                 <field name="related_amount_subtract_fees" force_save="1" readonly="1"/>
                                 <field name="foreign_currency_rate" force_save="1" readonly="1" optional="hide"/>
                                 <field

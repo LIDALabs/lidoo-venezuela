@@ -719,15 +719,11 @@ class AccountRetention(models.Model):
         journals = {
             ("islr", "in_invoice"): self.env.company.islr_supplier_retention_journal_id,
             ("islr", "out_invoice"): self.env.company.islr_customer_retention_journal_id,
-            (
-                "municipal",
-                "in_invoice",
-            ): self.env.company.municipal_supplier_retention_journal_id,
-            (
-                "municipal",
-                "out_invoice",
-            ): self.env.company.municipal_customer_retention_journal_id,
-        }
+            ("municipal", "in_invoice"): self.env.company.municipal_supplier_retention_journal_id,
+            ("municipal", "out_invoice"): self.env.company.municipal_customer_retention_journal_id,
+            ("iva", "in_invoice"): self.env.company.iva_supplier_retention_journal_id,
+            ("iva", "out_invoice"): self.env.company.iva_customer_retention_journal_id,
+            }
         journal_id = journals[(self.type_retention, self.type)].id
 
         if self.type_retention == "islr":
@@ -890,13 +886,10 @@ class AccountRetention(models.Model):
                 "foreign_iva_amount": foreign_tax_group["tax_group_amount"],
                 "foreign_invoice_total": invoice_id.tax_totals["foreign_amount_total"],
             }
-            if invoice_id.move_type == "out_invoice":
-                line_data["retention_amount"] = 0.0
-                line_data["foreign_retention_amount"] = 0.0
-            else:
-                line_data["retention_amount"] = retention_amount
-                line_data["foreign_retention_amount"] = line_data["foreign_iva_amount"] * (
-                    withholding_amount / 100
+            
+            line_data["retention_amount"] = retention_amount
+            line_data["foreign_retention_amount"] = line_data["foreign_iva_amount"] * (
+                withholding_amount / 100
                 )
             lines_data.append(line_data)
         return lines_data
