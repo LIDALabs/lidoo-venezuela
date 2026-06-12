@@ -29,7 +29,7 @@ msgstr ""
 
 #. module: l10n_ve_payment_extension
 #: model_terms:ir.ui.view,arch_db:l10n_ve_payment_extension.report_template_arcv
-msgid "% o <br/>tarifa"
+msgid "% o <br/>Tarifa"
 msgstr ""
 
 #. module: l10n_ve_payment_extension
