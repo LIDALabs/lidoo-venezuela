@@ -51,7 +51,7 @@
             </button>
 
             <button name="action_reverse" position="attributes">
-                <attribute name="invisible">move_type in ['in_invoice', 'in_refund'] or (correlative == False or debit_origin_id or reversed_entry_id)</attribute>
+                <attribute name="invisible">(correlative == False or debit_origin_id or reversed_entry_id)</attribute>
             </button>
 
             <button name="action_reverse" position="after">

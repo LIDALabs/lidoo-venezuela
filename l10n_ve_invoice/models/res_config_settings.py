@@ -24,12 +24,11 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.show_column_default_code_free_form", readonly=False
     )
 
-    # @FIXME: Uncomment
-    # auto_select_debit_note_journal = fields.Boolean(
-    #     string="Filter Journal Debit Note",
-    #     related="company_id.auto_select_debit_note_journal",
-    #     readonly=False
-    # )
+    auto_select_debit_note_journal = fields.Boolean(
+        string="Filter Journal Debit Note",
+        related="company_id.auto_select_debit_note_journal",
+        readonly=False
+    )
 
     @api.onchange("group_sales_invoicing_series")
     def onchange_group_sales_invoicing_series(self):
