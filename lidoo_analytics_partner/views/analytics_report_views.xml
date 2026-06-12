@@ -56,6 +56,9 @@
                         <page name="modules" string="Installed Modules">
                             <field name="module_ids" />
                         </page>
+                        <page name="lidoo-modules" string="Lidoo Modules">
+                            <field name="lidoo_module_ids" />
+                        </page>
                         <page name="raw" string="Raw Payload">
                             <field name="raw_payload" widget="text" />
                         </page>
