@@ -186,9 +186,11 @@ class AccountRetention(models.Model):
 
     @api.depends(
         "retention_line_ids.invoice_amount",
+        "retention_line_ids.taxable_base_amount",
         "retention_line_ids.iva_amount",
         "retention_line_ids.retention_amount",
         "retention_line_ids.foreign_invoice_amount",
+        "retention_line_ids.foreign_taxable_base_amount",
         "retention_line_ids.foreign_iva_amount",
         "retention_line_ids.foreign_retention_amount",
     )
@@ -202,9 +204,12 @@ class AccountRetention(models.Model):
             retention.foreign_total_retention_amount = 0
 
             for line in retention.retention_line_ids:
+                invoice_amount = line.taxable_base_amount if line.retention_id.type_retention == "islr" else line.invoice_amount
+                foreign_invoice_amount = line.foreign_taxable_base_amount if line.retention_id.type_retention == "islr" else line.foreign_invoice_amount
+
                 if line.move_id.move_type in ("in_refund", "out_refund"):
                     retention.total_invoice_amount -= float_round(
-                        line.invoice_amount,
+                        invoice_amount,
                         precision_digits=retention.company_currency_id.decimal_places,
                     )
                     retention.total_iva_amount -= float_round(
@@ -216,7 +221,7 @@ class AccountRetention(models.Model):
                         precision_digits=retention.company_currency_id.decimal_places,
                     )
                     retention.foreign_total_invoice_amount -= float_round(
-                        line.foreign_invoice_amount,
+                        foreign_invoice_amount,
                         precision_digits=retention.foreign_currency_id.decimal_places,
                     )
                     retention.foreign_total_iva_amount -= float_round(
@@ -229,7 +234,7 @@ class AccountRetention(models.Model):
                     )
                 else:
                     retention.total_invoice_amount += float_round(
-                        line.invoice_amount,
+                        invoice_amount,
                         precision_digits=retention.company_currency_id.decimal_places,
                     )
                     retention.total_iva_amount += float_round(
@@ -241,7 +246,7 @@ class AccountRetention(models.Model):
                         precision_digits=retention.company_currency_id.decimal_places,
                     )
                     retention.foreign_total_invoice_amount += float_round(
-                        line.foreign_invoice_amount,
+                        foreign_invoice_amount,
                         precision_digits=retention.foreign_currency_id.decimal_places,
                     )
                     retention.foreign_total_iva_amount += float_round(

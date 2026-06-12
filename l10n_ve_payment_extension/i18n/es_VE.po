@@ -43,6 +43,18 @@ msgid "% tax base"
 msgstr "% Base Imponible"
 
 #. module: l10n_ve_payment_extension
+#: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__taxable_base_amount
+#: model_terms:ir.ui.view,arch_db:l10n_ve_payment_extension.account_move_form_l10n_ve_payment_extension
+#: model_terms:ir.ui.view,arch_db:l10n_ve_payment_extension.view_retention_islr_form_l10n_ve_payment_extension
+msgid "Taxable Base"
+msgstr "Base Imponible"
+
+#. module: l10n_ve_payment_extension
+#: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__foreign_taxable_base_amount
+msgid "Foreign Taxable Base"
+msgstr "Base Imponible Alterna"
+
+#. module: l10n_ve_payment_extension
 #: model:ir.actions.report,print_report_name:l10n_ve_payment_extension.action_report_arcv
 msgid "'Comprobante_ARCV'"
 msgstr "'Comprobante ARCV'"

@@ -108,6 +108,22 @@ class AccountRetentionLine(models.Model):
         readonly=False,
     )
 
+    taxable_base_amount = fields.Float(
+        string="Taxable Base",
+        compute="_compute_taxable_base_amount",
+        store=True,
+        digits="Tasa",
+        readonly=False,
+    )
+
+    foreign_taxable_base_amount = fields.Float(
+        string="Foreign Taxable Base",
+        compute="_compute_taxable_base_amount",
+        store=True,
+        digits="Tasa",
+        readonly=False,
+    )
+
     related_percentage_fees = fields.Float(
         string="% Tarifa",
         compute="_compute_related_fields",
@@ -240,6 +256,12 @@ class AccountRetentionLine(models.Model):
                     partner=partner.name,
                     configured=", ".join(configured_types) or _("(none)"),
                 ))
+
+    @api.depends("invoice_amount", "foreign_invoice_amount", "related_percentage_tax_base")
+    def _compute_taxable_base_amount(self):
+        for record in self:
+            record.taxable_base_amount = record.invoice_amount * record.related_percentage_tax_base / 100
+            record.foreign_taxable_base_amount = record.foreign_invoice_amount * record.related_percentage_tax_base / 100
 
     @api.depends("foreign_invoice_amount", "foreign_currency_rate")
     def _compute_amounts(self):
