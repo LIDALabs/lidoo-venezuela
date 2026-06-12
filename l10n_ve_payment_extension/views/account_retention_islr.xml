@@ -83,8 +83,7 @@
                                             string="Taxable Base"
                                             widget="monetary"
                                             options="{'currency_field': 'company_currency_id'}"
-                                            column_invisible="not parent.base_currency_is_vef"
-                                            readonly="1"/>
+                                            column_invisible="not parent.base_currency_is_vef"/>
 
                                         <field
                                             name="foreign_taxable_base_amount"
@@ -92,8 +91,7 @@
                                             string="Taxable Base"
                                             widget="monetary"
                                             options="{'currency_field': 'foreign_currency_id'}"
-                                            column_invisible="parent.base_currency_is_vef"
-                                            readonly="1"/>
+                                            column_invisible="parent.base_currency_is_vef"/>
 
                                         <field
                                             name="related_pay_from"
