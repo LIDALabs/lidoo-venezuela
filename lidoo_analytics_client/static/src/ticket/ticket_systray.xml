@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="lidoo_analytics_client.TicketSystray">
+        <button class="btn btn-secondary o-no-caret o_ticket_systray"
+                t-on-click="openTicket"
+                title="Report an issue">
+            <i class="fa fa-bug"/>
+        </button>
+    </t>
+</templates>

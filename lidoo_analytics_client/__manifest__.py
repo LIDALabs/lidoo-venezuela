@@ -24,8 +24,11 @@
     "auto_install": False,
     "assets": {
         "web.assets_backend": [
-            "lidoo_analytics_client/static/src/systray/analytics_systray.js",
-            "lidoo_analytics_client/static/src/systray/analytics_systray.xml",
+            "lidoo_analytics_client/static/src/ticket/ticket_systray.js",
+            "lidoo_analytics_client/static/src/ticket/ticket_systray.xml",
+            "lidoo_analytics_client/static/src/ticket/ticket_dialog.js",
+            "lidoo_analytics_client/static/src/ticket/ticket_dialog.xml",
+            "lidoo_analytics_client/static/src/ticket/ticket_dialog.scss",
         ],
     },
 }

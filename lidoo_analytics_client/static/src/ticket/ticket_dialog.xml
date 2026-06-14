@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="lidoo_analytics_client.TicketDialog">
+        <div class="o_ticket_dialog p-3" style="min-width: 500px;">
+            <t t-if="state.isLoading">
+                <div class="text-center py-5 text-muted">
+                    <i class="fa fa-spinner fa-spin fa-2x mb-3 d-block"/>
+                    <t t-esc="'Loading...'"/>
+                </div>
+            </t>
+            <t t-else="">
+                <h5 class="mb-3">
+                    <i class="fa fa-bug me-2"/>
+                    Report an Issue
+                </h5>
+
+                <!-- Current view / route -->
+                <div class="form-group mb-3">
+                    <label class="font-weight-bold d-block mb-1">Current View</label>
+                    <div class="o_ticket_readonly bg-light border rounded px-2 py-1 small">
+                        <t t-esc="state.currentView"/>
+                        <br/>
+                        <span class="text-muted">
+                            Route: <t t-esc="state.currentRoute"/>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Screenshot placeholder -->
+                <div class="form-group mb-3">
+                    <label class="font-weight-bold d-block mb-1">Screenshot</label>
+                    <div class="alert alert-info py-2 mb-0 small">
+                        <i class="fa fa-camera me-1"/>
+                        Screenshot will be captured on submit.
+                    </div>
+                </div>
+
+                <!-- User description -->
+                <div class="form-group mb-3">
+                    <label class="font-weight-bold d-block mb-1" for="ticket_desc">
+                        What happened?
+                    </label>
+                    <textarea id="ticket_desc"
+                              class="form-control"
+                              t-model="state.userText"
+                              placeholder="Describe what you were doing, what you expected, and what went wrong..."
+                              rows="4"/>
+                </div>
+
+                <!-- Logs placeholder -->
+                <div class="form-group mb-3">
+                    <label class="font-weight-bold d-block mb-1">Server Logs</label>
+                    <div class="alert alert-info py-2 mb-0 small">
+                        <i class="fa fa-file-text-o me-1"/>
+                        Last 100 log lines will be attached on submit.
+                    </div>
+                </div>
+            </t>
+
+            <!-- Actions -->
+            <div class="o_ticket_actions d-flex justify-content-end gap-2 pt-2 border-top">
+                <button class="btn btn-secondary" t-on-click="close"
+                        t-att-disabled="state.submitting ? 'disabled' : null">
+                    Close
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>
