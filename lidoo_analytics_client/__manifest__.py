@@ -14,7 +14,7 @@
     "website": "https://lidalabs.com",
     "category": "Technical",
     "version": "17.0.1.1.0",
-    "depends": ["base"],
+    "depends": ["base", "web"],
     "data": [
         "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
@@ -22,4 +22,10 @@
         "data/ir_cron.xml",
     ],
     "auto_install": False,
+    "assets": {
+        "web.assets_backend": [
+            "lidoo_analytics_client/static/src/systray/analytics_systray.js",
+            "lidoo_analytics_client/static/src/systray/analytics_systray.xml",
+        ],
+    },
 }
