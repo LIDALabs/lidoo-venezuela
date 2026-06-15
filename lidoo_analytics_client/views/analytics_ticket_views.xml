@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lidoo_analytics_ticket_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.ticket.tree</field>
+        <field name="model">lidoo.analytics.ticket</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="create_date"/>
+                <field name="description"/>
+                <field name="current_route"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_lidoo_analytics_ticket_form" model="ir.ui.view">
+        <field name="name">lidoo.analytics.ticket.form</field>
+        <field name="model">lidoo.analytics.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <group>
+                    <field name="description"/>
+                </group>
+                <group string="Technical Info">
+                    <field name="user_id" readonly="1"/>
+                    <field name="create_date" readonly="1"/>
+                    <field name="current_route" readonly="1"/>
+                    <field name="screenshot_filename" readonly="1"/>
+                    <field name="error_message" readonly="1"/>
+                    <field name="server_logs" readonly="1" nolabel="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_lidoo_analytics_ticket" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">lidoo.analytics.ticket</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_lidoo_analytics_ticket"
+        name="Tickets"
+        parent="base.menu_custom"
+        action="action_lidoo_analytics_ticket"
+        sequence="10"/>
+</odoo>

@@ -19,6 +19,8 @@
         "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
         "views/analytics_log_views.xml",
+        "views/ticket_wizard_views.xml",
+        "views/analytics_ticket_views.xml",
         "data/ir_cron.xml",
     ],
     "auto_install": False,

@@ -87,14 +87,6 @@ class LidooAnalyticsReport(models.Model):
         compute="_compute_module_ids",
         store=True
     )
-    lidoo_module_ids = fields.One2many(
-        "lidoo.analytics.report.modules",
-        "report_id",
-        string="Lidoo Modules",
-        compute="_compute_lidoo_module_ids",
-        store=True
-    )
-
     def _compute_uptime_display(self):
         for record in self:
             seconds = record.uptime_seconds or 0
@@ -131,7 +123,3 @@ class LidooAnalyticsReport(models.Model):
                     'is_custom': mod.get('is_custom', False),
                 })
 
-    @api.depends('module_ids')
-    def _compute_lidoo_module_ids(self):
-        for record in self:
-            record.lidoo_module_ids = record.module_ids.filtered('is_custom')

@@ -57,7 +57,7 @@
                             <field name="module_ids" />
                         </page>
                         <page name="lidoo-modules" string="Lidoo Modules">
-                            <field name="lidoo_module_ids" />
+                            <field name="module_ids" domain="[('is_custom', '=', True)]" />
                         </page>
                         <page name="raw" string="Raw Payload">
                             <field name="raw_payload" widget="text" />

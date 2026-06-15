@@ -46,6 +46,13 @@ class ResConfigSettings(models.TransientModel):
         help="Key used by the partner instance to authenticate pull requests.",
     )
 
+    lidoo_analytics_ticket_webhook_url = fields.Char(
+        string="Ticket Webhook URL",
+        config_parameter="lidoo_analytics_ticket.webhook_url",
+        default="",
+        help="When a ticket is submitted, POST the data as JSON to this URL.",
+    )
+
     def action_generate_pull_key(self):
         """Generate a secure random key for Pull Mode and save it immediately."""
         new_key = secrets.token_bytes(32).hex()

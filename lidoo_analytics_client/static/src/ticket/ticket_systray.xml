@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="lidoo_analytics_client.TicketSystray">
-        <button class="btn btn-secondary o-no-caret"
+        <button class="btn btn-link o-no-caret px-1"
                 t-on-click="openTicket"
                 title="Report an issue">
             <i class="fa fa-life-ring"/>
         </button>
-    </t>
-
-    <t t-name="lidoo_analytics_client.TicketDialog">
-        <div class="p-3" style="min-width: 400px;">
-            <h5>Report an Issue</h5>
-            <p class="text-muted small">Ticket form goes here.</p>
-            <hr/>
-            <div class="text-end">
-                <button class="btn btn-secondary" t-on-click="close">Close</button>
-            </div>
-        </div>
     </t>
 </templates>

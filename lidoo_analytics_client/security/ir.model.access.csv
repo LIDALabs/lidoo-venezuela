@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_lidoo_analytics_log_system,lidoo.analytics.log.system,model_lidoo_analytics_log,base.group_system,1,1,1,1
 access_lidoo_analytics_log_user,lidoo.analytics.log.user,model_lidoo_analytics_log,base.group_user,1,0,0,0
+access_lidoo_analytics_ticket_wizard_user,lidoo.analytics.ticket.wizard.user,model_lidoo_analytics_ticket_wizard,base.group_user,1,1,1,1
+access_lidoo_analytics_ticket_user,lidoo.analytics.ticket.user,model_lidoo_analytics_ticket,base.group_user,1,0,0,0
+access_lidoo_analytics_ticket_system,lidoo.analytics.ticket.system,model_lidoo_analytics_ticket,base.group_system,1,1,1,1
