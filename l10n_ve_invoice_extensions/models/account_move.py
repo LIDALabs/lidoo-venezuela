@@ -52,7 +52,7 @@ class AccountMove(models.Model):
     @api.depends('journal_id')
     def _compute_is_debit_journal(self):
         for move in self:
-            move.is_debit_journal = True
+            move.is_debit_journal = move.journal_id.is_debit if move.journal_id else False
 
     def _get_invoice_reference_odoo_invoice(self):
         """ This computes the reference based on the Odoo format.
