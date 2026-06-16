@@ -48,6 +48,14 @@ class AccountPayment(models.Model):
         Override the create method to set the rate of the payment to its move
         and ensure all move lines have a currency_id (Odoo 17 NOT NULL constraint).
         """
+        for vals in vals_list:
+            if not vals.get('currency_id'):
+                _logger.warning(
+                    "CRITICAL: Creating account.payment without currency_id. "
+                    "Forcing fallback to company currency. vals=%s",
+                    vals,
+                )
+                vals['currency_id'] = self.env.company.currency_id.id
         payments = super().create(vals_list)
         for payment in payments.with_context(skip_account_move_synchronization=True):
             if payment.move_id:

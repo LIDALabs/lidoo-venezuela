@@ -394,6 +394,16 @@ class AccountMove(models.Model):
                 if existing_record:
                     raise ValidationError(_("The operation cannot be completed: Another entry with the same name already exists."))
 
+        if vals.get("currency_id") is False or vals.get("currency_id") is None:
+            _logger.warning(
+                "CRITICAL: Writing currency_id=False on account.move. "
+                "Forcing fallback. move_ids=%s",
+                self.ids,
+            )
+            for move in self:
+                vals["currency_id"] = move.currency_id.id or self.env.company.currency_id.id
+                break
+
         if vals.get("foreign_rate", False):
             for move in self:
                 vals.update({"last_foreign_rate": move.foreign_rate})
