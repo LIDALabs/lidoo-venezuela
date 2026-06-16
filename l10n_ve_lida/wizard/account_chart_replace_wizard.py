@@ -100,7 +100,9 @@ class AccountChartReplaceWizard(models.TransientModel):
         created = 0
         updated = 0
         skipped = 0
-        log_lines = []
+        created_lines = []
+        updated_lines = []
+        skipped_lines = []
 
         for row in rows:
             code = row["code"]
@@ -112,10 +114,10 @@ class AccountChartReplaceWizard(models.TransientModel):
                     old_name = acc.name
                     acc.write({"name": name})
                     updated += 1
-                    log_lines.append(f"UPDATE  {code}: '{old_name}' -> '{name}'")
+                    updated_lines.append(f"  {code}: '{old_name}' -> '{name}'")
                 else:
                     skipped += 1
-                    log_lines.append(f"SKIP    {code}: name unchanged")
+                    skipped_lines.append(f"  {code}: '{acc.name}'")
             else:
                 # Create new account
                 # Determine account_type from code prefix (best effort)
@@ -128,27 +130,40 @@ class AccountChartReplaceWizard(models.TransientModel):
                 })
                 created += 1
                 code_map[code] = new_acc
-                log_lines.append(f"CREATE  {code}: '{name}'")
+                created_lines.append(f"  {code}: '{name}'")
 
-        summary = (
-            f"Process completed.\n"
-            f"Total rows: {len(rows)}\n"
-            f"Created: {created}\n"
-            f"Updated: {updated}\n"
-            f"Skipped (unchanged): {skipped}\n\n"
-            f"--- Detail ---\n" + "\n".join(log_lines)
-        )
+        # Build detailed log
+        log_parts = [
+            f"Total filas: {len(rows)}",
+            f"Creadas: {created} | Actualizadas: {updated} | Sin cambios: {skipped}",
+            "",
+        ]
+
+        if created_lines:
+            log_parts.append(f"=== CREADAS ({len(created_lines)}) ===")
+            log_parts.extend(created_lines)
+            log_parts.append("")
+
+        if updated_lines:
+            log_parts.append(f"=== ACTUALIZADAS ({len(updated_lines)}) ===")
+            log_parts.extend(updated_lines)
+            log_parts.append("")
+
+        if skipped_lines:
+            log_parts.append(f"=== SIN CAMBIOS ({len(skipped_lines)}) ===")
+            log_parts.append("(Nombre en DB = Nombre en archivo)")
+            log_parts.extend(skipped_lines)
+            log_parts.append("")
+
+        summary = "\n".join(log_parts)
         self.write({"log": summary})
 
         return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": _("Chart of Accounts Replace"),
-                "message": _(f"Created: {created} | Updated: {updated} | Skipped: {skipped}"),
-                "sticky": False,
-                "type": "success",
-            },
+            "type": "ir.actions.act_window",
+            "res_model": "account.chart.replace.wizard",
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
         }
 
     def _guess_account_type(self, code):

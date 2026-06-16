@@ -13,15 +13,17 @@
                         <field name="file_format"/>
                     </group>
                 </group>
-                <group string="Instructions">
-                    <p class="text-muted">
-                        The file must have <strong>code</strong> and <strong>name</strong> columns.<br/>
-                        <strong>If the code exists</strong>: the name will be updated.<br/>
-                        <strong>If the code does not exist</strong>: a new account will be created.
-                    </p>
-                </group>
-                <group string="Log" invisible="not log">
-                    <field name="log" nolabel="1" readonly="1" rows="15"/>
+                <group>
+                    <group string="Instrucciones">
+                        <p class="text-muted">
+                            El archivo debe tener columnas <strong>code</strong> y <strong>name</strong>.<br/>
+                            <strong>Si el code existe</strong>: se actualiza el name.<br/>
+                            <strong>Si el code no existe</strong>: se crea una cuenta nueva.
+                        </p>
+                    </group>
+                    <group string="Resultado" invisible="not log">
+                        <field name="log" nolabel="1" readonly="1" rows="20"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="action_replace" string="Replace" type="object" class="btn-primary"/>
