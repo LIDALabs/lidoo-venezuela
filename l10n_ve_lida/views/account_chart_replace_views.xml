@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_chart_replace_button" model="ir.ui.view">
+        <field name="name">account.chart.replace.button.list</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account_base_import.view_account_base_import_list"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(l10n_ve_lida.action_account_chart_replace_wizard)d"
+                        type="action"
+                        string="Reemplazar"
+                        display="always"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

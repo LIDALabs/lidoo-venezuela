@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_chart_replace_wizard_form" model="ir.ui.view">
+        <field name="name">account.chart.replace.wizard.form</field>
+        <field name="model">account.chart.replace.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Replace Chart of Accounts">
+                <group>
+                    <group string="File">
+                        <field name="file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                        <field name="file_format"/>
+                    </group>
+                </group>
+                <group string="Instructions">
+                    <p class="text-muted">
+                        The file must have <strong>code</strong> and <strong>name</strong> columns.<br/>
+                        <strong>If the code exists</strong>: the name will be updated.<br/>
+                        <strong>If the code does not exist</strong>: a new account will be created.
+                    </p>
+                </group>
+                <group string="Log" invisible="not log">
+                    <field name="log" nolabel="1" readonly="1" rows="15"/>
+                </group>
+                <footer>
+                    <button name="action_replace" string="Replace" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_chart_replace_wizard" model="ir.actions.act_window">
+        <field name="name">Replace Chart of Accounts</field>
+        <field name="res_model">account.chart.replace.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
