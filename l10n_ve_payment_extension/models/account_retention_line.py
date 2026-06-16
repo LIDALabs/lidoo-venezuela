@@ -440,7 +440,7 @@ class AccountRetentionLine(models.Model):
                 raise ValidationError(_("You can not create a retention with 0 amount."))
 
             base_amount = (
-                record.taxable_base_amount or record.invoice_amount
+                record.taxable_base_amount
                 if record.retention_id and record.retention_id.type_retention == "islr"
                 else record.invoice_amount
             )
