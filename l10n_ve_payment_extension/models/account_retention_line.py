@@ -178,11 +178,14 @@ class AccountRetentionLine(models.Model):
 
     def create(self, vals_list):
         res = super().create(vals_list)
+        res._validate_retention_amounts()
         res._sync_payment_amount()
         return res
 
     def write(self, vals):
         res = super().write(vals)
+        if any(f in vals for f in ("retention_amount", "invoice_amount", "taxable_base_amount", "move_id")):
+            self._validate_retention_amounts()
         if any(f in vals for f in ("retention_amount", "foreign_retention_amount", "payment_id")):
             self._sync_payment_amount()
         return res
@@ -430,31 +433,26 @@ class AccountRetentionLine(models.Model):
                 }
             )
 
-    @api.constrains(
-        "retention_amount",
-        "invoice_total",
-        "foreign_retention_amount",
-        "invoice_amount",
-        "foreign_invoice_amount",
-    )
-    def _constraint_amounts(self):
+    def _validate_retention_amounts(self):
+        """Validate retention amounts after persistence, ensuring computed fields are settled."""
         for record in self:
-            if any(
-                (
-                    record.retention_amount <= 0,
-                    record.invoice_total <= 0,
-                    # record.foreign_retention_amount <= 0,
-                    record.invoice_amount <= 0,
-                    # record.foreign_invoice_amount <= 0,
-                )
-            ):
+            if record.retention_amount <= 0:
+                raise ValidationError(_("You can not create a retention with 0 amount."))
+
+            base_amount = (
+                record.taxable_base_amount or record.invoice_amount
+                if record.retention_id and record.retention_id.type_retention == "islr"
+                else record.invoice_amount
+            )
+            if base_amount <= 0:
                 raise ValidationError(_("You can not create a retention with 0 amount."))
 
             is_vef_the_base_currency = self.env.company.currency_id == self.env.ref("base.VEF")
-            is_client_retention = record.retention_id.type == "out_invoice"
+            is_client_retention = record.retention_id and record.retention_id.type == "out_invoice"
             if (
                 is_vef_the_base_currency
                 and is_client_retention
+                and record.move_id
                 and record.retention_amount > record.move_id.amount_residual
             ):
                 raise ValidationError(

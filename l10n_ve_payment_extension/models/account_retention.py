@@ -469,6 +469,7 @@ class AccountRetention(models.Model):
                 "payment_type_retention": "iva",
                 "is_retention": True,
                 "currency_id": self.env.user.company_id.currency_id.id,
+                "foreign_currency_id": False,
             }
 
             def account_retention_line_empty_recordset():
@@ -764,6 +765,7 @@ class AccountRetention(models.Model):
                     "foreign_inverse_rate": line.move_id.foreign_inverse_rate,
                     "retention_line_ids": line,
                     "currency_id": self.env.user.company_id.currency_id.id,
+                    "foreign_currency_id": False,
                 }
             )
 

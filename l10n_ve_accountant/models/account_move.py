@@ -423,6 +423,23 @@ class AccountMove(models.Model):
                     move._update_invoice_lines_with_new_journal(old_journal_id, new_journal_id)
         return res
 
+    def _post(self, soft=True):
+        """
+        Override _post to ensure all move lines have a currency_id before posting.
+        
+        Odoo 17 enforces a NOT NULL constraint on account.move.line.currency_id.
+        During _synchronize_to_moves (triggered by payment writes), move lines may
+        be recreated with amount_currency != 0 but without currency_id, violating
+        this constraint. This safety net catches any such lines before the INSERT.
+        """
+        for move in self:
+            lines_missing_currency = move.line_ids.filtered(lambda l: not l.currency_id)
+            if lines_missing_currency:
+                lines_missing_currency.write({
+                    "currency_id": move.company_id.currency_id.id,
+                })
+        return super()._post(soft=soft)
+
     @api.constrains("invoice_line_ids")
     def _check_taxes_id(self):
         for moves in self:

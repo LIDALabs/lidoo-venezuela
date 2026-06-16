@@ -45,10 +45,24 @@ class AccountPayment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """
-        Override the create method to set the rate of the payment to its move.
+        Override the create method to set the rate of the payment to its move
+        and ensure all move lines have a currency_id (Odoo 17 NOT NULL constraint).
         """
         payments = super().create(vals_list)
         for payment in payments.with_context(skip_account_move_synchronization=True):
+            if payment.move_id:
+                # Odoo 17 requires currency_id on account.move.line.
+                # When foreign_currency_id is set, _sync_dynamic_lines may create
+                # lines with amount_currency != 0 but no currency_id, violating
+                # the NOT NULL constraint. Fix them here as a safety net.
+                lines_missing_currency = payment.move_id.line_ids.filtered(
+                    lambda l: not l.currency_id
+                )
+                if lines_missing_currency:
+                    lines_missing_currency.write({
+                        "currency_id": payment.currency_id.id
+                        or payment.company_currency_id.id,
+                    })
             payment.move_id.write(
                 {
                     "foreign_rate": payment.foreign_rate,
