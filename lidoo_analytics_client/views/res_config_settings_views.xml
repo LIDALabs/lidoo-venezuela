@@ -38,8 +38,8 @@
                                 <button name="action_generate_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
                             </div>
                         </div>
-                        <setting id="lidoo_analytics_ticket_webhook_url" string="Ticket Webhook URL" title="Ticket Webhook" help="When a user submits a ticket, POST the JSON payload to this URL.">
-                            <field name="lidoo_analytics_ticket_webhook_url" placeholder="https://hooks.example.com/tickets" />
+                        <setting id="lidoo_analytics_ticket_webhook_url" string="Discord Webhook" title="Discord Webhook" help="Cuando un usuario envía un ticket, se publica un embed en este webhook de Discord.">
+                            <field name="lidoo_analytics_ticket_webhook_url" placeholder="https://discord.com/api/webhooks/..." />
                         </setting>
                     </block>
                 </app>

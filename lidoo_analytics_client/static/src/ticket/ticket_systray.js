@@ -96,7 +96,7 @@ export class TicketSystray extends Component {
 
         this.actionService.doAction({
             type: "ir.actions.act_window",
-            name: "Report an Issue",
+            name: "Reportar incidencia",
             res_model: "lidoo.analytics.ticket.wizard",
             views: [[false, "form"]],
             target: "new",

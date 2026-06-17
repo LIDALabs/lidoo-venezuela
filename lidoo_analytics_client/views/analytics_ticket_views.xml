@@ -24,7 +24,7 @@
                 <group>
                     <field name="description"/>
                 </group>
-                <group string="Technical Info">
+                <group string="Información técnica">
                     <field name="user_id" readonly="1"/>
                     <field name="create_date" readonly="1"/>
                     <field name="current_route" readonly="1"/>
@@ -37,15 +37,15 @@
     </record>
 
     <record id="action_lidoo_analytics_ticket" model="ir.actions.act_window">
-        <field name="name">Tickets</field>
+        <field name="name">Incidencias</field>
         <field name="res_model">lidoo.analytics.ticket</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem
         id="menu_lidoo_analytics_ticket"
-        name="Tickets"
-        parent="base.menu_custom"
+        name="Incidencias"
+        parent="base.menu_system"
         action="action_lidoo_analytics_ticket"
         sequence="10"/>
 </odoo>

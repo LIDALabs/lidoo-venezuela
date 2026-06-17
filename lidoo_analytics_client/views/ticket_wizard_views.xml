@@ -4,33 +4,33 @@
         <field name="name">lidoo.analytics.ticket.wizard.form</field>
         <field name="model">lidoo.analytics.ticket.wizard</field>
         <field name="arch" type="xml">
-            <form string="Report an Issue" class="o_form_nosheet">
+            <form string="Reportar incidencia" class="o_form_nosheet">
                 <div class="w-100 mb-3">
                     <field name="description"
                            widget="text"
                            nolabel="1"
-                           placeholder="Describe what you were doing, what you expected, and what went wrong..."
+                            placeholder="Describa qué estaba haciendo, qué esperaba y qué salió mal..."
                            class="w-100"
                            style="min-height: 100px;"/>
                 </div>
                 <field name="screenshot" invisible="1"/>
                 <field name="screenshot_filename" invisible="1"/>
 
-                <group string="Technical Info" groups="base.group_no_one" col="2">
+                <group string="Información técnica" groups="base.group_no_one" col="2">
                     <field name="current_route" readonly="1"/>
                     <field name="screenshot_filename" readonly="1"/>
                 </group>
 
                 <div groups="base.group_no_one" class="mt-3">
-                    <label for="server_logs" string="Recent Server Logs" class="fw-bold text-muted small mb-1"/>
+                    <label for="server_logs" string="Registros recientes del servidor" class="fw-bold text-muted small mb-1"/>
                     <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; background-color: #f8f9fa; padding: 8px; border-radius: 4px;">
                         <field name="server_logs" readonly="1" nolabel="1" class="text-monospace small"/>
                     </div>
                 </div>
 
                 <footer>
-                    <button string="Send" name="action_submit" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button string="Enviar" name="action_submit" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>

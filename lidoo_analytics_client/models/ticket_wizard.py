@@ -7,13 +7,13 @@ _logger = logging.getLogger(__name__)
 
 class LidooAnalyticsTicketWizard(models.TransientModel):
     _name = "lidoo.analytics.ticket.wizard"
-    _description = "Report an Issue Wizard"
+    _description = "Asistente para reportar incidencias"
 
-    description = fields.Text(string="Description", required=True)
-    screenshot = fields.Binary(string="Screenshot")
-    screenshot_filename = fields.Char(string="Filename")
-    current_route = fields.Char(string="Current Route")
-    server_logs = fields.Text(string="Server Logs")
+    description = fields.Text(string="Descripción", required=True)
+    screenshot = fields.Binary(string="Captura de pantalla")
+    screenshot_filename = fields.Char(string="Nombre de archivo")
+    current_route = fields.Char(string="Ruta actual")
+    server_logs = fields.Text(string="Registros del servidor")
 
     @api.model
     def default_get(self, fields_list):
@@ -84,7 +84,7 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
 
         if not self.description or not self.description.strip():
             raise UserError(
-                _("Please provide a description of the issue before sending.")
+                _("Por favor, proporcione una descripción de la incidencia antes de enviar.")
             )
 
         _logger.info("--- ACTION SUBMIT PROCESSING ---")
@@ -104,9 +104,8 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
             }
         )
 
-        # Construcción y volcado del JSON
-        payload = ticket._build_payload()
-        ticket._dump_payload(payload)
+        # Enviar automáticamente a Discord si hay webhook configurado
+        ticket.action_send()
 
         return {"type": "ir.actions.act_window_close"}
 

@@ -47,10 +47,10 @@ class ResConfigSettings(models.TransientModel):
     )
 
     lidoo_analytics_ticket_webhook_url = fields.Char(
-        string="Ticket Webhook URL",
+        string="Discord Webhook URL",
         config_parameter="lidoo_analytics_ticket.webhook_url",
         default="",
-        help="When a ticket is submitted, POST the data as JSON to this URL.",
+        help="URL del webhook de Discord donde se enviarán los tickets de incidencia.",
     )
 
     def action_generate_pull_key(self):

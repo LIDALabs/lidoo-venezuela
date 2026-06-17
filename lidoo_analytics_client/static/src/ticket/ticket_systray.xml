@@ -3,7 +3,7 @@
     <t t-name="lidoo_analytics_client.TicketSystray">
         <button class="btn btn-link o-no-caret px-1"
                 t-on-click="openTicket"
-                title="Report an issue">
+                title="Reportar incidencia">
             <i class="fa fa-life-ring"/>
         </button>
     </t>
