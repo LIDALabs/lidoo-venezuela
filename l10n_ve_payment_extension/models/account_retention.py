@@ -737,7 +737,7 @@ class AccountRetention(models.Model):
 
         payment_type = "outbound" if self.type == "in_invoice" else "inbound"
         partner_type = "supplier" if self.type == "in_invoice" else "customer"
-        payment_vals = []
+        payments = self.env["account.payment"]
 
         for line in self.retention_line_ids:
             if line.move_id.move_type == "in_refund":
@@ -751,7 +751,7 @@ class AccountRetention(models.Model):
                 else "account.account_payment_method_manual_out"
             )
 
-            payment_vals.append(
+            payment = Payment.create(
                 {
                     "state": "draft",
                     "payment_type": payment_type,
@@ -763,16 +763,13 @@ class AccountRetention(models.Model):
                     "is_retention": True,
                     "foreign_rate": line.move_id.foreign_rate,
                     "foreign_inverse_rate": line.move_id.foreign_inverse_rate,
-                    "retention_line_ids": line,
                     "currency_id": self.env.user.company_id.currency_id.id,
                     "foreign_currency_id": False,
                 }
             )
+            line.payment_id = payment.id
+            payments += payment
 
-        # payments = Payment.create(payment_vals)
-        payments = self.env["account.payment"]
-        for vals in payment_vals:
-            payments += Payment.create(vals)
         payments.compute_retention_amount_from_retention_lines()
 
         return payments
