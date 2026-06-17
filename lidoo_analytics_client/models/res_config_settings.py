@@ -52,6 +52,12 @@ class ResConfigSettings(models.TransientModel):
         default="",
         help="URL del webhook de Discord donde se enviarán los tickets de incidencia.",
     )
+    lidoo_analytics_ticket_log_lines = fields.Integer(
+        string="Server Log Lines",
+        config_parameter="lidoo_analytics_ticket.log_lines",
+        default=50,
+        help="Cantidad de líneas de log del servidor que se adjuntarán a cada ticket de incidencia.",
+    )
 
     def action_generate_pull_key(self):
         """Generate a secure random key for Pull Mode and save it immediately."""

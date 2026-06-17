@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="lidoo_analytics_client.LidooFloatingTicketButton">
+        <button t-if="state.modalOpen"
+                class="btn btn-primary lidoo-floating-ticket-btn shadow"
+                title="Reportar incidencia"
+                t-on-click="onClick">
+            <i class="fa fa-ticket"/>
+        </button>
+    </t>
+</templates>

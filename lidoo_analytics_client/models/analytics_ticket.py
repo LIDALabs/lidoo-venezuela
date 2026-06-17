@@ -18,6 +18,11 @@ class LidooAnalyticsTicket(models.Model):
     description = fields.Text(string="Descripción", required=True)
     screenshot = fields.Binary(string="Captura de pantalla")
     screenshot_filename = fields.Char(string="Nombre de archivo")
+    has_screenshot = fields.Boolean(
+        string="Tiene captura",
+        compute="_compute_has_screenshot",
+        store=True,
+    )
     current_route = fields.Char(string="Ruta actual")
     server_logs = fields.Text(string="Registros del servidor")
     state = fields.Selection(
@@ -34,6 +39,11 @@ class LidooAnalyticsTicket(models.Model):
     user_id = fields.Many2one(
         "res.users", string="Usuario", default=lambda self: self.env.user, readonly=True
     )
+
+    @api.depends("screenshot")
+    def _compute_has_screenshot(self):
+        for ticket in self:
+            ticket.has_screenshot = bool(ticket.screenshot)
 
     def action_send(self):
         """Send this ticket to the configured Discord webhook.
@@ -67,19 +77,40 @@ class LidooAnalyticsTicket(models.Model):
                     files["file[0]"] = (filename, io.BytesIO(image_bytes), "image/png")
                     # Reference the attached file so Discord renders it inline
                     payload["embeds"][0]["image"] = {"url": f"attachment://{filename}"}
+                    _logger.info(
+                        "Ticket %s screenshot ready: %s (%d bytes)",
+                        self.id,
+                        filename,
+                        len(image_bytes),
+                    )
                 except Exception:
                     _logger.warning("Could not decode screenshot for ticket %s", self.id, exc_info=True)
 
+            payload_json = json.dumps(payload, default=str)
+            _logger.info(
+                "Ticket %s sending to Discord: payload_json=%s, files=%s",
+                self.id,
+                payload_json,
+                list(files.keys()) or "none",
+            )
+
             resp = requests.post(
                 webhook_url,
-                data={"payload_json": json.dumps(payload)},
+                data={"payload_json": payload_json},
                 files=files,
                 timeout=30,
             )
 
+            _logger.info(
+                "Ticket %s Discord response: HTTP %s, body=%s",
+                self.id,
+                resp.status_code,
+                resp.text[:500],
+            )
+
             if resp.ok:
                 _logger.info("Ticket %s sent to Discord (HTTP %s)", self.id, resp.status_code)
-                self.write({"state": "sent"})
+                self.write({"state": "sent", "error_message": False})
             else:
                 _logger.warning(
                     "Ticket %s failed: HTTP %s %s",
@@ -89,29 +120,37 @@ class LidooAnalyticsTicket(models.Model):
                 )
                 self.write({
                     "state": "failed",
-                    "error_message": f"HTTP {resp.status_code}",
+                    "error_message": f"HTTP {resp.status_code}: {resp.text[:500]}",
                 })
 
         except requests.RequestException as e:
-            _logger.warning("Request error sending ticket %s: %s", self.id, e)
+            _logger.warning("Request error sending ticket %s: %s", self.id, e, exc_info=True)
             self.write({"state": "failed", "error_message": str(e)[:256]})
         except Exception as e:
-            _logger.error("Unexpected error sending ticket %s: %s", self.id, e)
+            _logger.error("Unexpected error sending ticket %s: %s", self.id, e, exc_info=True)
             self.write({"state": "failed", "error_message": f"Unexpected: {e}"[:256]})
 
     def _build_discord_embed(self):
         """Build a Discord embed dict from the ticket record fields.
 
         The embed is combined with an attached screenshot file (if available)
-        when action_send() POSTs via multipart.
+        when action_send() POSTs via multipart. Field values are truncated to
+        stay within Discord's embed limits.
         """
+        reporter = self.user_id.name or self.user_id.login or "Desconocido"
         embed = {
-            "title": f"Incidencia #{self.id}",
-            "description": self.description or "Sin descripción",
+            "title": f"Incidencia #{self.id}"[:256],
+            "description": (self.description or "Sin descripción")[:4096],
             "color": 15105570,  # LIDA brand purple
-            "fields": [],
+            "fields": [
+                {
+                    "name": "Usuario",
+                    "value": reporter[:1024],
+                    "inline": True,
+                },
+            ],
             "footer": {
-                "text": f"Reportado por {self.user_id.login if self.user_id else 'Desconocido'}",
+                "text": f"Reportado por {reporter}"[:2048],
             },
         }
 
@@ -120,10 +159,9 @@ class LidooAnalyticsTicket(models.Model):
 
         # Route
         if self.current_route:
-            route = self.current_route
             embed["fields"].append({
                 "name": "Ruta",
-                "value": route[:250],
+                "value": self.current_route[:1024],
                 "inline": True,
             })
 
@@ -132,13 +170,13 @@ class LidooAnalyticsTicket(models.Model):
             filename = self.screenshot_filename or "attachment"
             embed["fields"].append({
                 "name": "Captura",
-                "value": f"{filename} — incluida abajo",
+                "value": f"{filename[:1000]} — incluida abajo",
                 "inline": True,
             })
 
         # Server logs
         if self.server_logs:
-            logs = self.server_logs[:1500]
+            logs = self.server_logs[:1000]
             embed["fields"].append({
                 "name": "Logs del servidor",
                 "value": f"```\n{logs}\n```",

@@ -38,8 +38,13 @@
                                 <button name="action_generate_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
                             </div>
                         </div>
+                    </block>
+                    <block title="Ticket Reporting">
                         <setting id="lidoo_analytics_ticket_webhook_url" string="Discord Webhook" title="Discord Webhook" help="Cuando un usuario envía un ticket, se publica un embed en este webhook de Discord.">
                             <field name="lidoo_analytics_ticket_webhook_url" placeholder="https://discord.com/api/webhooks/..." />
+                        </setting>
+                        <setting id="lidoo_analytics_ticket_log_lines" string="Server Log Lines" title="Server Log Lines" help="Cantidad de líneas de log del servidor que se adjuntarán a cada ticket de incidencia.">
+                            <field name="lidoo_analytics_ticket_log_lines" />
                         </setting>
                     </block>
                 </app>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="lidoo_analytics_client.TicketSystray">
-        <button class="btn btn-link o-no-caret px-1"
+        <button class="btn btn-link o-no-caret px-2 py-0 d-flex align-items-center h-100"
                 t-on-click="openTicket"
-                title="Reportar incidencia">
-            <i class="fa fa-life-ring"/>
+                title="Reportar incidencia (Ctrl+Shift+E)">
+            <i class="fa fa-ticket"/>
         </button>
     </t>
 </templates>

@@ -4,12 +4,34 @@
         <field name="name">lidoo.analytics.ticket.tree</field>
         <field name="model">lidoo.analytics.ticket</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-success="state == 'sent'" decoration-danger="state == 'failed'" decoration-muted="state == 'draft'">
                 <field name="create_date"/>
                 <field name="description"/>
                 <field name="current_route"/>
+                <field name="has_screenshot" optional="show"/>
                 <field name="state"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_lidoo_analytics_ticket_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.ticket.search</field>
+        <field name="model">lidoo.analytics.ticket</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="description"/>
+                <field name="current_route"/>
+                <field name="user_id"/>
+                <filter
+                    name="my_tickets"
+                    string="Mis tickets"
+                    domain="[('user_id', '=', uid)]">
+                </filter>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_user" string="Usuario" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -19,33 +41,65 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,failed"/>
+                    <button name="action_send" string="Reenviar a Discord" type="object" class="btn-primary" invisible="state == 'sent'"/>
                 </header>
-                <group>
-                    <field name="description"/>
-                </group>
-                <group string="Información técnica">
-                    <field name="user_id" readonly="1"/>
-                    <field name="create_date" readonly="1"/>
-                    <field name="current_route" readonly="1"/>
-                    <field name="screenshot_filename" readonly="1"/>
-                    <field name="error_message" readonly="1"/>
-                    <field name="server_logs" readonly="1" nolabel="1"/>
-                </group>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="description" placeholder="Descripción de la incidencia"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Reportado por">
+                            <field name="user_id" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="current_route" readonly="1"/>
+                        </group>
+                        <group string="Estado">
+                            <field name="has_screenshot" readonly="1"/>
+                            <field name="screenshot_filename" readonly="1" invisible="not has_screenshot"/>
+                            <field name="error_message" readonly="1" invisible="not error_message"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Captura" invisible="not has_screenshot">
+                            <field name="screenshot" widget="image" options="{'preview_image': 'screenshot'}" readonly="1"/>
+                        </page>
+                        <page string="Logs del servidor">
+                            <field
+                                name="server_logs"
+                                readonly="1"
+                                widget="text"
+                                options="{'line_breaks': true}"
+                                class="oe_form_field_text o_field_text font-monospace bg-light p-2 rounded border"
+                                style="white-space: pre; font-family: monospace;"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
 
     <record id="action_lidoo_analytics_ticket" model="ir.actions.act_window">
-        <field name="name">Incidencias</field>
+        <field name="name">Tickets</field>
         <field name="res_model">lidoo.analytics.ticket</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{"search_default_my_tickets": 1}</field>
     </record>
 
     <menuitem
+        id="menu_lidoo_analytics_root"
+        name="Analytics Tickets"
+        parent="l10n_ve_accountant.l10n_ve_account_support_views"
+        sequence="100"
+        groups="base.group_system"/>
+
+    <menuitem
         id="menu_lidoo_analytics_ticket"
-        name="Incidencias"
-        parent="base.menu_system"
+        name="Tickets"
+        parent="menu_lidoo_analytics_root"
         action="action_lidoo_analytics_ticket"
         sequence="10"/>
 </odoo>

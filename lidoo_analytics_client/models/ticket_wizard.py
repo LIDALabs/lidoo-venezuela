@@ -87,10 +87,15 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
                 _("Por favor, proporcione una descripción de la incidencia antes de enviar.")
             )
 
+        if not self.screenshot:
+            raise UserError(
+                _("Es obligatorio adjuntar una captura de pantalla para enviar el ticket.")
+            )
+
         _logger.info("--- ACTION SUBMIT PROCESSING ---")
         _logger.info(
             "Final transient record screenshot size: %d bytes",
-            len(self.screenshot) if self.screenshot else 0,
+            len(self.screenshot),
         )
 
         # Crear el ticket persistente real con los datos blindados
@@ -107,11 +112,64 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
         # Enviar automáticamente a Discord si hay webhook configurado
         ticket.action_send()
 
+        try:
+            if ticket.state == "sent":
+                self.env.user.notify_info(
+                    message=_("Ticket enviado correctamente a Discord."),
+                )
+            elif ticket.state == "failed":
+                self.env.user.notify_warning(
+                    message=_("Ticket guardado, pero no se pudo enviar a Discord: %s") % (ticket.error_message or ""),
+                )
+            else:
+                self.env.user.notify_info(
+                    message=_("Ticket guardado como borrador. Configurá el webhook de Discord en Ajustes para enviarlo."),
+                )
+        except Exception as e:
+            _logger.warning("Could not notify user after ticket submit: %s", e)
+
         return {"type": "ir.actions.act_window_close"}
 
-    def _fetch_server_logs(self, max_lines=50):
-        """Fetch recent server logs from ir.logging or logfile."""
-        # 1. Try ir.logging (populated when log_db=True)
+    def _fetch_server_logs(self):
+        """Fetch recent server logs using the configured line limit."""
+        ICP = self.env["ir.config_parameter"].sudo()
+        max_lines = ICP.get_param("lidoo_analytics_ticket.log_lines")
+        try:
+            max_lines = int(max_lines) if max_lines else 50
+        except ValueError:
+            max_lines = 50
+        return self._fetch_server_logs_with_limit(max_lines)
+
+    def _fetch_server_logs_with_limit(self, max_lines=50):
+        """Fetch recent server logs from ir.logging or logfile.
+
+        Prioritizes ERROR/WARNING/CRITICAL records. Falls back to recent logs of
+        any level if no error logs are available, then to the configured logfile.
+        """
+        # 1. Try error/warning logs first (most useful for debugging incidents)
+        try:
+            error_logs = self.env["ir.logging"].search_read(
+                [("level", "in", ["ERROR", "WARNING", "CRITICAL"])],
+                ["name", "level", "message", "create_date"],
+                order="create_date desc",
+                limit=max_lines,
+            )
+            if error_logs:
+                lines = []
+                for log in reversed(error_logs):
+                    lines.append(
+                        "[{}] [{}] {}: {}".format(
+                            log["create_date"],
+                            log["level"],
+                            log["name"],
+                            log["message"],
+                        )
+                    )
+                return "\n".join(lines)
+        except Exception as e:
+            _logger.warning("Could not fetch ir.logging error logs: %s", e)
+
+        # 2. Fallback: recent logs regardless of level
         try:
             logs = self.env["ir.logging"].search_read(
                 [],
@@ -134,7 +192,7 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
         except Exception as e:
             _logger.warning("Could not fetch ir.logging: %s", e)
 
-        # 2. Fallback: try reading the configured logfile
+        # 3. Fallback: try reading the configured logfile
         for path in [
             "/etc/odoo/odoo-server.log",
             "/var/log/odoo/odoo.log",
