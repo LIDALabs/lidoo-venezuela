@@ -44,6 +44,37 @@ class AccountMoveLine(models.Model):
     )
     amount_currency = fields.Monetary(precompute=False)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create to ensure currency_id is always set on move lines.
+
+        Odoo 17 enforces a NOT NULL constraint on account.move.line.currency_id.
+        Under certain code paths (e.g., retention payment creation, synchronize_to_moves),
+        move lines may be created with amount_currency != 0 but without currency_id,
+        violating this constraint.
+
+        This safety net sets a fallback currency_id before the INSERT:
+        1. Use the move's currency if move_id is available (typical for x2many creates)
+        2. Fall back to the company's currency
+        """
+        for vals in vals_list:
+            if not vals.get('currency_id'):
+                _logger.warning(
+                    "CRITICAL: Creating account.move.line without currency_id. "
+                    "Forcing fallback. vals=%s",
+                    vals,
+                )
+                move_id = vals.get('move_id')
+                if move_id:
+                    move = self.env['account.move'].browse(move_id)
+                    vals['currency_id'] = (
+                        move.currency_id.id
+                        or move.company_id.currency_id.id
+                    )
+                else:
+                    vals['currency_id'] = self.env.company.currency_id.id
+        return super().create(vals_list)
+
     # Report fields
     foreign_debit = fields.Monetary(
         currency_field="foreign_currency_id",
