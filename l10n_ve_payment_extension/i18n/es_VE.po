@@ -40,7 +40,7 @@ msgstr "% Tarifa"
 #. module: l10n_ve_payment_extension
 #: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__related_percentage_tax_base
 msgid "% tax base"
-msgstr "% Base Imponible"
+msgstr "% de Rentención"
 
 #. module: l10n_ve_payment_extension
 #: model:ir.model.fields,field_description:l10n_ve_payment_extension.field_account_retention_line__taxable_base_amount
