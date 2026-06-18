@@ -16,3 +16,4 @@ class BcvRateLog(models.Model):
     error_message = fields.Text('Mensaje de error')
     created_at = fields.Datetime('Fecha de creación', default=fields.Datetime.now, readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
+    automatico = fields.Boolean('Automático', default=False, help='Indica si la consulta fue realizada automáticamente por el cron (True) o manualmente desde el wizard (False).')

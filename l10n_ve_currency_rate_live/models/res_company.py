@@ -26,7 +26,7 @@ class ResCompany(models.Model):
                 return
             
             helper = self.env['bcv.rate.helper']
-            result = helper.get_bcv_rate_with_fallback()
+            result = helper.get_bcv_rate_with_fallback(automatico=True)
             
             if not result.get('rates') or not result.get('date'):
                 _logger.warning(f"BCV rate query failed for {company.name}, no fallback available")

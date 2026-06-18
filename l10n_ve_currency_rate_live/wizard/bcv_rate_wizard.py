@@ -39,7 +39,7 @@ class BcvRateWizard(models.TransientModel):
         else:
             try:
                 helper = self.env['bcv.rate.helper']
-                result = helper.get_bcv_rate_with_fallback()
+                result = helper.get_bcv_rate_with_fallback(automatico=False)
                 if result.get('rates') and result.get('date'):
                     res.update({
                         'rate_usd': result['rates'].get('USD', 0.0),
@@ -55,7 +55,7 @@ class BcvRateWizard(models.TransientModel):
     def action_get_bcv_rate(self):
         self.ensure_one()
         helper = self.env['bcv.rate.helper']
-        result = helper.get_bcv_rate_with_fallback()
+        result = helper.get_bcv_rate_with_fallback(automatico=False)
         
         if result.get('rates') and result.get('date'):
             self.write({
