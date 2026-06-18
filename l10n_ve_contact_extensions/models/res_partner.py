@@ -30,11 +30,17 @@ class ResPartner(models.Model):
             self.company_type = 'person'
 
     def _check_required_address_ve(self):
+        # Skip validation when creating a user (partner is created internally)
+        if self.env.context.get('user_create'):
+            return
         for partner in self:
             if partner.parent_id:
                 continue
             # Skip validation for the main company partner
             if partner.is_company:
+                continue
+            # Skip validation for partners linked to users
+            if partner.user_ids:
                 continue
 
             missing = []
@@ -64,7 +70,9 @@ class ResPartner(models.Model):
 
     @api.constrains('street', 'state_id', 'zip_code_id', 'parent_id')
     def _constrain_required_address_ve(self):
-        self._check_required_address_ve()
+        # Skip for user partners (created internally by res.users)
+        user_partners = self.filtered('user_ids')
+        (self - user_partners)._check_required_address_ve()
 
     @api.constrains('vat', 'country_id', 'prefix_vat')
     def check_vat(self):
