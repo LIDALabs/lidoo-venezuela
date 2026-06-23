@@ -18,7 +18,6 @@ class InventoryCalculatorFinishedLine(models.Model):
         "product.product",
         string="Producto",
         required=True,
-        domain="[('id', 'in', parent.product_with_recipe_ids)]",
     )
     product_uom_id = fields.Many2one(
         "uom.uom",

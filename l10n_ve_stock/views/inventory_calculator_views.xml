@@ -113,17 +113,14 @@
                         <group string="Ubicaciones">
                             <field name="virtual_location_id"
                                    string="Virtual (Traslado)"
-                                   help="Origen del stock fabricado (tipo transit/view)"
                                    required="state in ('draft', 'confirmed')"
                                    placeholder="Physical Locations/Traslado..."/>
                             <field name="location_dest_id"
                                    string="Destino"
-                                   help="Almacén para productos terminados (tipo internal)"
                                    required="state in ('draft', 'confirmed')"
                                    placeholder="WH/Existencias"/>
                             <field name="location_src_id"
                                    string="Origen (ref)"
-                                   help="Solo referencia — no afecta stock"
                                    placeholder="Opcional"/>
                             <field name="company_id" invisible="1"/>
                         </group>
@@ -136,50 +133,50 @@
                     </group>
 
                     <!-- Productos Finales -->
-                    <notebook>
-                        <page string="Productos Finales" name="finished" icon="fa-cubes">
-                            <field name="finished_product_ids" nolabel="1">
-                                <tree editable="bottom"
-                                      decoration-success="has_recipe"
-                                      decoration-warning="not has_recipe">
-                                    <field name="sequence" widget="handle" optional="hide"/>
-                                    <field name="product_id"
-                                           string="Producto"
-                                           placeholder="Seleccionar producto..."/>
-                                    <field name="product_uom_id" readonly="1"
-                                           string="Unidad"/>
-                                    <field name="quantity"
-                                           string="Cantidad"
-                                           required="1"/>
-                                    <field name="has_recipe" readonly="1"
-                                           widget="boolean_toggle"
-                                           string="Receta"/>
-                                    <field name="raw_cost_per_unit"
-                                           readonly="1"
-                                           string="Costo/Unit"
-                                           options="{'currency_field': 'currency_id'}"/>
-                                    <field name="raw_cost_total"
-                                           readonly="1"
-                                           string="Costo Total"
-                                           options="{'currency_field': 'currency_id'}"/>
-                                    <field name="note"
-                                           string="Nota"
-                                           optional="hide"/>
-                                </tree>
-                            </field>
-                            <div class="text-center mt-2 mb-1"
-                                 invisible="state != 'draft'">
-                                <button name="action_compute_raw_materials"
-                                        string="Calcular Materias Primas desde Recetas"
-                                        type="object"
-                                        class="btn-secondary"
-                                        icon="fa-calculator"/>
-                            </div>
-                        </page>
+                    <group string="Productos Finales">
+                        <field name="finished_product_ids" nolabel="1">
+                            <tree editable="bottom"
+                                  decoration-success="has_recipe"
+                                  decoration-warning="not has_recipe">
+                                <field name="sequence" widget="handle" optional="hide"/>
+                                <field name="product_id"
+                                       string="Producto"
+                                       placeholder="Seleccionar producto..."/>
+                                <field name="product_uom_id" readonly="1"
+                                       string="Unidad"/>
+                                <field name="quantity"
+                                       string="Cantidad"
+                                       required="1"/>
+                                <field name="has_recipe" readonly="1"
+                                       widget="boolean_toggle"
+                                       string="Receta"/>
+                                <field name="raw_cost_per_unit"
+                                       readonly="1"
+                                       string="Costo/Unit"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="raw_cost_total"
+                                       readonly="1"
+                                       string="Costo Total"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="note"
+                                       string="Nota"
+                                       optional="hide"/>
+                            </tree>
+                        </field>
+                        <div class="text-center mt-2 mb-1"
+                             invisible="state != 'draft'">
+                            <button name="action_compute_raw_materials"
+                                    string="Calcular Materias Primas desde Recetas"
+                                    type="object"
+                                    class="btn-secondary"
+                                    icon="fa-calculator"/>
+                        </div>
+                    </group>
 
-                        <page string="Materias Primas" name="raw_materials"
-                              icon="fa-cube"
-                              invisible="not raw_material_ids">
+                    <!-- Materias Primas (solo lectura) -->
+                    <notebook invisible="not raw_material_ids">
+                        <page string="Materias Primas (referencia — no descuenta stock)"
+                              name="raw_materials">
                             <field name="raw_material_ids" readonly="1" nolabel="1">
                                 <tree create="false" edit="false"
                                       delete="false"
@@ -196,13 +193,14 @@
                                 </tree>
                             </field>
                         </page>
-
-                        <page string="Notas" name="notes" icon="fa-sticky-note-o">
-                            <field name="note"
-                                   placeholder="Notas adicionales..."
-                                   nolabel="1"/>
-                        </page>
                     </notebook>
+
+                    <!-- Notas -->
+                    <group string="Notas" invisible="state != 'draft'">
+                        <field name="note"
+                               placeholder="Notas adicionales..."
+                               nolabel="1"/>
+                    </group>
                 </sheet>
 
                 <!-- Chatter -->
