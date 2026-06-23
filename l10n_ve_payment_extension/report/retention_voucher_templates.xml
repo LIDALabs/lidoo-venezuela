@@ -451,7 +451,7 @@
                         <!--Firma y sello imagen estática-->
                         <div style="height:100px">
                             <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/f_y_s.jpeg' % web_base_url"/>
+                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
                         </div>
                         <!--Firma y sello fin-->
                         <!--Firma digital-->
@@ -784,7 +784,7 @@
                         <!--Firma y sello imagen estática-->
                         <div style="height:100px">
                             <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/f_y_s.jpeg' % web_base_url"/>
+                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
                         </div>
                         <!--Firma y sello fin-->
                         <div style="height:auto"></div>
