@@ -13,6 +13,18 @@ class AccountMove(models.Model):
     _name = "account.move"
     _inherit = "account.move"
 
+    preset_note_id = fields.Many2one(
+        "invoice.preset.note",
+        string="Preset Note",
+        company_dependent=True,
+    )
+    preset_note_text = fields.Text(
+        string="Preset Note Text",
+        compute="_compute_preset_note_text",
+        inverse="_inverse_preset_note_text",
+        store=True,
+        copy=False,
+    )
     correlative = fields.Char("Control Number", copy=False, help="Sequence control number")
     invoice_reception_date = fields.Date(
         "Reception Date",
@@ -36,6 +48,27 @@ class AccountMove(models.Model):
     # 0: not printed yet, 1: first print (original), 2 or more: copies
     free_form_copy_number = fields.Integer(default=0, copy=False)
     is_print_copy = fields.Boolean(compute='_compute_is_print_copy')
+
+    @api.depends("preset_note_id")
+    def _compute_preset_note_text(self):
+        for move in self:
+            if move.preset_note_id:
+                move.preset_note_text = move.preset_note_id.text
+            else:
+                move.preset_note_text = False
+
+    def _inverse_preset_note_text(self):
+        for move in self:
+            if move.preset_note_text and not move.preset_note_id:
+                Note = self.env["invoice.preset.note"]
+                existing = Note.search([("text", "=", move.preset_note_text)], limit=1)
+                if existing:
+                    move.preset_note_id = existing
+                else:
+                    move.preset_note_id = Note.create({
+                        "name": move.preset_note_text[:50],
+                        "text": move.preset_note_text,
+                    })
 
     @api.constrains("invoice_line_ids")
     def _check_price_in_zero(self):

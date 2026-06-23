@@ -81,6 +81,17 @@
                     Note: the invoice date is prior to the current date.
                 </div>
             </xpath>
+            <xpath expr="//field[@name='narration']" position="before">
+                <field name="preset_note_id"
+                    options="{'no_open': True, 'no_create': True}"
+                    placeholder="Select a preset note..."
+                    invisible="move_type not in ('out_invoice', 'out_refund')"
+                />
+                <field name="preset_note_text"
+                    placeholder="Or type a custom note..."
+                    invisible="move_type not in ('out_invoice', 'out_refund')"
+                />
+            </xpath>
         </field>
     </record>
     <!-- <record id="view_account_move_od_journal_sequence" model="ir.ui.view">

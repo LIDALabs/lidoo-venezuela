@@ -13,6 +13,40 @@ class SaleOrder(models.Model):
     _name = "sale.order"
     _inherit = ["sale.order", "filter.partner.mixin"]
 
+    preset_note_id = fields.Many2one(
+        "invoice.preset.note",
+        string="Preset Note",
+        company_dependent=True,
+    )
+    preset_note_text = fields.Text(
+        string="Preset Note Text",
+        compute="_compute_preset_note_text",
+        inverse="_inverse_preset_note_text",
+        store=True,
+        copy=False,
+    )
+
+    @api.depends("preset_note_id")
+    def _compute_preset_note_text(self):
+        for order in self:
+            if order.preset_note_id:
+                order.preset_note_text = order.preset_note_id.text
+            else:
+                order.preset_note_text = False
+
+    def _inverse_preset_note_text(self):
+        for order in self:
+            if order.preset_note_text and not order.preset_note_id:
+                Note = self.env["invoice.preset.note"]
+                existing = Note.search([("text", "=", order.preset_note_text)], limit=1)
+                if existing:
+                    order.preset_note_id = existing
+                else:
+                    order.preset_note_id = Note.create({
+                        "name": order.preset_note_text[:50],
+                        "text": order.preset_note_text,
+                    })
+
     def default_alternate_currency(self):
         """
         This method is used to get the foreign currency of the company and set it as the default
@@ -315,6 +349,8 @@ class SaleOrder(models.Model):
         )
         invoice_vals["foreign_rate"] = self.foreign_rate
         invoice_vals["foreign_inverse_rate"] = self.foreign_inverse_rate
+        if self.preset_note_id:
+            invoice_vals["preset_note_id"] = self.preset_note_id.id
         return invoice_vals
 
     def _update_invoices_rate(self):

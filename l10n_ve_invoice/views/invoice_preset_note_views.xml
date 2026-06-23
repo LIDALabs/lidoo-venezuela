@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_invoice_preset_note_form" model="ir.ui.view">
+        <field name="name">invoice.preset.note.form</field>
+        <field name="model">invoice.preset.note</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Note Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="text" placeholder="Enter the note text..." />
+                        <field name="active" />
+                        <field name="company_id" groups="base.group_multi_company" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_invoice_preset_note_tree" model="ir.ui.view">
+        <field name="name">invoice.preset.note.tree</field>
+        <field name="model">invoice.preset.note</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="text" />
+                <field name="active" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_invoice_preset_note" model="ir.actions.act_window">
+        <field name="name">Preset Notes</field>
+        <field name="res_model">invoice.preset.note</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_invoice_preset_note"
+        name="Preset Notes"
+        parent="l10n_ve_invoice.menu_accounting_reports"
+        action="action_invoice_preset_note"
+        sequence="100"
+    />
+</odoo>
