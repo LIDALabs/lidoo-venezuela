@@ -10,10 +10,14 @@ class BcvRateHelper(models.AbstractModel):
     _description = 'BCV Rate Helper with Fallback'
 
     @api.model
-    def get_bcv_rate_with_fallback(self):
+    def get_bcv_rate_with_fallback(self, automatico=False):
         """
         Consulta la tasa del BCV con logging y fallback automático.
-        
+
+        Args:
+            automatico (bool): True si la consulta fue iniciada por el cron,
+                               False si fue iniciada manualmente desde el wizard.
+
         Returns:
             dict: {
                 'rates': {'USD': float, 'EUR': float, ...},
@@ -24,11 +28,12 @@ class BcvRateHelper(models.AbstractModel):
         """
         result = binaural_bcv_query.get_bcv_rate_of_the_day(self)
         current_date = fields.Date.context_today(self)
-        
+
         log_vals = {
             'date': current_date,
             'status': 'success' if not result.get('error') else 'error',
             'company_id': self.env.company.id,
+            'automatico': automatico,
         }
         
         used_fallback = False

@@ -5,7 +5,7 @@
     "author": "binaural-dev",
     "website": "https://binauraldev.com/",
     "category": "Technical",
-    "version": "17.0.1.1.2",
+    "version": "17.0.1.1.3",
     "installable": True,
     "depends": ["l10n_ve_rate", "currency_rate_live", "lida_reference_prices", "account_accountant"],
     "images": ["static/description/l10n_ve.png"],

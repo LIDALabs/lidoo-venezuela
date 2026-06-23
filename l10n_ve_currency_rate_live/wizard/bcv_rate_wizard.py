@@ -7,7 +7,7 @@ class BcvRateWizard(models.TransientModel):
     name = fields.Char(string='Tasa del Día', readonly=True)
     rate_usd = fields.Float(string='Tasa BCV (USD)', digits=(12, 4), readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
-    date = fields.Date(string='Fecha de Tasa', readonly=True)
+    date = fields.Datetime(string='Fecha de Tasa', readonly=True)
     used_fallback = fields.Boolean(string='Usó tasa anterior', readonly=True)
     error_message = fields.Text(string='Mensaje de error', readonly=True)
 
@@ -22,30 +22,45 @@ class BcvRateWizard(models.TransientModel):
         if menu and ent_menu and menu.parent_id != ent_menu:
             menu.sudo().write({'parent_id': ent_menu.id})
 
-        try:
-            helper = self.env['bcv.rate.helper']
-            result = helper.get_bcv_rate_with_fallback()
-            if result.get('rates') and result.get('date'):
-                res.update({
-                    'rate_usd': result['rates'].get('USD', 0.0),
-                    'date': result['date'],
-                    'name': f"Tasa BCV del {result['date']}",
-                    'used_fallback': result.get('used_fallback', False),
-                    'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
-                })
-        except Exception:
-            pass
+        today = fields.Date.context_today(self)
+        existing_log = self.env['bcv.rate.log'].search([
+            ('date', '=', today),
+            ('company_id', '=', self.env.company.id),
+        ], order='created_at desc', limit=1)
+
+        if existing_log:
+            res.update({
+                'rate_usd': existing_log.rate_usd,
+                'date': existing_log.created_at,
+                'name': f"Tasa BCV del {existing_log.date}",
+                'used_fallback': existing_log.status != 'success',
+                'error_message': existing_log.error_message or '',
+            })
+        else:
+            try:
+                helper = self.env['bcv.rate.helper']
+                result = helper.get_bcv_rate_with_fallback(automatico=False)
+                if result.get('rates') and result.get('date'):
+                    res.update({
+                        'rate_usd': result['rates'].get('USD', 0.0),
+                        'date': fields.Datetime.now(),
+                        'name': f"Tasa BCV del {result['date']}",
+                        'used_fallback': result.get('used_fallback', False),
+                        'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
+                    })
+            except Exception:
+                pass
         return res
 
     def action_get_bcv_rate(self):
         self.ensure_one()
         helper = self.env['bcv.rate.helper']
-        result = helper.get_bcv_rate_with_fallback()
+        result = helper.get_bcv_rate_with_fallback(automatico=False)
         
         if result.get('rates') and result.get('date'):
             self.write({
                 'rate_usd': result['rates'].get('USD', 0.0),
-                'date': result['date'],
+                'date': fields.Datetime.now(),
                 'name': f"Tasa BCV del {result['date']}",
                 'used_fallback': result.get('used_fallback', False),
                 'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
