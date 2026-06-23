@@ -11,4 +11,9 @@ from . import (
     stock_picking_type,
     stock_quant,
     stock_warehouse,
+    inventory_calculator,
+    inventory_calculator_finished_line,
+    inventory_calculator_raw_line,
+    inventory_calculator_recipe,
+    inventory_calculator_recipe_log,
 )
