@@ -115,6 +115,9 @@
                 <field name="financial_document"
                     invisible="move_type not in ('out_refund', 'out_invoice')" />
             </field>
+            <field name="invoice_payment_term_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
         </field>
     </record>
     <record id="view_account_tree_inherit_binaural_accountant" model="ir.ui.view">
