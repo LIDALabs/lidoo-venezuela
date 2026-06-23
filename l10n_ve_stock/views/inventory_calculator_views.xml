@@ -133,14 +133,6 @@
                     </group>
 
                     <!-- Productos Finales -->
-                    <div class="text-center mt-1 mb-2"
-                         invisible="state != 'draft'">
-                        <button name="action_compute_raw_materials"
-                                string="Calcular Materias Primas desde Recetas"
-                                type="object"
-                                class="btn-secondary"
-                                icon="fa-calculator"/>
-                    </div>
                     <field name="finished_product_ids" nolabel="1">
                         <tree editable="bottom"
                               decoration-success="has_recipe"
@@ -148,6 +140,7 @@
                             <field name="sequence" widget="handle" optional="hide"/>
                             <field name="product_id"
                                    string="Producto"
+                                   domain="[('id', 'in', parent.product_with_recipe_ids)]"
                                    placeholder="Seleccionar producto..."/>
                             <field name="product_uom_id" readonly="1"
                                    string="Unidad"/>
@@ -170,6 +163,14 @@
                                    optional="hide"/>
                         </tree>
                     </field>
+                    <div class="text-center mt-1 mb-2"
+                         invisible="state != 'draft'">
+                        <button name="action_compute_raw_materials"
+                                string="Calcular Materias Primas desde Recetas"
+                                type="object"
+                                class="btn-secondary"
+                                icon="fa-calculator"/>
+                    </div>
 
                     <!-- Materias Primas (solo lectura) -->
                     <notebook invisible="not raw_material_ids">
