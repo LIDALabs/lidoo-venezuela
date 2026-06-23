@@ -114,7 +114,6 @@ class InventoryCalculator(models.Model):
     product_with_recipe_ids = fields.Many2many(
         "product.product",
         compute="_compute_product_with_recipe_ids",
-        store=True,
         string="Productos con Receta",
     )
 
@@ -158,11 +157,10 @@ class InventoryCalculator(models.Model):
                 rec.finished_product_ids.mapped("raw_cost_total")
             )
 
-    @api.depends()
     def _compute_product_with_recipe_ids(self):
         """Retorna solo los productos que tienen una receta activa."""
         Recipe = self.env["inventory.calculator.recipe"]
-        recipe_products = Recipe.search([("active", "=", True)]).mapped(
+        recipe_products = Recipe.sudo().search([("active", "=", True)]).mapped(
             "product_id"
         )
         for rec in self:

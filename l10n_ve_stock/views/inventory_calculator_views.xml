@@ -133,14 +133,15 @@
                     </group>
 
                     <!-- Productos Finales -->
-                    <field name="finished_product_ids" nolabel="1">
+                    <field name="finished_product_ids" nolabel="1"
+                           context="{'default_company_id': company_id, 'recipe_products': product_with_recipe_ids}">
                         <tree editable="bottom"
                               decoration-success="has_recipe"
                               decoration-warning="not has_recipe">
                             <field name="sequence" widget="handle" optional="hide"/>
                             <field name="product_id"
                                    string="Producto"
-                                   domain="[('id', 'in', parent.product_with_recipe_ids)]"
+                                   domain="[('id', 'in', context.get('recipe_products', []))]"
                                    placeholder="Seleccionar producto..."/>
                             <field name="product_uom_id" readonly="1"
                                    string="Unidad"/>
