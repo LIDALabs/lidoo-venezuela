@@ -37,6 +37,7 @@
         "views/res_config_settings_views.xml",
         "views/stock_quant_views.xml",
         "views/stock_move_line_views.xml",
+        "views/stock_move_views.xml",
         "views/stock_picking_views.xml",
         "views/stock_location_views.xml",
         "views/inventory_calculator_views.xml",
