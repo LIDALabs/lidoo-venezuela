@@ -419,41 +419,13 @@ class InventoryCalculator(models.Model):
         dest_loc = self.location_dest_id
 
         for line in self.finished_product_ids:
-            # 1. Movimiento de producto final: Virtual → Destino
-            move = Move.create(
-                {
-                    "name": f"[{self.name}] PF: {line.product_id.display_name}",
-                    "origin": self.name,
-                    "location_id": virtual_loc.id,
-                    "location_dest_id": dest_loc.id,
-                    "date": self.date,
-                    "company_id": self.company_id.id,
-                    "product_id": line.product_id.id,
-                    "product_uom_qty": line.quantity,
-                    "price_unit": line.product_id.standard_price or 0.0,
-                    "inventory_calculator_id": self.id,
-                }
-            )
-            MoveLine.create(
-                {
-                    "move_id": move.id,
-                    "product_id": line.product_id.id,
-                    "product_uom_id": line.product_uom_id.id,
-                    "quantity": line.quantity,
-                    "location_id": virtual_loc.id,
-                    "location_dest_id": dest_loc.id,
-                }
-            )
-            move._action_confirm()
-            move._action_done()
-
-            # 2. Movimientos de materia prima: Origen → Virtual
+            # Salidas: materias primas (Origen → Virtual)
             if line.recipe_id:
                 for rline in line.recipe_line_ids:
                     qty_needed = rline.quantity * line.quantity
                     raw_move = Move.create(
                         {
-                            "name": f"[{self.name}] MP: {rline.product_id.display_name}",
+                            "name": f"[{self.name}] Salida: {rline.product_id.display_name}",
                             "origin": self.name,
                             "location_id": origin_loc.id,
                             "location_dest_id": virtual_loc.id,
@@ -478,6 +450,34 @@ class InventoryCalculator(models.Model):
                     raw_move._action_confirm()
                     raw_move._action_done()
 
+            # Entrada: producto final (Virtual → Destino)
+            move = Move.create(
+                {
+                    "name": f"[{self.name}] Entrada: {line.product_id.display_name}",
+                    "origin": self.name,
+                    "location_id": virtual_loc.id,
+                    "location_dest_id": dest_loc.id,
+                    "date": self.date,
+                    "company_id": self.company_id.id,
+                    "product_id": line.product_id.id,
+                    "product_uom_qty": line.quantity,
+                    "price_unit": line.product_id.standard_price or 0.0,
+                    "inventory_calculator_id": self.id,
+                }
+            )
+            MoveLine.create(
+                {
+                    "move_id": move.id,
+                    "product_id": line.product_id.id,
+                    "product_uom_id": line.product_uom_id.id,
+                    "quantity": line.quantity,
+                    "location_id": virtual_loc.id,
+                    "location_dest_id": dest_loc.id,
+                }
+            )
+            move._action_confirm()
+            move._action_done()
+
     def _create_reverse_stock_moves(self):
         """Invierte todos los movimientos (tanto PF como MP)."""
         self.ensure_one()
@@ -493,9 +493,14 @@ class InventoryCalculator(models.Model):
         )
         for move in original_moves:
             for mline in move.move_line_ids:
+                # Si original era "Entrada", reversa es "Salida" y viceversa
+                if "Entrada" in (move.name or ""):
+                    tipo_reversa = "Salida"
+                else:
+                    tipo_reversa = "Entrada"
                 reverse_move = Move.create(
                     {
-                        "name": f"[{self.name}] Reversa: {move.product_id.display_name}",
+                        "name": f"[{self.name}] Reversa {tipo_reversa}: {move.product_id.display_name}",
                         "origin": self.name,
                         "location_id": mline.location_dest_id.id,
                         "location_dest_id": mline.location_id.id,
