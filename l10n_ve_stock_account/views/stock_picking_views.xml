@@ -33,10 +33,16 @@
             <xpath expr="//form//header" position="inside">
                 <field name="dispatch_guide_controls" invisible="1" />
                 <button 
-                    name="print_dispatch_guide" string="Guide Dispatch"
-                    type="object" class="o_btn_validate"
+                    name="print_dispatch_guide" string="Guía de Carga"
+                    type="object" class="oe_highlight"
                     invisible="not dispatch_guide_controls"
                     data-hotkey="m"/>
+            </xpath>
+            <xpath expr="//form/header/button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//form/header/button[@name='do_print_picking']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="is_consignment" invisible="1" />
@@ -72,7 +78,6 @@
                     required="operation_code == 'outgoing' and show_other_causes_transfer_reason" />
                 <field name="allowed_reason_ids" invisible="1" />
                 <field name="is_donation" invisible="1" />
-                <field name="dispatch_guide_controls" invisible="1" />
                 <field 
                     name="guide_number"
                     readonly="1"
