@@ -12,12 +12,12 @@ class InventoryCalculatorProcess(models.TransientModel):
         required=True,
         readonly=True,
     )
-    virtual_location_id = fields.Many2one(
+    location_src_id = fields.Many2one(
         "stock.location",
-        string="Ubicacion Virtual (Traslado)",
-        domain="[('usage', 'in', ('transit', 'view'))]",
+        string="Ubicacion Origen",
+        domain="[('usage', '=', 'internal')]",
         required=True,
-        help="Ubicacion de transito usada como intermediario durante la produccion.",
+        help="Donde estan las materias primas.",
     )
     location_dest_id = fields.Many2one(
         "stock.location",
@@ -39,8 +39,8 @@ class InventoryCalculatorProcess(models.TransientModel):
         if active_id:
             calculator = self.env["inventory.calculator"].browse(active_id)
             res.setdefault("calculator_id", calculator.id)
-            res.setdefault("virtual_location_id",
-                           calculator.virtual_location_id.id)
+            res.setdefault("location_src_id",
+                           calculator.location_src_id.id)
             res.setdefault("location_dest_id",
                            calculator.location_dest_id.id)
         return res
@@ -50,7 +50,7 @@ class InventoryCalculatorProcess(models.TransientModel):
         if not self.calculator_id:
             raise UserError(_("No se encontro la calculadora."))
         calculator = self.calculator_id
-        calculator.virtual_location_id = self.virtual_location_id
+        calculator.location_src_id = self.location_src_id
         calculator.location_dest_id = self.location_dest_id
         calculator.action_done()
         return {"type": "ir.actions.act_window_close"}

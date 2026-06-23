@@ -15,12 +15,12 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group string="Ubicaciones">
-                    <field name="virtual_location_id"
-                           string="Ubicacion Virtual (Traslado)"
-                           placeholder="Ej: Physical Locations/Traslado entre almacenes"/>
+                    <field name="location_src_id"
+                           string="Ubicacion Origen"
+                           placeholder="Donde estan las materias primas"/>
                     <field name="location_dest_id"
                            string="Ubicacion Destino"
-                           placeholder="Ej: WH/Existencias — donde se guardan los productos finales"/>
+                           placeholder="Donde se guardan los productos terminados"/>
                 </group>
                 <footer>
                     <button name="action_process"

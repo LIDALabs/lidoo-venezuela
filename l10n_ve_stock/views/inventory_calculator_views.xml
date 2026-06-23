@@ -111,17 +111,14 @@
                     <!-- Ubicaciones -->
                     <group>
                         <group string="Ubicaciones">
-                            <field name="virtual_location_id"
-                                   string="Virtual (Traslado)"
+                            <field name="location_src_id"
+                                   string="Origen"
                                    required="state in ('draft', 'confirmed')"
-                                   placeholder="Physical Locations/Traslado..."/>
+                                   placeholder="Donde estan las materias primas"/>
                             <field name="location_dest_id"
                                    string="Destino"
                                    required="state in ('draft', 'confirmed')"
-                                   placeholder="WH/Existencias"/>
-                            <field name="location_src_id"
-                                   string="Origen (ref)"
-                                   placeholder="Opcional"/>
+                                   placeholder="Donde se guardan los productos terminados"/>
                             <field name="company_id" invisible="1"/>
                         </group>
                         <group string="Resumen">
@@ -225,9 +222,9 @@
                 <field name="date" string="Fecha"/>
                 <field name="user_id" string="Responsable"/>
                 <field name="finished_product_count"
-                       string="PF"
+                       string="Productos Finales"
                        sum="Total"/>
-                <field name="raw_material_count" string="MP"/>
+                <field name="raw_material_count" string="Materias Primas"/>
                 <field name="total_raw_cost"
                        string="Costo Total"
                        sum="Total Costo"

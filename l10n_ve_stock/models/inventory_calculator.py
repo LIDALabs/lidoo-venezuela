@@ -63,8 +63,9 @@ class InventoryCalculator(models.Model):
     location_src_id = fields.Many2one(
         "stock.location",
         string="Ubicacion Origen",
+        required=True,
         domain="[('usage', '=', 'internal')]",
-        help="Ubicacion de referencia para materias primas (opcional).",
+        help="Donde estan las materias primas.",
     )
     location_dest_id = fields.Many2one(
         "stock.location",
@@ -75,9 +76,10 @@ class InventoryCalculator(models.Model):
     )
     virtual_location_id = fields.Many2one(
         "stock.location",
-        string="Ubicacion Virtual (Traslado)",
-        domain="[('usage', 'in', ('transit', 'view'))]",
-        help="Ubicacion de transito usada como intermediario durante la produccion.",
+        string="Ubicacion Virtual",
+        compute="_compute_virtual_location_id",
+        store=True,
+        help="Ubicacion virtual de produccion (auto-detectada).",
     )
 
     # Productos Finales (input del usuario)
@@ -149,6 +151,25 @@ class InventoryCalculator(models.Model):
             rec.has_raw_without_recipe = any(
                 not line.recipe_id for line in rec.finished_product_ids
             )
+
+    @api.depends("company_id")
+    def _compute_virtual_location_id(self):
+        """Auto-detecta la ubicacion virtual de produccion desde el warehouse."""
+        for rec in self:
+            if rec.company_id:
+                warehouse = self.env["stock.warehouse"].search(
+                    [("company_id", "=", rec.company_id.id)], limit=1
+                )
+                if warehouse:
+                    rec.virtual_location_id = warehouse.lot_stock_id
+                else:
+                    # Fallback: buscar cualquier ubicacion virtual
+                    rec.virtual_location_id = self.env["stock.location"].search(
+                        [("usage", "=", "transit"), ("company_id", "=", rec.company_id.id)],
+                        limit=1,
+                    )
+            else:
+                rec.virtual_location_id = False
 
     @api.depends("finished_product_ids.raw_cost_total")
     def _compute_total_raw_cost(self):
@@ -371,6 +392,8 @@ class InventoryCalculator(models.Model):
         errors = []
         if not self.virtual_location_id:
             errors.append(_("Ubicacion Virtual de Produccion"))
+        if not self.location_src_id:
+            errors.append(_("Ubicacion Origen"))
         if not self.location_dest_id:
             errors.append(_("Ubicacion Destino"))
         if errors:
@@ -383,24 +406,26 @@ class InventoryCalculator(models.Model):
             )
 
     def _create_stock_moves(self):
-        """Crea un stock.move por cada producto final (patron Odoo 17).
-
-        IMPORTANTE: Las materias primas NO se descuentan del stock.
-        La calculadora solo AGREGA productos finales al inventario.
+        """Crea movimientos de stock:
+        - Producto final: Virtual → Destino (SUMA al inventario)
+        - Materia prima: Origen → Virtual (RESTA del inventario)
         """
         self.ensure_one()
         self._validate_locations()
         Move = self.env["stock.move"]
         MoveLine = self.env["stock.move.line"]
         virtual_loc = self.virtual_location_id
+        origin_loc = self.location_src_id
+        dest_loc = self.location_dest_id
 
         for line in self.finished_product_ids:
+            # 1. Movimiento de producto final: Virtual → Destino
             move = Move.create(
                 {
-                    "name": f"[{self.name}] {line.product_id.display_name}",
+                    "name": f"[{self.name}] PF: {line.product_id.display_name}",
                     "origin": self.name,
                     "location_id": virtual_loc.id,
-                    "location_dest_id": self.location_dest_id.id,
+                    "location_dest_id": dest_loc.id,
                     "date": self.date,
                     "company_id": self.company_id.id,
                     "product_id": line.product_id.id,
@@ -416,19 +441,49 @@ class InventoryCalculator(models.Model):
                     "product_uom_id": line.product_uom_id.id,
                     "quantity": line.quantity,
                     "location_id": virtual_loc.id,
-                    "location_dest_id": self.location_dest_id.id,
+                    "location_dest_id": dest_loc.id,
                 }
             )
             move._action_confirm()
             move._action_done()
 
+            # 2. Movimientos de materia prima: Origen → Virtual
+            if line.recipe_id:
+                for rline in line.recipe_line_ids:
+                    qty_needed = rline.quantity * line.quantity
+                    raw_move = Move.create(
+                        {
+                            "name": f"[{self.name}] MP: {rline.product_id.display_name}",
+                            "origin": self.name,
+                            "location_id": origin_loc.id,
+                            "location_dest_id": virtual_loc.id,
+                            "date": self.date,
+                            "company_id": self.company_id.id,
+                            "product_id": rline.product_id.id,
+                            "product_uom_qty": qty_needed,
+                            "price_unit": rline.product_id.standard_price or 0.0,
+                            "inventory_calculator_id": self.id,
+                        }
+                    )
+                    MoveLine.create(
+                        {
+                            "move_id": raw_move.id,
+                            "product_id": rline.product_id.id,
+                            "product_uom_id": rline.product_uom_id.id,
+                            "quantity": qty_needed,
+                            "location_id": origin_loc.id,
+                            "location_dest_id": virtual_loc.id,
+                        }
+                    )
+                    raw_move._action_confirm()
+                    raw_move._action_done()
+
     def _create_reverse_stock_moves(self):
-        """Invierte cada movimiento de producto final individualmente."""
+        """Invierte todos los movimientos (tanto PF como MP)."""
         self.ensure_one()
         self._validate_locations()
         Move = self.env["stock.move"]
         MoveLine = self.env["stock.move.line"]
-        virtual_loc = self.virtual_location_id
 
         original_moves = self.env["stock.move"].search(
             [
@@ -440,10 +495,10 @@ class InventoryCalculator(models.Model):
             for mline in move.move_line_ids:
                 reverse_move = Move.create(
                     {
-                        "name": f"[{self.name}] {move.product_id.display_name} Reversa",
+                        "name": f"[{self.name}] Reversa: {move.product_id.display_name}",
                         "origin": self.name,
-                        "location_id": self.location_dest_id.id,
-                        "location_dest_id": virtual_loc.id,
+                        "location_id": mline.location_dest_id.id,
+                        "location_dest_id": mline.location_id.id,
                         "date": fields.Date.context_today(self),
                         "company_id": self.company_id.id,
                         "product_id": move.product_id.id,
@@ -458,8 +513,8 @@ class InventoryCalculator(models.Model):
                         "product_id": move.product_id.id,
                         "product_uom_id": mline.product_uom_id.id,
                         "quantity": mline.quantity,
-                        "location_id": self.location_dest_id.id,
-                        "location_dest_id": virtual_loc.id,
+                        "location_id": mline.location_dest_id.id,
+                        "location_dest_id": mline.location_id.id,
                     }
                 )
                 reverse_move._action_confirm()
