@@ -109,22 +109,24 @@
                     </div>
 
                     <!-- Ubicaciones -->
-                    <group col="4" string="Ubicaciones">
-                        <field name="virtual_location_id"
-                               string="Virtual (Traslado)"
-                               help="Origen del stock fabricado (tipo transit/view)"
-                               required="state in ('draft', 'confirmed')"
-                               options="{'no_open': True}"/>
-                        <field name="location_dest_id"
-                               string="Destino"
-                               help="Almacén para productos terminados (tipo internal)"
-                               required="state in ('draft', 'confirmed')"
-                               options="{'no_open': True}"/>
-                        <field name="location_src_id"
-                               string="Origen (ref)"
-                               help="Solo referencia — no afecta stock"
-                               options="{'no_open': True}"/>
-                        <field name="company_id" invisible="1"/>
+                    <group string="Ubicaciones" col="4">
+                        <group colspan="2">
+                            <field name="virtual_location_id"
+                                   string="Virtual (Traslado)"
+                                   help="Origen del stock fabricado (tipo transit/view)"
+                                   required="state in ('draft', 'confirmed')"
+                                   options="{'no_open': True}"/>
+                            <field name="location_dest_id"
+                                   string="Destino"
+                                   help="Almacén para productos terminados (tipo internal)"
+                                   required="state in ('draft', 'confirmed')"
+                                   options="{'no_open': True}"/>
+                            <field name="location_src_id"
+                                   string="Origen (ref)"
+                                   help="Solo referencia — no afecta stock"
+                                   options="{'no_open': True}"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
                     </group>
 
                     <!-- Productos Finales -->
