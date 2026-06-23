@@ -294,6 +294,23 @@ class InventoryCalculator(models.Model):
                 raise UserError(
                     _("Agregue al menos un producto final.")
                 )
+            # Validar que todos tengan receta
+            sin_receta = rec.finished_product_ids.filtered(
+                lambda l: not l.recipe_id
+            )
+            if sin_receta:
+                nombres = "\n".join(
+                    f"• {l.product_id.display_name}"
+                    for l in sin_receta
+                )
+                raise UserError(
+                    _(
+                        "Los siguientes productos NO tienen receta:\n%s\n\n"
+                        "Cree recetas en Inventario > Control de Produccion "
+                        "> Recetas de Productos."
+                    )
+                    % nombres
+                )
             if not rec.raw_material_ids:
                 rec.action_compute_raw_materials()
             rec.state = "confirmed"
