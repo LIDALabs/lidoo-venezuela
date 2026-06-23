@@ -558,11 +558,13 @@ class InventoryCalculator(models.Model):
 
     def action_open_finished_moves(self):
         self.ensure_one()
+        tree_view = self.env.ref("l10n_ve_stock.stock_move_calculator_tree_view")
+        form_view = self.env.ref("stock.view_move_form")
         return {
             "type": "ir.actions.act_window",
-            "name": _("Movimientos de Productos Finales"),
+            "name": _("Movimientos"),
             "res_model": "stock.move",
-            "view_mode": "tree,form",
+            "views": [(tree_view.id, "tree"), (form_view.id, "form")],
             "domain": [("inventory_calculator_id", "=", self.id)],
             "context": {"default_inventory_calculator_id": self.id},
             "target": "current",
@@ -570,11 +572,13 @@ class InventoryCalculator(models.Model):
 
     def action_open_finished_reverse_moves(self):
         self.ensure_one()
+        tree_view = self.env.ref("l10n_ve_stock.stock_move_calculator_tree_view")
+        form_view = self.env.ref("stock.view_move_form")
         return {
             "type": "ir.actions.act_window",
             "name": _("Movimientos de Reversa"),
             "res_model": "stock.move",
-            "view_mode": "tree,form",
+            "views": [(tree_view.id, "tree"), (form_view.id, "form")],
             "domain": [
                 ("inventory_calculator_id", "=", self.id),
                 ("name", "like", "%Reversa%"),
