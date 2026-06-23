@@ -133,45 +133,43 @@
                     </group>
 
                     <!-- Productos Finales -->
-                    <group string="Productos Finales">
-                        <field name="finished_product_ids" nolabel="1">
-                            <tree editable="bottom"
-                                  decoration-success="has_recipe"
-                                  decoration-warning="not has_recipe">
-                                <field name="sequence" widget="handle" optional="hide"/>
-                                <field name="product_id"
-                                       string="Producto"
-                                       placeholder="Seleccionar producto..."/>
-                                <field name="product_uom_id" readonly="1"
-                                       string="Unidad"/>
-                                <field name="quantity"
-                                       string="Cantidad"
-                                       required="1"/>
-                                <field name="has_recipe" readonly="1"
-                                       widget="boolean_toggle"
-                                       string="Receta"/>
-                                <field name="raw_cost_per_unit"
-                                       readonly="1"
-                                       string="Costo/Unit"
-                                       options="{'currency_field': 'currency_id'}"/>
-                                <field name="raw_cost_total"
-                                       readonly="1"
-                                       string="Costo Total"
-                                       options="{'currency_field': 'currency_id'}"/>
-                                <field name="note"
-                                       string="Nota"
-                                       optional="hide"/>
-                            </tree>
-                        </field>
-                        <div class="text-center mt-2 mb-1"
-                             invisible="state != 'draft'">
-                            <button name="action_compute_raw_materials"
-                                    string="Calcular Materias Primas desde Recetas"
-                                    type="object"
-                                    class="btn-secondary"
-                                    icon="fa-calculator"/>
-                        </div>
-                    </group>
+                    <div class="text-center mt-1 mb-2"
+                         invisible="state != 'draft'">
+                        <button name="action_compute_raw_materials"
+                                string="Calcular Materias Primas desde Recetas"
+                                type="object"
+                                class="btn-secondary"
+                                icon="fa-calculator"/>
+                    </div>
+                    <field name="finished_product_ids" nolabel="1">
+                        <tree editable="bottom"
+                              decoration-success="has_recipe"
+                              decoration-warning="not has_recipe">
+                            <field name="sequence" widget="handle" optional="hide"/>
+                            <field name="product_id"
+                                   string="Producto"
+                                   placeholder="Seleccionar producto..."/>
+                            <field name="product_uom_id" readonly="1"
+                                   string="Unidad"/>
+                            <field name="quantity"
+                                   string="Cantidad"
+                                   required="1"/>
+                            <field name="has_recipe" readonly="1"
+                                   widget="boolean_toggle"
+                                   string="Receta"/>
+                            <field name="raw_cost_per_unit"
+                                   readonly="1"
+                                   string="Costo/Unit"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="raw_cost_total"
+                                   readonly="1"
+                                   string="Costo Total"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="note"
+                                   string="Nota"
+                                   optional="hide"/>
+                        </tree>
+                    </field>
 
                     <!-- Materias Primas (solo lectura) -->
                     <notebook invisible="not raw_material_ids">
