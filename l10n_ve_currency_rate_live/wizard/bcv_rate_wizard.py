@@ -204,8 +204,8 @@ class BcvRateWizard(models.TransientModel):
                 }
             }
 
-        # 1. Obtener la fecha de la tasa (puede ser hoy o una fecha anterior)
-        rate_date = self.date.date() if hasattr(self.date, 'date') else self.date
+        # 1. Obtener la fecha de hoy para guardar la tasa
+        today = fields.Date.context_today(self)
         
         # 2. Asegurar que la tasa este guardada en la base de datos (USD)
         usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
@@ -213,13 +213,13 @@ class BcvRateWizard(models.TransientModel):
             Rate = self.env['res.currency.rate']
             existing_rate = Rate.search([
                 ('currency_id', '=', usd_currency.id),
-                ('name', '=', rate_date),
+                ('name', '=', today),
                 ('company_id', '=', self.company_id.id)
             ], limit=1)
             
             vals = {
                 'currency_id': usd_currency.id,
-                'name': rate_date,
+                'name': today,
                 'inverse_company_rate': self.rate_usd,
                 'company_id': self.company_id.id,
             }
@@ -229,6 +229,7 @@ class BcvRateWizard(models.TransientModel):
                 Rate.create(vals)
 
         # 3. Registrar en el log historial con todos los detalles
+        rate_date = self.date.date() if hasattr(self.date, 'date') else self.date
         log_vals = {
             'date': rate_date,
             'rate_usd': self.rate_usd,
@@ -238,7 +239,7 @@ class BcvRateWizard(models.TransientModel):
             'description': (
                 f"Actualización manual de precios desde el wizard. "
                 f"Tasa aplicada: {self.rate_usd} Bs/USD con Fecha Valor {rate_date}. "
-                f"Los precios de productos fueron actualizados con esta tasa."
+                f"Guardada como tasa del {today}. Los precios de productos fueron actualizados con esta tasa."
             ),
         }
         self.env['bcv.rate.log'].create(log_vals)
@@ -253,7 +254,7 @@ class BcvRateWizard(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': _('Exito'),
-                'message': _('Los precios han sido actualizados con la tasa del %s (%.4f Bs/USD)') % (rate_date, self.rate_usd),
+                'message': _('Los precios han sido actualizados con la tasa del %s (%.4f Bs/USD)') % (today, self.rate_usd),
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
