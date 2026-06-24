@@ -7,16 +7,17 @@ class BcvRateWizard(models.TransientModel):
     name = fields.Char(string='Tasa del Día', readonly=True)
     rate_usd = fields.Float(string='Tasa BCV (USD)', digits=(12, 4), readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
-    date = fields.Datetime(string='Fecha de Tasa', readonly=True)
+    date = fields.Datetime(string='Fecha de consulta', readonly=True)
     used_fallback = fields.Boolean(string='Usó tasa anterior', readonly=True)
     error_message = fields.Text(string='Mensaje de error', readonly=True)
+    info_message = fields.Text(string='Mensaje informativo', readonly=True)
+    show_use_last_known_rate = fields.Boolean(string='Mostrar btn ultima tasa', default=False)
 
     @api.model
     def default_get(self, fields_list):
         res = super(BcvRateWizard, self).default_get(fields_list)
         
         # Self-healing menu parenting for Enterprise
-        # This runs on every wizard open to ensure compatibility even if post_init didn't run
         menu = self.env.ref('l10n_ve_currency_rate_live.menu_bcv_rate_wizard_account', raise_if_not_found=False)
         ent_menu = self.env.ref('account_accountant.menu_accounting', raise_if_not_found=False)
         if menu and ent_menu and menu.parent_id != ent_menu:
@@ -35,16 +36,32 @@ class BcvRateWizard(models.TransientModel):
                 'name': f"Tasa BCV del {existing_log.date}",
                 'used_fallback': existing_log.status != 'success',
                 'error_message': existing_log.error_message or '',
+                'show_use_last_known_rate': False,
             })
         else:
+            # No log for today — show the "use last known rate" button
+            res['show_use_last_known_rate'] = True
+            res['info_message'] = (
+                "No se registró una tasa para hoy. "
+                "Puede cargar la última tasa conocida o consultar el BCV."
+            )
             try:
                 helper = self.env['bcv.rate.helper']
                 result = helper.get_bcv_rate_with_fallback(automatico=False)
                 if result.get('rates') and result.get('date'):
+                    rate_date = result['date']
+                    # If Fecha Valor is in the future, keep button visible
+                    if rate_date > today:
+                        res['show_use_last_known_rate'] = True
+                        res['info_message'] = (
+                            f"El BCV publicó una tasa con Fecha Valor {rate_date}, "
+                            "que es un día futuro. Esto ocurre en fines de semana "
+                            "y feriados. Puede cargar la última tasa conocida."
+                        )
                     res.update({
                         'rate_usd': result['rates'].get('USD', 0.0),
                         'date': fields.Datetime.now(),
-                        'name': f"Tasa BCV del {result['date']}",
+                        'name': f"Tasa BCV del {rate_date}",
                         'used_fallback': result.get('used_fallback', False),
                         'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
                     })
@@ -53,19 +70,96 @@ class BcvRateWizard(models.TransientModel):
         return res
 
     def action_get_bcv_rate(self):
+        """Consultar tasa del BCV."""
         self.ensure_one()
         helper = self.env['bcv.rate.helper']
         result = helper.get_bcv_rate_with_fallback(automatico=False)
         
         if result.get('rates') and result.get('date'):
+            today = fields.Date.context_today(self)
+            rate_date = result['date']
+            show_btn = rate_date > today
+            info_msg = ''
+            if show_btn:
+                info_msg = (
+                    f"El BCV publicó una tasa con Fecha Valor {rate_date}, "
+                    "que es un día futuro. Esto ocurre en fines de semana "
+                    "y feriados. Puede cargar la última tasa conocida."
+                )
             self.write({
                 'rate_usd': result['rates'].get('USD', 0.0),
                 'date': fields.Datetime.now(),
-                'name': f"Tasa BCV del {result['date']}",
+                'name': f"Tasa BCV del {rate_date}",
                 'used_fallback': result.get('used_fallback', False),
                 'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
+                'info_message': info_msg,
+                'show_use_last_known_rate': show_btn,
             })
         
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'bcv.rate.wizard',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'new',
+        }
+
+    def action_use_last_known_rate(self):
+        """Cargar la ultima tasa conocida antes de hoy desde la base de datos.
+        Util para dias feriados cuando el BCV publica una tasa con Fecha Valor
+        futura y se necesita usar la ultima tasa real del dia anterior."""
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        
+        usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
+        if not usd_currency:
+            self.write({
+                'info_message': 'No se encontro la moneda USD en el sistema.',
+            })
+            return self._reopen()
+        
+        # Buscar la ultima tasa USD guardada ANTES de hoy
+        last_rate = self.env['res.currency.rate'].search([
+            ('currency_id', '=', usd_currency.id),
+            ('company_id', '=', self.env.company.id),
+            ('name', '<', today),
+        ], order='name desc', limit=1)
+        
+        if not last_rate:
+            self.write({
+                'rate_usd': 0.0,
+                'name': 'Sin tasa anterior',
+                'info_message': (
+                    'No se encontro ninguna tasa USD guardada antes de hoy '
+                    f'({today}). Consulte el BCV o ingrese la tasa manualmente.'
+                ),
+            })
+            return self._reopen()
+        
+        # inverse_company_rate es la tasa legible (ej: 621.53)
+        # rate es el inverso (1/621.53 ≈ 0.0016)
+        rate_value = last_rate.inverse_company_rate or (
+            1.0 / last_rate.rate if last_rate.rate else 0.0
+        )
+        rate_date = last_rate.name.date() if hasattr(last_rate.name, 'date') else last_rate.name
+        
+        self.write({
+            'rate_usd': rate_value,
+            'date': last_rate.write_date or fields.Datetime.now(),
+            'name': f"Tasa del {rate_date}",
+            'used_fallback': True,
+            'error_message': '',
+            'show_use_last_known_rate': False,
+            'info_message': (
+                f"Se cargo la ultima tasa conocida del {rate_date} "
+                f"({rate_value} Bs/USD). Puede usar esta tasa para "
+                "actualizar precios si hoy es dia no laborable."
+            ),
+        })
+        return self._reopen()
+
+    def _reopen(self):
+        """Reabrir el wizard con los datos actualizados."""
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'bcv.rate.wizard',
@@ -97,7 +191,7 @@ class BcvRateWizard(models.TransientModel):
                 }
             }
 
-        # 1. Asegurar que la tasa esté guardada en la base de datos (USD)
+        # 1. Asegurar que la tasa este guardada en la base de datos (USD)
         usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
         if usd_currency:
             Rate = self.env['res.currency.rate']
@@ -107,8 +201,6 @@ class BcvRateWizard(models.TransientModel):
                 ('company_id', '=', self.company_id.id)
             ], limit=1)
             
-            # Según l10n_ve_rate, inverse_company_rate es la tasa legible (e.g. 50.0)
-            # Al escribir inverse_company_rate, Odoo calcula company_rate y rate.
             vals = {
                 'currency_id': usd_currency.id,
                 'name': self.date,
@@ -120,7 +212,7 @@ class BcvRateWizard(models.TransientModel):
             else:
                 Rate.create(vals)
 
-        # 2. Proceder con el comando de actualización de precios
+        # 2. Proceder con el comando de actualizacion de precios
         pricelist_obj = self.env['product.pricelist']
         if hasattr(pricelist_obj, '_update_product_prices'):
              pricelist_obj._update_product_prices()
@@ -129,7 +221,7 @@ class BcvRateWizard(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _('Éxito'),
+                'title': _('Exito'),
                 'message': _('Los precios han sido actualizados con la tasa consultada'),
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
