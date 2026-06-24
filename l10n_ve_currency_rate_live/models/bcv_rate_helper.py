@@ -28,6 +28,7 @@ class BcvRateHelper(models.AbstractModel):
         """
         result = binaural_bcv_query.get_bcv_rate_of_the_day(self)
         current_date = fields.Date.context_today(self)
+        origen = "automático (cron)" if automatico else "manual (wizard)"
 
         log_vals = {
             'date': current_date,
@@ -40,9 +41,11 @@ class BcvRateHelper(models.AbstractModel):
         
         if result.get('error'):
             # Loguear el error
+            error_type = result['error'].get('type', 'Unknown')
+            error_msg = result['error'].get('message', '')
             log_vals.update({
-                'error_type': result['error'].get('type', 'Unknown'),
-                'error_message': result['error'].get('message', ''),
+                'error_type': error_type,
+                'error_message': error_msg,
             })
             
             # Buscar última tasa exitosa como fallback
@@ -55,12 +58,29 @@ class BcvRateHelper(models.AbstractModel):
                 result['rates'] = {'USD': last_success.rate_usd}
                 result['date'] = last_success.date
                 used_fallback = True
+                log_vals['rate_usd'] = last_success.rate_usd
+                log_vals['description'] = (
+                    f"Consulta {origen} al BCV falló ({error_type}: {error_msg}). "
+                    f"Se usó como respaldo la última tasa exitosa: "
+                    f"{last_success.rate_usd} Bs/USD con Fecha Valor {last_success.date}."
+                )
                 _logger.info(f"Using fallback rate: {last_success.rate_usd} from {last_success.date}")
             else:
+                log_vals['description'] = (
+                    f"Consulta {origen} al BCV falló ({error_type}: {error_msg}). "
+                    f"No hay tasa de respaldo disponible en el sistema."
+                )
                 _logger.warning("No fallback rate available")
         else:
             # Consulta exitosa
-            log_vals['rate_usd'] = result['rates'].get('USD', 0.0)
+            rate_usd = result['rates'].get('USD', 0.0)
+            rate_date = result.get('date', current_date)
+            log_vals['rate_usd'] = rate_usd
+            log_vals['date'] = rate_date
+            log_vals['description'] = (
+                f"Consulta {origen} al BCV exitosa. "
+                f"Tasa USD: {rate_usd} Bs/USD con Fecha Valor {rate_date}."
+            )
         
         # Crear el log
         self.env['bcv.rate.log'].create(log_vals)

@@ -235,6 +235,11 @@ class BcvRateWizard(models.TransientModel):
             'status': 'success',
             'company_id': self.company_id.id,
             'automatico': False,
+            'description': (
+                f"Actualización manual de precios desde el wizard. "
+                f"Tasa aplicada: {self.rate_usd} Bs/USD con Fecha Valor {rate_date}. "
+                f"Los precios de productos fueron actualizados con esta tasa."
+            ),
         }
         self.env['bcv.rate.log'].create(log_vals)
 

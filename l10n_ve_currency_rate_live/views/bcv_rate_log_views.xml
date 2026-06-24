@@ -10,6 +10,7 @@
                 <field name="rate_usd" string="Tasa USD"/>
                 <field name="automatico" string="Automático"/>
                 <field name="status"/>
+                <field name="description" optional="show"/>
                 <field name="error_type" optional="hide"/>
                 <field name="error_message" optional="hide"/>
                 <field name="company_id" optional="hide"/>
@@ -35,6 +36,9 @@
                             <field name="created_at" string="Fecha de registro"/>
                         </group>
                     </group>
+                    <group string="Descripción">
+                        <field name="description" nolabel="1"/>
+                    </group>
                     <group string="Detalles del error" invisible="status != 'error'">
                         <field name="error_type"/>
                         <field name="error_message"/>
@@ -50,6 +54,7 @@
         <field name="arch" type="xml">
             <search string="Buscar logs">
                 <field name="date"/>
+                <field name="description"/>
                 <field name="status"/>
                 <filter string="Exitosas" name="success" domain="[('status', '=', 'success')]"/>
                 <filter string="Con error" name="error" domain="[('status', '=', 'error')]"/>
