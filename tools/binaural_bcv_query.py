@@ -4,6 +4,7 @@ from odoo import fields
 import requests
 import logging
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -37,6 +38,24 @@ def get_bcv_rate_of_the_day(self):
             }
         
         soup = BeautifulSoup(response.text, "html.parser")
+
+        # Extract 'Fecha Valor' from the BCV page
+        # The date is in: <span class="date-display-single" content="2026-06-25T00:00:00-04:00" ...>
+        fecha_valor_date = None
+        date_span = soup.find("span", class_="date-display-single")
+        if date_span and date_span.get("content"):
+            try:
+                # Parse ISO format: "2026-06-25T00:00:00-04:00"
+                iso_str = date_span["content"]
+                fecha_valor_date = datetime.fromisoformat(iso_str).date()
+                _logger.info(f"BCV Fecha Valor extracted: {fecha_valor_date}")
+            except (ValueError, TypeError) as e:
+                _logger.warning(f"Could not parse BCV Fecha Valor '{date_span.get('content')}': {e}")
+        
+        # Fallback to today if Fecha Valor not found
+        if not fecha_valor_date:
+            _logger.warning("BCV Fecha Valor not found in page, falling back to current date")
+            fecha_valor_date = current_date
 
         # Parse USD
         usd_container = soup.find(id="dolar")
@@ -85,7 +104,7 @@ def get_bcv_rate_of_the_day(self):
                 "RUB": float(rub_value),
                 "TRY": float(try_value),
             },
-            'date': current_date,
+            'date': fecha_valor_date,
             'error': None
         }
         
