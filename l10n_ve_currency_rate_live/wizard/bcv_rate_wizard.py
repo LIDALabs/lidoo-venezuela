@@ -7,7 +7,7 @@ class BcvRateWizard(models.TransientModel):
     name = fields.Char(string='Tasa del Día', readonly=True)
     rate_usd = fields.Float(string='Tasa BCV (USD)', digits=(12, 4), readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
-    date = fields.Datetime(string='Fecha de consulta', readonly=True)
+    date = fields.Datetime(string='Fecha Valor', readonly=True)
     used_fallback = fields.Boolean(string='Usó tasa anterior', readonly=True)
     error_message = fields.Text(string='Mensaje de error', readonly=True)
     info_message = fields.Text(string='Mensaje informativo', readonly=True)
@@ -24,49 +24,62 @@ class BcvRateWizard(models.TransientModel):
             menu.sudo().write({'parent_id': ent_menu.id})
 
         today = fields.Date.context_today(self)
-        existing_log = self.env['bcv.rate.log'].search([
-            ('date', '=', today),
-            ('company_id', '=', self.env.company.id),
-        ], order='created_at desc', limit=1)
-
-        if existing_log:
-            res.update({
-                'rate_usd': existing_log.rate_usd,
-                'date': existing_log.created_at,
-                'name': f"Tasa BCV del {existing_log.date}",
-                'used_fallback': existing_log.status != 'success' and bool(existing_log.error_message),
-                'error_message': existing_log.error_message or '',
-                'show_use_last_known_rate': False,
-            })
-        else:
-            # No log for today — show the "use last known rate" button
-            res['show_use_last_known_rate'] = True
-            res['info_message'] = (
-                "No se registró una tasa para hoy. "
-                "Puede cargar la última tasa conocida o consultar el BCV."
-            )
-            try:
-                helper = self.env['bcv.rate.helper']
-                result = helper.get_bcv_rate_with_fallback(automatico=False)
-                if result.get('rates') and result.get('date'):
-                    rate_date = result['date']
-                    # If Fecha Valor is in the future, keep button visible
-                    if rate_date > today:
-                        res['show_use_last_known_rate'] = True
-                        res['info_message'] = (
-                            f"El BCV publicó una tasa con Fecha Valor {rate_date}, "
-                            "que es un día futuro. Esto ocurre en fines de semana "
-                            "y feriados. Puede cargar la última tasa conocida."
-                        )
-                    res.update({
-                        'rate_usd': result['rates'].get('USD', 0.0),
-                        'date': fields.Datetime.now(),
-                        'name': f"Tasa BCV del {rate_date}",
-                        'used_fallback': result.get('used_fallback', False),
-                        'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
-                    })
-            except Exception:
-                pass
+        
+        # 1. Buscar la tasa USD actualmente activa en el sistema
+        usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
+        if usd_currency:
+            active_rate = self.env['res.currency.rate'].search([
+                ('currency_id', '=', usd_currency.id),
+                ('company_id', '=', self.env.company.id),
+            ], order='name desc', limit=1)
+            
+            if active_rate:
+                rate_value = active_rate.inverse_company_rate or (
+                    1.0 / active_rate.rate if active_rate.rate else 0.0
+                )
+                rate_date = active_rate.name.date() if hasattr(active_rate.name, 'date') else active_rate.name
+                
+                res.update({
+                    'rate_usd': rate_value,
+                    'date': fields.Datetime.to_datetime(rate_date),
+                    'name': f"Tasa del {rate_date}",
+                    'used_fallback': False,
+                    'error_message': '',
+                    'show_use_last_known_rate': False,
+                })
+                
+                # Si la tasa activa es de hoy, no mostrar boton
+                if rate_date >= today:
+                    return res
+                
+                # Si la tasa activa es anterior a hoy, mostrar boton para consultar BCV
+                res['show_use_last_known_rate'] = True
+                res['info_message'] = (
+                    f"La tasa activa es del {rate_date}. "
+                    "Puede consultar el BCV para obtener la tasa actualizada."
+                )
+                return res
+        
+        # 2. No hay tasa activa — consultar BCV directamente
+        res['show_use_last_known_rate'] = True
+        res['info_message'] = (
+            "No se encontró una tasa USD en el sistema. "
+            "Consulte el BCV para obtener la tasa."
+        )
+        try:
+            helper = self.env['bcv.rate.helper']
+            result = helper.get_bcv_rate_with_fallback(automatico=False)
+            if result.get('rates') and result.get('date'):
+                rate_date = result['date']
+                res.update({
+                    'rate_usd': result['rates'].get('USD', 0.0),
+                    'date': fields.Datetime.now(),
+                    'name': f"Tasa BCV del {rate_date}",
+                    'used_fallback': result.get('used_fallback', False),
+                    'error_message': result.get('error', {}).get('message', '') if result.get('error') else '',
+                })
+        except Exception:
+            pass
         return res
 
     def action_get_bcv_rate(self):
