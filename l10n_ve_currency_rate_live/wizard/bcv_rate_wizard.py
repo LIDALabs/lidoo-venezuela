@@ -34,7 +34,7 @@ class BcvRateWizard(models.TransientModel):
                 'rate_usd': existing_log.rate_usd,
                 'date': existing_log.created_at,
                 'name': f"Tasa BCV del {existing_log.date}",
-                'used_fallback': existing_log.status != 'success',
+                'used_fallback': existing_log.status != 'success' and bool(existing_log.error_message),
                 'error_message': existing_log.error_message or '',
                 'show_use_last_known_rate': False,
             })
@@ -145,9 +145,9 @@ class BcvRateWizard(models.TransientModel):
         
         self.write({
             'rate_usd': rate_value,
-            'date': last_rate.write_date or fields.Datetime.now(),
+            'date': fields.Datetime.to_datetime(rate_date),
             'name': f"Tasa del {rate_date}",
-            'used_fallback': True,
+            'used_fallback': False,
             'error_message': '',
             'show_use_last_known_rate': False,
             'info_message': (
@@ -191,19 +191,22 @@ class BcvRateWizard(models.TransientModel):
                 }
             }
 
-        # 1. Asegurar que la tasa este guardada en la base de datos (USD)
+        # 1. Obtener la fecha de la tasa (puede ser hoy o una fecha anterior)
+        rate_date = self.date.date() if hasattr(self.date, 'date') else self.date
+        
+        # 2. Asegurar que la tasa este guardada en la base de datos (USD)
         usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
         if usd_currency:
             Rate = self.env['res.currency.rate']
             existing_rate = Rate.search([
                 ('currency_id', '=', usd_currency.id),
-                ('name', '=', self.date),
+                ('name', '=', rate_date),
                 ('company_id', '=', self.company_id.id)
             ], limit=1)
             
             vals = {
                 'currency_id': usd_currency.id,
-                'name': self.date,
+                'name': rate_date,
                 'inverse_company_rate': self.rate_usd,
                 'company_id': self.company_id.id,
             }
@@ -212,7 +215,17 @@ class BcvRateWizard(models.TransientModel):
             else:
                 Rate.create(vals)
 
-        # 2. Proceder con el comando de actualizacion de precios
+        # 3. Registrar en el log historial con todos los detalles
+        log_vals = {
+            'date': rate_date,
+            'rate_usd': self.rate_usd,
+            'status': 'success',
+            'company_id': self.company_id.id,
+            'automatico': False,
+        }
+        self.env['bcv.rate.log'].create(log_vals)
+
+        # 4. Proceder con el comando de actualizacion de precios
         pricelist_obj = self.env['product.pricelist']
         if hasattr(pricelist_obj, '_update_product_prices'):
              pricelist_obj._update_product_prices()
@@ -222,7 +235,7 @@ class BcvRateWizard(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': _('Exito'),
-                'message': _('Los precios han sido actualizados con la tasa consultada'),
+                'message': _('Los precios han sido actualizados con la tasa del %s (%.4f Bs/USD)') % (rate_date, self.rate_usd),
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
