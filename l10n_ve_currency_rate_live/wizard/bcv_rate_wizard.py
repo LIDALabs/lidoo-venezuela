@@ -25,13 +25,13 @@ class BcvRateWizard(models.TransientModel):
 
         today = fields.Date.context_today(self)
         
-        # 1. Buscar la tasa USD actualmente activa en el sistema
+        # 1. Buscar la tasa USD actualmente activa en el sistema (la más reciente en tiempo real)
         usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
         if usd_currency:
             active_rate = self.env['res.currency.rate'].search([
                 ('currency_id', '=', usd_currency.id),
                 ('company_id', '=', self.env.company.id),
-            ], order='name desc', limit=1)
+            ], order='write_date desc', limit=1)
             
             if active_rate:
                 rate_value = active_rate.inverse_company_rate or (
