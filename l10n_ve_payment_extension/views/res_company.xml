@@ -16,7 +16,7 @@
 			</group>
                     </group>
                 </page>
-                <page string="Stamp Image" name="stamp_image">
+                <page string="Firma y Sello" name="stamp_image">
                     <group>
                         <group>
                             <field name="stamp_image" widget="image" class="oe_avatar"/>
