@@ -19,6 +19,7 @@ class PaymentExtensionRetentionIvaVoucher(models.AbstractModel):
             "foreign_currency_is_vef": self.get_foreign_currency_is_vef(),
             "get_digits": self.get_digits(),
             "docs": docs_retentions,
+            "res_company": self.env.company,
         }
 
     def get_digits(self):
