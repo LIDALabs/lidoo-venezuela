@@ -452,7 +452,7 @@
                                 <div style="height:100px">
                                     <t t-if="res_company.stamp_image">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                            t-att-src="image_data_uri(res_company.stamp_image)"/>
+                                            t-attf-src="data:image/png;base64,{{res_company.stamp_image}}"/>
                                     </t>
                                     <t t-else="">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
@@ -791,7 +791,7 @@
                         <div style="height:100px">
                             <t t-if="res_company.stamp_image">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                    t-att-src="image_data_uri(res_company.stamp_image)"/>
+                                    t-attf-src="data:image/png;base64,{{res_company.stamp_image}}"/>
                             </t>
                             <t t-else="">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"
