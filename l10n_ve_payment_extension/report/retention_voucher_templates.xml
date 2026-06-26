@@ -450,9 +450,9 @@
                             <div class="col-5" style="width:35%; margin-top:10px;">
                                 <!--Firma y sello-->
                                 <div style="height:100px">
-                                    <t t-if="res_company.firma_sello">
+                                    <t t-if="res_company.stamp_image">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                            t-att-src="image_data_uri(res_company.firma_sello)"/>
+                                            t-att-src="image_data_uri(res_company.stamp_image)"/>
                                     </t>
                                     <t t-else="">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
@@ -789,9 +789,9 @@
                     <div class="col-5" style="width:35%;margin-top:10px;">
                         <!--Firma y sello-->
                         <div style="height:100px">
-                            <t t-if="res_company.firma_sello">
+                            <t t-if="res_company.stamp_image">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                    t-att-src="image_data_uri(res_company.firma_sello)"/>
+                                    t-att-src="image_data_uri(res_company.stamp_image)"/>
                             </t>
                             <t t-else="">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"

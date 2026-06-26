@@ -47,4 +47,4 @@ class ResCompany(models.Model):
         default=False,
     )
 
-    firma_sello = fields.Binary(string="Firma y Sello")
+    stamp_image = fields.Binary(string="Stamp Image")
