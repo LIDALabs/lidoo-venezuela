@@ -16,6 +16,13 @@
 			</group>
                     </group>
                 </page>
+                <page string="Firma y Sello" name="firma_sello">
+                    <group>
+                        <group>
+                            <field name="firma_sello" widget="image" class="oe_avatar"/>
+                        </group>
+                    </group>
+                </page>
             </notebook>
         </field>
     </record>

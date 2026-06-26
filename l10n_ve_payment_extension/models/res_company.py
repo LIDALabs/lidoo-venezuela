@@ -46,3 +46,5 @@ class ResCompany(models.Model):
         string="Hide extra columns in Patent Municipal Report related to advances",
         default=False,
     )
+
+    firma_sello = fields.Binary(string="Firma y Sello")

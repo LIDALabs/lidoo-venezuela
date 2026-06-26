@@ -444,16 +444,22 @@
                 </div>
             </div>
 
-            <!--Firmas-->
-            <div class="container" style="font-size:12px !important;">
-                <div class="row text-center">
-                    <div class="col-5" style="width:35%; margin-top:10px;">
-                        <!--Firma y sello imagen estática-->
-                        <div style="height:100px">
-                            <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
-                        </div>
-                        <!--Firma y sello fin-->
+                    <!--Firmas-->
+                    <div class="container" style="font-size:12px !important;">
+                        <div class="row text-center">
+                            <div class="col-5" style="width:35%; margin-top:10px;">
+                                <!--Firma y sello-->
+                                <div style="height:100px">
+                                    <t t-if="res_company.firma_sello">
+                                        <img style="max-height:100px;width:auto;margin-bottom:5px"
+                                            t-att-src="image_data_uri(res_company.firma_sello)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img style="max-height:100px;width:auto;margin-bottom:5px"
+                                            t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
+                                    </t>
+                                </div>
+                                <!--Firma y sello fin-->
                         <!--Firma digital-->
                         <div style="height:auto">
                             <img style="max-height:120px;width:200px" t-if="retention.get_signature()"
@@ -781,10 +787,16 @@
             <div class="container" style="font-size:12px !important;">
                 <div class="row text-center">
                     <div class="col-5" style="width:35%;margin-top:10px;">
-                        <!--Firma y sello imagen estática-->
+                        <!--Firma y sello-->
                         <div style="height:100px">
-                            <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
+                            <t t-if="res_company.firma_sello">
+                                <img style="max-height:100px;width:auto;margin-bottom:5px"
+                                    t-att-src="image_data_uri(res_company.firma_sello)"/>
+                            </t>
+                            <t t-else="">
+                                <img style="max-height:100px;width:auto;margin-bottom:5px"
+                                    t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
+                            </t>
                         </div>
                         <!--Firma y sello fin-->
                         <div style="height:auto"></div>
