@@ -11,17 +11,24 @@
                         <p>No se pudo obtener la tasa del día. Se está usando la última tasa registrada.</p>
                         <p><strong>Detalle del error:</strong> <field name="error_message" readonly="1" invisible="not error_message"/></p>
                     </div>
+                    <div class="alert alert-info" role="alert" invisible="not info_message">
+                        <h4>ℹ️ Información</h4>
+                        <p><field name="info_message" readonly="1"/></p>
+                    </div>
                     <group>
                         <field name="name"/>
                         <field name="rate_usd" widget="monetary" options="{'currency_field': 'company_id.currency_id'}"/>
                         <field name="date"/>
                         <field name="used_fallback" invisible="1"/>
                         <field name="error_message" invisible="1"/>
+                        <field name="info_message" invisible="1"/>
+                        <field name="show_use_last_known_rate" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                     </group>
                 </sheet>
                 <footer>
                     <button name="action_get_bcv_rate" string="Consultar BCV" type="object" class="btn-secondary" data-hotkey="q"/>
+                    <button name="action_use_last_known_rate" string="Usar Última Tasa Conocida" type="object" class="btn-secondary" data-hotkey="l" invisible="not show_use_last_known_rate"/>
                     <button name="action_update_prices" string="Actualizar Precios" type="object" class="btn-primary" data-hotkey="w"/>
                     <button name="action_view_history" string="Ver Historial" type="object" class="btn-secondary" data-hotkey="h"/>
                     <button string="Cerrar" class="btn-secondary" special="cancel" data-hotkey="x"/>

@@ -46,3 +46,19 @@ class ResCompany(models.Model):
         string="Hide extra columns in Patent Municipal Report related to advances",
         default=False,
     )
+
+    stamp_image = fields.Binary(string="Firma y Sello", attachment=True)
+
+    def get_stamp_image_url(self):
+        """Devuelve la URL publica del attachment para usar en reportes PDF."""
+        self.ensure_one()
+        if not self.stamp_image:
+            return False
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'res.company'),
+            ('res_field', '=', 'stamp_image'),
+            ('res_id', '=', self.id),
+        ], limit=1)
+        if attachment:
+            return '/web/image/%s' % attachment.id
+        return False

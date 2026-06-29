@@ -865,28 +865,10 @@ class StockPicking(models.Model):
         for picking in self:
             picking.has_document = bool(picking.sale_id.document)
 
-    @api.depends("is_dispatch_guide", "state", "document", "sale_id", "write_uid", "picking_type_code")
+    @api.depends("state")
     def _compute_dispatch_guide_controls(self):
         for picking in self:
-            picking.dispatch_guide_controls = False
-
-            if picking.state != "done":
-                continue
-
-            if picking.picking_type_code == "incoming":
-                continue
-
-            # if not picking.sale_id and not picking.operation_code == "internal":
-            #     continue
-
-            if picking.document == "invoice":
-                continue
-
-            if picking.document == "dispatch_guide":
-                picking.dispatch_guide_controls = True
-
-            if picking.is_dispatch_guide:
-                picking.dispatch_guide_controls = True
+            picking.dispatch_guide_controls = picking.state == "done"
 
     @api.depends("sale_id")
     def _compute_show_print_button_when_is_dispatch_guide(self):

@@ -1079,3 +1079,18 @@ class AccountMove(models.Model):
                     and line.display_type == "product"
                 ):
                     raise ValidationError(_("All added lines must indicate the product."))
+
+    @api.constrains("invoice_payment_term_id")
+    def _check_invoice_payment_term_id(self):
+        """Valida que las facturas (no notas de crédito/débito) tengan términos de pago.
+        Solo aplica en creación/edición de borradores, no en facturas posteadas."""
+        for move in self:
+            if move.move_type not in ("out_invoice", "in_invoice"):
+                continue
+            if move.state != "draft":
+                continue
+            if not move.invoice_payment_term_id:
+                raise ValidationError(_(
+                    "Los términos de pago son obligatorios para las facturas. "
+                    "Por favor seleccione un término de pago antes de confirmar."
+                ))

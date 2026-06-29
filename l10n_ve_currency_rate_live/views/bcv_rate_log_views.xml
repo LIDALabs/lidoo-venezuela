@@ -4,10 +4,11 @@
         <field name="name">bcv.rate.log.tree</field>
         <field name="model">bcv.rate.log</field>
         <field name="arch" type="xml">
-            <tree string="BCV Rate Logs" decoration-success="status == 'success'" decoration-danger="status == 'error'" create="false">
+            <tree string="BCV Rate Logs" decoration-success="status == 'success'" decoration-danger="status == 'error'">
                 <field name="created_at" string="Fecha/Hora"/>
                 <field name="date"/>
                 <field name="rate_usd" string="Tasa USD"/>
+                <field name="rate_source"/>
                 <field name="status"/>
                 <field name="error_type" optional="hide"/>
                 <field name="error_message" optional="hide"/>
@@ -20,17 +21,19 @@
         <field name="name">bcv.rate.log.form</field>
         <field name="model">bcv.rate.log</field>
         <field name="arch" type="xml">
-            <form string="BCV Rate Log" create="false" edit="false">
+            <form string="BCV Rate Log">
                 <sheet>
                     <group>
                         <group>
                             <field name="date"/>
                             <field name="rate_usd"/>
+                            <field name="rate_source"/>
                             <field name="status"/>
                         </group>
                         <group>
                             <field name="company_id"/>
                             <field name="created_at"/>
+                            <field name="manual_rate_creator_id" readonly="1"/>
                         </group>
                     </group>
                     <group string="Detalles del error" invisible="status != 'error'">

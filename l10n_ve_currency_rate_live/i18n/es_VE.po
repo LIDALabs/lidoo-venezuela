@@ -16,6 +16,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ve_currency_rate_live
+#: model:ir.model.fields,help:l10n_ve_currency_rate_live.field_bcv_rate_log__automatico
+msgid "Indica si la consulta fue realizada automáticamente por el cron (True) o manualmente desde el wizard (False)."
+msgstr "Indica si la consulta fue realizada automáticamente por el cron (Verdadero) o manualmente desde el wizard (Falso)."
+
+#. module: l10n_ve_currency_rate_live
 #: model_terms:ir.ui.view,arch_db:l10n_ve_currency_rate_live.res_config_settings_view_form_inherit_currency_rate_live
 msgid "<span class=\"o_text-muted\">Only update in habil days</span>"
 msgstr "<span class=\"o_text-muted\">Solo actualizar en días hábiles</span>"

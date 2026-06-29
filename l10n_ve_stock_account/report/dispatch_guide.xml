@@ -2,16 +2,16 @@
 <odoo>
     <data>
 <record id="action_dispatch_guide" model="ir.actions.report">
-        <field name="name">Dispatch Guide</field>
+        <field name="name">Guía de Carga</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">l10n_ve_stock_account.dispatch_guide_template</field>
-        <field name="report_file">l10n_ve_stock_account.dispatch_guide_template</field>
+        <field name="report_name">l10n_ve_stock_account.dispatch_guide_template_report</field>
+        <field name="report_file">l10n_ve_stock_account.dispatch_guide_template_report</field>
         <field name="print_report_name">"Dispatch Guide " + object.name</field>
         <field name="paperformat_id" ref="l10n_ve_stock_account.dispatch_guide_paperformat" />
         <!-- <field name="attachment">"Guía de Despacho " + object.name</field> -->
-        <!-- <field name="binding_model_id" eval="False" /> -->
-        <!-- <field name="binding_type">report</rield> -->
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
     </record>
     </data>
 </odoo>

@@ -115,6 +115,7 @@
             
             <field name="payment_term_id" position="replace">
                 <field name="payment_term_id" options="{'no_open':True,'no_create': True}"
+                    required="1"
                     groups="!l10n_ve_sale.payment_terms_sale_order_group" />
             </field>
 
