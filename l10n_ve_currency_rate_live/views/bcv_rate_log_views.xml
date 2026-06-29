@@ -4,13 +4,12 @@
         <field name="name">bcv.rate.log.tree</field>
         <field name="model">bcv.rate.log</field>
         <field name="arch" type="xml">
-            <tree string="BCV Rate Logs" decoration-success="status == 'success'" decoration-danger="status == 'error'" create="false">
-                <field name="created_at" string="Fecha de registro"/>
-                <field name="date" string="Fecha Valor"/>
+            <tree string="BCV Rate Logs" decoration-success="status == 'success'" decoration-danger="status == 'error'">
+                <field name="created_at" string="Fecha/Hora"/>
+                <field name="date"/>
                 <field name="rate_usd" string="Tasa USD"/>
-                <field name="automatico" string="Automático"/>
+                <field name="rate_source"/>
                 <field name="status"/>
-                <field name="description" optional="show"/>
                 <field name="error_type" optional="hide"/>
                 <field name="error_message" optional="hide"/>
                 <field name="company_id" optional="hide"/>
@@ -22,22 +21,20 @@
         <field name="name">bcv.rate.log.form</field>
         <field name="model">bcv.rate.log</field>
         <field name="arch" type="xml">
-            <form string="BCV Rate Log" create="false" edit="false">
+            <form string="BCV Rate Log">
                 <sheet>
                     <group>
                         <group>
-                            <field name="date" string="Fecha Valor"/>
+                            <field name="date"/>
                             <field name="rate_usd"/>
+                            <field name="rate_source"/>
                             <field name="status"/>
-                            <field name="automatico"/>
                         </group>
                         <group>
                             <field name="company_id"/>
-                            <field name="created_at" string="Fecha de registro"/>
+                            <field name="created_at"/>
+                            <field name="manual_rate_creator_id" readonly="1"/>
                         </group>
-                    </group>
-                    <group string="Descripción">
-                        <field name="description" nolabel="1"/>
                     </group>
                     <group string="Detalles del error" invisible="status != 'error'">
                         <field name="error_type"/>
@@ -54,18 +51,13 @@
         <field name="arch" type="xml">
             <search string="Buscar logs">
                 <field name="date"/>
-                <field name="description"/>
                 <field name="status"/>
                 <filter string="Exitosas" name="success" domain="[('status', '=', 'success')]"/>
                 <filter string="Con error" name="error" domain="[('status', '=', 'error')]"/>
                 <separator/>
-                <filter string="Automático" name="automatic" domain="[('automatico', '=', True)]"/>
-                <filter string="Manual" name="manual" domain="[('automatico', '=', False)]"/>
-                <separator/>
                 <group expand="0" string="Agrupar por">
                     <filter string="Fecha" name="group_date" context="{'group_by': 'date'}"/>
                     <filter string="Estado" name="group_status" context="{'group_by': 'status'}"/>
-                    <filter string="Automático" name="group_automatic" context="{'group_by': 'automatico'}"/>
                 </group>
             </search>
         </field>

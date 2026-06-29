@@ -10,6 +10,7 @@
     "depends": ["l10n_ve_rate", "currency_rate_live", "lida_reference_prices", "account_accountant"],
     "images": ["static/description/l10n_ve.png"],
     "data": [
+        "security/bcv_security.xml",
         "security/ir.model.access.csv",
         "views/res_config_settings.xml",
         "views/bcv_rate_log_views.xml",

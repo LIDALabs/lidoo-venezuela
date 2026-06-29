@@ -118,43 +118,33 @@ class BcvRateWizard(models.TransientModel):
         }
 
     def action_use_last_known_rate(self):
-        """Cargar la ultima tasa conocida antes de hoy desde la base de datos.
+        """Cargar la ultima tasa BCV conocida antes de hoy desde el historial.
         Util para dias feriados cuando el BCV publica una tasa con Fecha Valor
         futura y se necesita usar la ultima tasa real del dia anterior."""
         self.ensure_one()
         today = fields.Date.context_today(self)
         
-        usd_currency = self.env.ref('base.USD', raise_if_not_found=False)
-        if not usd_currency:
-            self.write({
-                'info_message': 'No se encontro la moneda USD en el sistema.',
-            })
-            return self._reopen()
-        
-        # Buscar la ultima tasa USD guardada ANTES de hoy
-        last_rate = self.env['res.currency.rate'].search([
-            ('currency_id', '=', usd_currency.id),
+        # Buscar la ultima tasa exitosa en el historial BCV ANTES de hoy
+        last_log = self.env['bcv.rate.log'].search([
+            ('status', '=', 'success'),
+            ('rate_usd', '>', 0),
             ('company_id', '=', self.env.company.id),
-            ('name', '<', today),
-        ], order='name desc', limit=1)
+            ('date', '<', today),
+        ], order='date desc', limit=1)
         
-        if not last_rate:
+        if not last_log:
             self.write({
                 'rate_usd': 0.0,
                 'name': 'Sin tasa anterior',
                 'info_message': (
-                    'No se encontro ninguna tasa USD guardada antes de hoy '
+                    'No se encontro ninguna tasa BCV guardada antes de hoy '
                     f'({today}). Consulte el BCV o ingrese la tasa manualmente.'
                 ),
             })
             return self._reopen()
         
-        # inverse_company_rate es la tasa legible (ej: 621.53)
-        # rate es el inverso (1/621.53 ≈ 0.0016)
-        rate_value = last_rate.inverse_company_rate or (
-            1.0 / last_rate.rate if last_rate.rate else 0.0
-        )
-        rate_date = last_rate.name.date() if hasattr(last_rate.name, 'date') else last_rate.name
+        rate_value = last_log.rate_usd
+        rate_date = last_log.date
         
         self.write({
             'rate_usd': rate_value,
@@ -164,7 +154,7 @@ class BcvRateWizard(models.TransientModel):
             'error_message': '',
             'show_use_last_known_rate': False,
             'info_message': (
-                f"Se cargo la ultima tasa conocida del {rate_date} "
+                f"Se cargo la ultima tasa BCV conocida del {rate_date} "
                 f"({rate_value} Bs/USD). Puede usar esta tasa para "
                 "actualizar precios si hoy es dia no laborable."
             ),
@@ -235,12 +225,6 @@ class BcvRateWizard(models.TransientModel):
             'rate_usd': self.rate_usd,
             'status': 'success',
             'company_id': self.company_id.id,
-            'automatico': False,
-            'description': (
-                f"Actualización manual de precios desde el wizard. "
-                f"Tasa aplicada: {self.rate_usd} Bs/USD con Fecha Valor {rate_date}. "
-                f"Guardada como tasa del {today}. Los precios de productos fueron actualizados con esta tasa."
-            ),
         }
         self.env['bcv.rate.log'].create(log_vals)
 

@@ -450,9 +450,9 @@
                             <div class="col-5" style="width:35%; margin-top:10px;">
                                 <!--Firma y sello-->
                                 <div style="height:100px">
-                                    <t t-if="res_company.stamp_image">
+                                    <t t-if="res_company.get_stamp_image_url()">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                            t-attf-src="data:image/png;base64,{{res_company.stamp_image}}"/>
+                                            t-att-src="res_company.get_stamp_image_url()"/>
                                     </t>
                                     <t t-else="">
                                         <img style="max-height:100px;width:auto;margin-bottom:5px"
@@ -789,9 +789,9 @@
                     <div class="col-5" style="width:35%;margin-top:10px;">
                         <!--Firma y sello-->
                         <div style="height:100px">
-                            <t t-if="res_company.stamp_image">
+                            <t t-if="res_company.get_stamp_image_url()">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                    t-attf-src="data:image/png;base64,{{res_company.stamp_image}}"/>
+                                    t-att-src="res_company.get_stamp_image_url()"/>
                             </t>
                             <t t-else="">
                                 <img style="max-height:100px;width:auto;margin-bottom:5px"
