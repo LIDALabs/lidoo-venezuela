@@ -127,7 +127,7 @@
 
             <xpath expr="//field[@name='note']" position="before">
                 <field name="preset_note_id"
-                    options="{'no_open': True, 'no_create': True}"
+                    options="{'no_open': True }"
                     placeholder="Select a preset note..."
                 />
                 <field name="preset_note_text"
