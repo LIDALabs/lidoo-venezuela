@@ -125,7 +125,7 @@
                     groups="!l10n_ve_sale.edit_product_line_pricing_sale_order_group" />
             </xpath>
 
-            <xpath expr="//field[@name='narration']" position="before">
+            <xpath expr="//field[@name='note']" position="before">
                 <field name="preset_note_id"
                     options="{'no_open': True, 'no_create': True}"
                     placeholder="Select a preset note..."

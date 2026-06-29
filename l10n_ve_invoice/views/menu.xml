@@ -1,6 +1,9 @@
 
 <odoo>
 
+        <menuitem id="menu_accounting_reports" name="Accounting Reports"
+                  parent="account.menu_finance_reports" sequence="60"/>
+
         <record id="ir_invoice_correlative" model="ir.actions.act_window">
             <field name="name">control number</field>
             <field name="type">ir.actions.act_window</field>
