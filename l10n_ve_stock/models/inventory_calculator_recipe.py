@@ -22,7 +22,6 @@ class InventoryCalculatorRecipe(models.Model):
         string="Producto Final",
         required=True,
         tracking=True,
-        domain="[('type', '!=', 'service')]",
     )
     product_uom_id = fields.Many2one(
         "uom.uom",
