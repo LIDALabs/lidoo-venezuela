@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data noupdate="1">
-        <record id="preset_note_thank_you" model="invoice.preset.note">
-            <field name="name">Gracias por su compra</field>
-            <field name="text">Gracias por su compra. Esperamos volver a servirle pronto.</field>
-        </record>
         <record id="preset_note_cash_payment" model="invoice.preset.note">
             <field name="name">Pago al contado</field>
             <field name="text">Esta factura fue pagada al contado.</field>
-        </record>
-        <record id="preset_note_credit_terms" model="invoice.preset.note">
-            <field name="name">Términos de crédito</field>
-            <field name="text">Pago a 30 días. Se aplican intereses por mora.</field>
-        </record>
-        <record id="preset_note_warranty" model="invoice.preset.note">
-            <field name="name">Garantía</field>
-            <field name="text">Todos los productos cuentan con garantía de 30 días. Conserve esta factura como comprobante.</field>
-        </record>
-        <record id="preset_note_return_policy" model="invoice.preset.note">
-            <field name="name">Política de devolución</field>
-            <field name="text">Devoluciones aceptadas dentro de los primeros 15 días con factura original y producto sin uso.</field>
         </record>
     </data>
 </odoo>
