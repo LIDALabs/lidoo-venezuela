@@ -26,9 +26,8 @@
         <field name="model">invoice.preset.note</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" />
-                <field name="text" />
-                <field name="active" invisible="1" />
+                <field name="name" string="Motivo" />
+                <field name="text" string="Contenido" />
             </tree>
         </field>
     </record>

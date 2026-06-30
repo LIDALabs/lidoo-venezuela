@@ -692,3 +692,8 @@ msgstr "Motivo de nota"
 #: model:ir.model.fields,field_description:l10n_ve_invoice.field_account_move__preset_note_text
 msgid "Preset Note Text"
 msgstr "Nota Adicional"
+
+#. module: l10n_ve_invoice
+#: model:ir.ui.menu,name:l10n_ve_invoice.menu_accounting_reports
+msgid "Accounting Reports"
+msgstr "Informes contables"
