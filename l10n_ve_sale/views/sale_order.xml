@@ -129,9 +129,11 @@
                 <field name="preset_note_id"
                     options="{'no_open': True }"
                     placeholder="Select a preset note..."
+                    readonly="state != 'draft'"
                 />
                 <field name="preset_note_text"
                     placeholder="Or type a custom note..."
+                    readonly="state != 'draft'"
                 />
             </xpath>
 

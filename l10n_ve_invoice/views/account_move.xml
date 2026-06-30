@@ -86,10 +86,12 @@
                     options="{'no_open': True }"
                     placeholder="Select a preset note..."
                     invisible="move_type not in ('out_invoice', 'out_refund')"
+                    readonly="state != 'draft'"
                 />
                 <field name="preset_note_text"
                     placeholder="Or type a custom note..."
                     invisible="move_type not in ('out_invoice', 'out_refund')"
+                    readonly="state != 'draft'"
                 />
             </xpath>
         </field>

@@ -49,9 +49,11 @@ class AccountMove(models.Model):
     free_form_copy_number = fields.Integer(default=0, copy=False)
     is_print_copy = fields.Boolean(compute='_compute_is_print_copy')
 
-    @api.depends("preset_note_id")
+    @api.depends("preset_note_id", "state")
     def _compute_preset_note_text(self):
         for move in self:
+            if move.state != "draft":
+                continue
             if move.preset_note_id:
                 move.preset_note_text = move.preset_note_id.text
             else:
@@ -59,6 +61,8 @@ class AccountMove(models.Model):
 
     def _inverse_preset_note_text(self):
         for move in self:
+            if move.state != "draft":
+                continue
             if move.preset_note_text and not move.preset_note_id:
                 Note = self.env["invoice.preset.note"]
                 existing = Note.search([("text", "=", move.preset_note_text)], limit=1)

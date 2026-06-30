@@ -26,9 +26,11 @@ class SaleOrder(models.Model):
         copy=False,
     )
 
-    @api.depends("preset_note_id")
+    @api.depends("preset_note_id", "state")
     def _compute_preset_note_text(self):
         for order in self:
+            if order.state != 'draft':
+                continue
             if order.preset_note_id:
                 order.preset_note_text = order.preset_note_id.text
             else:
@@ -36,6 +38,8 @@ class SaleOrder(models.Model):
 
     def _inverse_preset_note_text(self):
         for order in self:
+            if order.state != 'draft':
+                continue
             if order.preset_note_text and not order.preset_note_id:
                 Note = self.env["invoice.preset.note"]
                 existing = Note.search([("text", "=", order.preset_note_text)], limit=1)
