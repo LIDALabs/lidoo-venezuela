@@ -215,6 +215,10 @@
                         </tbody>
                     </table>
 
+                    <div t-if="o.preset_note_text" name="preset_note" class="mt-2 mb-2">
+                        <span t-field="o.preset_note_text"/>
+                    </div>
+
                     <div class="clearfix mb-4">
                         <div id="total" class="row">
                             <div t-attf-class="#{'col-7' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
