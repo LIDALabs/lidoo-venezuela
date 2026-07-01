@@ -83,7 +83,6 @@
             </xpath>
             <xpath expr="//field[@name='narration']" position="before">
                 <field name="preset_note_id"
-                    options="{'no_open': True }"
                     placeholder="Select a preset note..."
                     invisible="move_type not in ('out_invoice', 'out_refund')"
                     readonly="state != 'draft'"
