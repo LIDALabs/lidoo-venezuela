@@ -137,9 +137,13 @@
                             <field name="sequence" widget="handle" optional="hide"/>
                             <field name="product_id"
                                    string="Producto"
-                                   placeholder="Seleccionar producto..."/>
+                                   placeholder="Seleccionar producto..."
+                                   domain="[('id', 'in', parent.product_with_recipe_ids)]"/>
                             <field name="product_uom_id" readonly="1"
                                    string="Unidad"/>
+                            <field name="recipe_id" readonly="1"
+                                   string="Receta"
+                                   optional="show"/>
                             <field name="quantity"
                                    string="Cantidad"
                                    required="1"/>
