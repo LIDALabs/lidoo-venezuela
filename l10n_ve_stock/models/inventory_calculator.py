@@ -116,6 +116,8 @@ class InventoryCalculator(models.Model):
     product_with_recipe_ids = fields.Many2many(
         "product.product",
         compute="_compute_product_with_recipe_ids",
+        store=True,
+        depends=["company_id"],
         string="Productos con Receta",
     )
 
@@ -156,20 +158,34 @@ class InventoryCalculator(models.Model):
     def _compute_virtual_location_id(self):
         """Auto-detecta la ubicacion virtual de produccion desde el warehouse."""
         for rec in self:
-            if rec.company_id:
-                warehouse = self.env["stock.warehouse"].search(
-                    [("company_id", "=", rec.company_id.id)], limit=1
-                )
-                if warehouse:
-                    rec.virtual_location_id = warehouse.lot_stock_id
-                else:
-                    # Fallback: buscar cualquier ubicacion virtual
-                    rec.virtual_location_id = self.env["stock.location"].search(
-                        [("usage", "=", "transit"), ("company_id", "=", rec.company_id.id)],
-                        limit=1,
-                    )
-            else:
+            if not rec.company_id:
                 rec.virtual_location_id = False
+                continue
+
+            production_loc = False
+            warehouse = self.env["stock.warehouse"].search(
+                [("company_id", "=", rec.company_id.id)], limit=1
+            )
+            if warehouse and warehouse.view_location_id:
+                # Buscar ubicación de producción hija del almacén
+                production_loc = self.env["stock.location"].search(
+                    [
+                        ("usage", "=", "production"),
+                        ("location_id", "child_of", warehouse.view_location_id.id),
+                        ("company_id", "=", rec.company_id.id),
+                    ],
+                    limit=1,
+                )
+            if not production_loc:
+                # Fallback: cualquier ubicación de producción de la empresa
+                production_loc = self.env["stock.location"].search(
+                    [
+                        ("usage", "=", "production"),
+                        ("company_id", "=", rec.company_id.id),
+                    ],
+                    limit=1,
+                )
+            rec.virtual_location_id = production_loc
 
     @api.depends("finished_product_ids.raw_cost_total")
     def _compute_total_raw_cost(self):
@@ -346,9 +362,26 @@ class InventoryCalculator(models.Model):
                 raise UserError(_("Solo los registros confirmados pueden procesarse."))
             rec._create_stock_moves()
             rec.state = "done"
+
+            added_lines = "<br>".join(
+                f"• {line.product_id.display_name}: +{line.quantity:.2f} "
+                f"{line.product_uom_id.name or ''}"
+                for line in rec.finished_product_ids
+            )
+            removed_lines = "<br>".join(
+                f"• {line.product_id.display_name}: -{line.quantity:.2f} "
+                f"{line.product_uom_id.name or ''}"
+                for line in rec.raw_material_ids
+            )
+            body = _(
+                "Procesado — movimientos de stock creados.<br><br>"
+                "<strong>Productos finales agregados:</strong><br>%(added)s<br><br>"
+                "<strong>Materias primas descontadas:</strong><br>%(removed)s"
+            ) % {"added": added_lines, "removed": removed_lines}
             rec.message_post(
-                body=_("Procesado — movimientos de stock creados."),
-                subtype_xmlid="mail.mt_note",
+                body=body,
+                body_is_html=True,
+                subtype_xmlid="mail.mt_comment",
             )
 
     def action_cancel(self):
@@ -405,6 +438,41 @@ class InventoryCalculator(models.Model):
                 % "\n• ".join(errors)
             )
 
+    def _check_raw_material_availability(self):
+        """Valida que haya stock suficiente de cada materia prima."""
+        self.ensure_one()
+        needed = {}
+        for line in self.raw_material_ids:
+            needed[line.product_id] = needed.get(line.product_id, 0.0) + line.quantity
+
+        shortages = []
+        for product, qty in needed.items():
+            available = product.with_context(
+                location=self.location_src_id.id
+            ).free_qty
+            if qty > available:
+                shortages.append(
+                    _(
+                        "• %(product)s: necesita %(need).2f, disponible %(avail).2f"
+                    )
+                    % {
+                        "product": product.display_name,
+                        "need": qty,
+                        "avail": available,
+                    }
+                )
+
+        if shortages:
+            raise UserError(
+                _(
+                    "No hay stock suficiente de materias primas en %(location)s:\n%s"
+                )
+                % {
+                    "location": self.location_src_id.display_name,
+                    "shortages": "\n".join(shortages),
+                }
+            )
+
     def _create_stock_moves(self):
         """Crea movimientos de stock:
         - Producto final: Virtual → Destino (SUMA al inventario)
@@ -412,6 +480,7 @@ class InventoryCalculator(models.Model):
         """
         self.ensure_one()
         self._validate_locations()
+        self._check_raw_material_availability()
         Move = self.env["stock.move"]
         MoveLine = self.env["stock.move.line"]
         virtual_loc = self.virtual_location_id
