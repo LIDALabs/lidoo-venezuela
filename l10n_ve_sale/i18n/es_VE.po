@@ -529,3 +529,23 @@ msgstr ""
 #, python-format
 msgid "{}. Only has {} units of the {} demanded."
 msgstr "{}. Solo tiene {} unidades de {} exigidas."
+
+#. module: l10n_ve_sale
+#: model:ir.model.fields,field_description:l10n_ve_sale.field_sale_order__preset_note_id
+msgid "Preset Note"
+msgstr "Motivo de nota"
+
+#. module: l10n_ve_sale
+#: model:ir.model.fields,field_description:l10n_ve_sale.field_sale_order__preset_note_text
+msgid "Preset Note Text"
+msgstr "Nota Adicional"
+
+#. module: l10n_ve_sale
+#: model_terms:ir.ui.view,arch_db:l10n_ve_sale.view_sale_order_form_l10n_ve_sales
+msgid "Select a preset note..."
+msgstr "Seleccione un motivo..."
+
+#. module: l10n_ve_sale
+#: model_terms:ir.ui.view,arch_db:l10n_ve_sale.view_sale_order_form_l10n_ve_sales
+msgid "Or type a custom note..."
+msgstr "O escriba un contenido personalizado..."

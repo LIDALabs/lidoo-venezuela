@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_invoice_preset_note,invoice.preset.note,model_invoice_preset_note,base.group_user,1,1,1,1
 access_wizard_accounting_reports,binaural_wizard_accounting_reports,model_wizard_accounting_reports,base.group_user,1,1,1,1
