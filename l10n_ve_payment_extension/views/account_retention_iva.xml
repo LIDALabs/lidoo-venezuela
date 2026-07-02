@@ -15,6 +15,9 @@
                             class="oe_highlight" />
                         <button name="action_cancel" type="object" invisible="state != 'emitted'" string="Cancel"
                             confirm="Are you sure you want to cancel this voucher? The associated accounting entries will be reversed" />
+                        <button name="%(retention_voucher_action)d" type="action"
+                            string="Imprimir" invisible="state != 'emitted'"
+                            class="oe_highlight" />
                         <field name="state" widget="statusbar" nolabel="1" />
                     </header>
                     <sheet>

@@ -20,6 +20,7 @@ class PaymentExtensionRetentionIvaVoucher(models.AbstractModel):
             "get_digits": self.get_digits(),
             "docs": docs_retentions,
             "res_company": self.env.company,
+            "format_rif": self.format_rif,
         }
 
     def get_digits(self):
@@ -28,3 +29,11 @@ class PaymentExtensionRetentionIvaVoucher(models.AbstractModel):
 
     def get_foreign_currency_is_vef(self):
         return self.env.company.currency_foreign_id == self.env.ref("base.VEF")
+
+    def format_rif(self, prefix, vat):
+        if not prefix or not vat:
+            return ''
+        clean = vat.replace('-', '').replace(' ', '')
+        if len(clean) == 9:
+            return f"{prefix}-{clean[:8]}-{clean[8]}"
+        return f"{prefix}-{clean}"
