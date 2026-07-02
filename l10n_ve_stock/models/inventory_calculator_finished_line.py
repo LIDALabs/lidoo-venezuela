@@ -98,7 +98,13 @@ class InventoryCalculatorFinishedLine(models.Model):
                     "inventory.calculator.recipe.line"
                 ]
 
-    @api.depends("recipe_line_ids", "quantity")
+    @api.depends(
+        "recipe_line_ids",
+        "recipe_line_ids.quantity",
+        "recipe_line_ids.product_id",
+        "recipe_line_ids.product_id.standard_price",
+        "quantity",
+    )
     def _compute_raw_costs(self):
         for line in self:
             if not line.recipe_line_ids:
