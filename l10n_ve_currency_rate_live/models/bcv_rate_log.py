@@ -27,6 +27,12 @@ class BcvRateLog(models.Model):
     created_at = fields.Datetime('Fecha de creación', default=fields.Datetime.now, readonly=True)
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
 
+    automatico = fields.Boolean(
+        'Automático', 
+        default=False,
+        help='Indica si la consulta fue realizada automáticamente por el cron (True) o manualmente desde el wizard (False).'
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         manual_group = 'l10n_ve_currency_rate_live.group_bcv_manual_rate'

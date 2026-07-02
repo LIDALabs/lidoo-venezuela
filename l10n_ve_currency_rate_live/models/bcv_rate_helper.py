@@ -61,6 +61,7 @@ class BcvRateHelper(models.AbstractModel):
             'date': current_date,
             'status': 'success' if not result.get('error') else 'error',
             'company_id': company_id,
+            'automatico': automatico,
         }
 
         used_fallback = False
