@@ -6,11 +6,10 @@
                 <div class="row">
                     <div class="col-3">
                         <t t-if="res_company.logo">
-                            <img style="max-height:100px;width:200px;float:left"
-                                t-att-src="image_data_uri(res_company.logo)"/>
+                            <img style="max-height:100px;width:200px;float:left" t-att-src="image_data_uri(res_company.logo)"/>
                         </t>
                         <t t-else="">
-                            <div style="max-height:100px;width:200px;float:left"></div>
+                            <div style="max-height:100px;width:200px;float:left"/>
                         </t>
                     </div>
                     <h3 t-if="retention.state == 'cancel'" style="position:absolute;left:65px;top:250px;font-size:260px !important;opacity: 0.1;">ANULADA</h3>
@@ -24,7 +23,7 @@
                             Gravadas con el Impuesto Establecido en este Decreto con Rango,
                             Valor y Fuerza de Ley.
                         </p>
-                        <small> Este comprobante se emite según lo establecido en el Artículo 16 de la Providencia Administrativa Nro SNAT/2025/000054 de fecha 02/07/2025 Publicada Gaceta Oficial Nro 43.171 de fecha 16 de julio de 2025.</small>
+                        
                     </div>
                 </div>
 
@@ -36,9 +35,9 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <span>Fecha de emision:</span>
+                        <span>Fecha de Emision:</span>
                         <div>
-                            <span t-esc="retention.date" t-options='{"widget": "date"}'/>
+                            <span t-esc="retention.date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
                         </div>
                     </div>
                 </div>
@@ -55,7 +54,6 @@
                             <div class="col-12">
                                 <span t-esc="res_company.street"/>
                                 <span t-esc="res_company.street2"/>
-                                <span t-esc="res_company.state_id.name"/>
                             </div>
                         </div>
                     </div>
@@ -64,7 +62,7 @@
                             <span>Registro de Informacion Fiscal del Agente de Retención:</span>
                         </div>
                         <div>
-                            <span t-esc="res_company.vat"/>
+                            <span t-esc="'J-'+res_company.vat"/>
                         </div>
                     </div>
 
@@ -102,8 +100,7 @@
                     <div class="col-6">
                         <span>Registro de Información Fiscal del Sujeto Retenido (R.I.F)</span>
                         <div>
-                            <span style="text-transform:uppercase"
-                                t-esc="retention.partner_id.prefix_vat+retention.partner_id.vat"/>
+                            <span style="text-transform:uppercase" t-esc="retention.partner_id.prefix_vat+retention.partner_id.vat"/>
                         </div>
                     </div>
                 </div>
@@ -132,7 +129,7 @@
                         <span>Número de Factura</span>
                     </div>
                     <div class="" style="width:6%">
-                        <span>Nro de Control Factura</span>
+                        <span>Nro de Control</span>
                     </div>
                     <div class="" style="width:6%">
                         <span>Nota de Débito</span>
@@ -144,19 +141,19 @@
                         <span>Tipo de Transacción</span>
                     </div>
                     <div class="" style="width:6%">
-                        <span>Factura afectada</span>
+                        <span>Factura Afectada</span>
                     </div>
                     <div class="" style="width:7%">
                         <span>Total Compras Incluyendo el IVA</span>
                     </div>
                     <div class="" style="width:7%">
-                        <span>Compras sin derecho a Crédito IVA</span>
+                        <span>Compras Sin Derecho a Crédito IVA</span>
                     </div>
                     <div class="" style="width:10%">
                         <span>Base Imponible</span>
                     </div>
                     <div class="" style="width:7%">
-                        <span>% Alic</span>
+                        <span>% Alíc</span>
                     </div>
                     <div class="" style="width:7%">
                         <span>% Ret</span>
@@ -174,17 +171,17 @@
             <div style="margin-top:5px;margin-bottom:5px;font-size:10px !important;" class="container">
                 <div style="border-bottom:1px solid black" class="text-center">
 
-                    <t t-set="total_amount_total" t-options='{"widget": "float", "precision": get_digits}'/>
-                    <t t-set="total_amount_amount_except" t-options='{"widget": "float", "precision": get_digits}' t-value="0"/>
-                    <t t-set="amount_except" t-options='{"widget": "float", "precision": get_digits}'/>
+                    <t t-set="total_amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                    <t t-set="total_amount_amount_except" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
+                    <t t-set="amount_except" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
 
-                    <t t-set="taxable_base_amount" t-options='{"widget": "float", "precision": get_digits}' t-value='0'/>
-                    <t t-set="total_amount_tax" t-options='{"widget": "float", "precision": get_digits}' t-value='0'/>
+                    <t t-set="taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
+                    <t t-set="total_amount_tax" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
                     <!--retenido-->
-                    <t t-set="related_percentage_tax_base" t-options='{"widget": "float", "precision": get_digits}'/>
-                    <t t-set="total_amount_to_pay" t-options='{"widget": "float", "precision": get_digits}' t-value='0'/>
+                    <t t-set="related_percentage_tax_base" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                    <t t-set="total_amount_to_pay" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
 
-                    <t t-set="excent" t-options='{"widget": "float", "precision": get_digits}' t-value='0'></t>
+                    <t t-set="excent" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
 
                     <t t-foreach="retention.retention_line_ids" t-as="line">
                         <div class="row">
@@ -268,13 +265,11 @@
                             <div class="" style="width:7%">
                                 <span>
                     <t t-if="foreign_currency_is_vef">
-                                        <t t-esc="line.foreign_invoice_total"
-                                        t-options='{"widget": "float", "precision": get_digits}'/>
+                                        <t t-esc="line.foreign_invoice_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_total" t-value="total_amount_total+str(line.foreign_invoice_total)"/>
                         </t>
                     <t t-else="">
-                                        <t t-esc="line.invoice_total"
-                                        t-options='{"widget": "float", "precision": get_digits}'/>
+                                        <t t-esc="line.invoice_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_total" t-value="total_amount_total+str(line.invoice_total)"/>
                     </t>
                                 </span>
@@ -283,15 +278,12 @@
                             <!-- sin derecho a Crédito IVA -->
                             <div class="" style="width:7%">
                     <t t-if="foreign_currency_is_vef">
-                    <t t-set="amount_except"
-                    t-value="sum(line.move_id.invoice_line_ids.filtered(lambda l: l.tax_ids.amount == 0).mapped('foreign_subtotal'))"/>
+                    <t t-set="amount_except" t-value="sum(line.move_id.invoice_line_ids.filtered(lambda l: l.tax_ids.amount == 0).mapped('foreign_subtotal'))"/>
                     </t>
                     <t t-else="">
-                    <t t-set="amount_except"
-                    t-value="sum(line.move_id.invoice_line_ids.filtered(lambda l: l.tax_ids.amount == 0).mapped('price_subtotal'))"/>
+                    <t t-set="amount_except" t-value="sum(line.move_id.invoice_line_ids.filtered(lambda l: l.tax_ids.amount == 0).mapped('price_subtotal'))"/>
                     </t>
-                                <span t-esc="amount_except"
-                                    t-options='{"widget": "float", "precision": get_digits}'/>
+                                <span t-esc="amount_except" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                                 <t t-set="amount_except" t-value="total_amount_amount_except + amount_except"/>
                             </div>
 
@@ -300,25 +292,21 @@
                             <div class="" style="width:10%">
                     <t t-if="foreign_currency_is_vef">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.foreign_taxable_base_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.foreign_taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.foreign_taxable_base_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.foreign_taxable_base_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.foreign_taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.foreign_taxable_base_amount)"/>
                     </t>
                     </t>
                     <t t-else="">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.taxable_base_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.taxable_base_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.taxable_base_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.taxable_base_amount)"/>
                     </t>
                     </t>
@@ -337,25 +325,21 @@
                             <div class="" style="width:10%">
                     <t t-if="foreign_currency_is_vef">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.foreign_iva_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.foreign_iva_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_tax" t-value="float(total_amount_tax - line.foreign_iva_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.foreign_iva_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.foreign_iva_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_tax" t-value="float(total_amount_tax + line.foreign_iva_amount) "/>
                     </t>
                     </t>
                     <t t-else="">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.iva_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.iva_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_tax" t-value="float(total_amount_tax - line.iva_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.iva_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.iva_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_tax" t-value="float(total_amount_tax + line.iva_amount) "/>
                     </t>
                     </t>
@@ -365,25 +349,21 @@
                             <div class="" style="width:10%">
                     <t t-if="foreign_currency_is_vef">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.foreign_retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.foreign_retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_to_pay" t-value="float(total_amount_to_pay - line.foreign_retention_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.foreign_retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.foreign_retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_to_pay" t-value="float(total_amount_to_pay + line.foreign_retention_amount) "/>
                     </t>
                     </t>
                     <t t-else="">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_to_pay" t-value="float(total_amount_to_pay - line.retention_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="total_amount_to_pay" t-value="float(total_amount_to_pay + line.retention_amount) "/>
                     </t>
                     </t>
@@ -422,8 +402,7 @@
                             <span style="visibility:hidden">--</span>
                         </div>
                         <div class="" style="width:10%">
-                    <span t-esc="taxable_base_amount"
-                                t-options='{"widget": "float", "precision": get_digits}'/>
+                    <span t-esc="taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         </div>
                         <div class="" style="width:7%">
                             <span style="visibility:hidden">--</span>
@@ -432,41 +411,36 @@
                             <span style="visibility:hidden">--</span>
                         </div>
                         <div class="" style="width:10%">
-                            <span t-esc="total_amount_tax"
-                                t-options='{"widget": "float", "precision": get_digits}'/>
+                            <span t-esc="total_amount_tax" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         </div>
                         <div class="" style="width:10%">
-                            <span t-esc="float(total_amount_to_pay)"
-                                t-options='{"widget": "float", "precision": get_digits}'/>
+                            <span t-esc="float(total_amount_to_pay)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         </div>
 
                     </div>
                 </div>
             </div>
 
-                    <!--Firmas-->
-                    <div class="container" style="font-size:12px !important;">
-                        <div class="row text-center">
-                            <div class="col-5" style="width:35%; margin-top:10px;">
-                                <!--Firma y sello-->
-                                <div style="height:100px">
-                                    <t t-if="res_company.stamp_image">
-                                        <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                            t-att-src="image_data_uri(res_company.stamp_image)"/>
-                                    </t>
-                                    <t t-else="">
-                                        <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                            t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
-                                    </t>
-                                </div>
-                                <!--Firma y sello fin-->
+            <!--Firmas-->
+            <div class="container" style="font-size:12px !important;">
+                <div class="row text-center">
+                    <div class="col-5" style="width:35%; margin-top:10px;">
+                        <!--Firma y sello-->
+                        <div style="height:100px">
+                            <t t-if="res_company.stamp_image">
+                                <img style="max-height:100px;width:auto;margin-bottom:5px" t-att-src="image_data_uri(res_company.stamp_image)"/>
+                            </t>
+                            <t t-else="">
+                                <img style="max-height:100px;width:auto;margin-bottom:5px" t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
+                            </t>
+                        </div>
+                        <!--Firma y sello fin-->
                         <!--Firma digital-->
                         <div style="height:auto">
                             <t t-set="firma_raw" t-value="retention.get_signature()"/>
                             <t t-if="firma_raw">
                                 <t t-set="firma_clean" t-value="firma_raw.decode('utf-8') if isinstance(firma_raw, bytes) else firma_raw"/>
-                                <img style="max-height:120px;width:200px"
-                                    t-attf-src="data:image/png;base64,#{firma_clean}"/>
+                                <img style="max-height:120px;width:200px" t-attf-src="data:image/png;base64,#{firma_clean}"/>
                             </t>
                         </div>
                         <!--Firma digital fin-->
@@ -478,11 +452,11 @@
 
                     </div>
                     <div class="col-5" style="width:35%;margin-top:10px;">
-                        <div style="height:100px"></div>
+                        <div style="height:100px"/>
                         <h6 style="text-align: center; margin: 30px 0;border-top: 1px solid #000;width:80%; padding-top:10px;">
                             Recibido por:
                         </h6>
-                        <div style="height:30px"></div>
+                        <div style="height:30px"/>
                         <h6 style="text-align: center; margin: 5px 0;width:80%; padding-top:10px;">Fecha de entrega:
                         </h6>
                     </div>
@@ -497,11 +471,10 @@
                 <div class="row">
                     <div class="col-4">
                         <t t-if="res_company.logo">
-                            <img style="max-height:100px;width:200px;float:left"
-                                t-att-src="image_data_uri(res_company.logo)"/>
+                            <img style="max-height:100px;width:200px;float:left" t-att-src="image_data_uri(res_company.logo)"/>
                         </t>
                         <t t-else="">
-                            <div style="max-height:100px;width:200px;float:left"></div>
+                            <div style="max-height:100px;width:200px;float:left"/>
                         </t>
                     </div>
                     <h3 t-if="retention.state == 'cancel'" style="position:absolute;left:65px;top:250px;font-size:260px !important;opacity: 0.1;">ANULADA</h3>
@@ -512,17 +485,17 @@
                         <div class="col-12">
                             <span>Art. 24 del Drecreto 1808 Según G.O Nro 36.203 de fecha de mayo de 1997</span>
                         </div>
-                    <br />
+                    <br/>
                     <div class="col-12 row justify-content-end" style="margin-top:8px">
                         <div class="col-6">
                             <span>Nro Comprobante:</span>
                             <div>
-                                <span t-esc="retention.number"></span>
+                                <span t-esc="retention.number"/>
                             </div>
                         </div>
                         <div class="col-6">
                             <span>Fecha:</span>
-                            <span t-esc="retention.date" t-options='{"widget": "date"}'/>
+                            <span t-esc="retention.date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
                         </div>
                     </div>
 
@@ -531,7 +504,7 @@
             </div>
 
             <!--Body-->
-            <t t-set="imp" t-options='{"widget": "float", "precision": get_digits}' t-value='0' />
+            <t t-set="imp" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}" t-value="0"/>
 
             <div class="container" style="font-size:12px !important;margin-top:10px!important">
                 <div class="row">
@@ -550,11 +523,11 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="col-12" >
+                        <div class="col-12">
                             <span>No. R.I.F.:</span>
                         </div>
                         <div class="col-12" style="text-transform:uppercase">
-                            <span t-esc="res_company.vat"/>
+                            <span t-esc="'J '+res_company.vat"/>
                         </div>
                     </div>
                 </div>
@@ -584,8 +557,7 @@
                         </div>
 
                         <div class="col-12">
-                            <span style="text-transform:uppercase"
-                                t-esc="retention.partner_id.prefix_vat+retention.partner_id.vat"/>
+                            <span style="text-transform:uppercase" t-esc="retention.partner_id.prefix_vat+retention.partner_id.vat"/>
                         </div>
                     </div>
                 </div>
@@ -682,14 +654,12 @@
                             <!-- Total Factura -->
                             <div style="width:15%">
                     <t t-if="foreign_currency_is_vef">
-                                    <span t-field="line.foreign_invoice_total"
-                                        t-options='{"widget": "float", "precision": get_digits}'>
+                                    <span t-field="line.foreign_invoice_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                     </span>
                         </t>
                     <t t-else="">
-                                    <span t-field="line.invoice_total"
-                                        t-options='{"widget": "float", "precision": get_digits}'>
+                                    <span t-field="line.invoice_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                     </span>
                         </t>
@@ -697,14 +667,12 @@
                             <!-- Base de Retención -->
                             <div style="width:15%">
                     <t t-if="foreign_currency_is_vef">
-                                    <span t-field="line.foreign_invoice_amount"
-                                        t-options='{"widget": "float", "precision": get_digits}'>
+                                    <span t-field="line.foreign_invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                 </span>
                     </t>
                     <t t-else="">
-                                    <span t-field="line.invoice_amount"
-                                        t-options='{"widget": "float", "precision": get_digits}'>
+                                    <span t-field="line.invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                 </span>
                     </t>
@@ -716,33 +684,28 @@
                             </div>
                             <!-- Sustraendo -->
                             <div style="width:15%">
-                    <span t-field="line.related_amount_subtract_fees"
-                    t-options='{"widget": "float", "precision": 2}'/>
+                    <span t-field="line.related_amount_subtract_fees" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                             </div>
                             <!-- imp Retenido -->
                             <t t-set="retention_amount" t-value="0"/>
                             <div style="width:15%">
                     <t t-if="foreign_currency_is_vef">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.foreign_retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.foreign_retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="imp" t-value="float(imp - line.foreign_retention_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.foreign_retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.foreign_retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="imp" t-value="float(imp + line.foreign_retention_amount) "/>
                     </t>
                     </t>
                     <t t-else="">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="-line.retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="imp" t-value="float(imp - line.retention_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.retention_amount"
-                        t-options='{"widget": "float", "precision": get_digits}'/>
+                        <span t-esc="line.retention_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         <t t-set="imp" t-value="float(imp + line.retention_amount) "/>
                     </t>
                     </t>
@@ -778,53 +741,53 @@
                             <span style="visibility:hidden">--</span>
                         </div>
                         <div t-if="retention.retention_line_ids[0].code_visible" class="" style="width:3%">
-                <span t-esc="imp" t-options='{"widget": "float", "precision": get_digits}' />
+                <span t-esc="imp" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         </div>
                         <div t-else="" class="" style="width:12%">
-                            <span t-esc="imp" t-options='{"widget": "float", "precision": get_digits}' />
+                            <span t-esc="imp" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
                         </div>               
                     </div>
                 </div>
             </div>
 
             <!--Firmas-->
+                       <!--Firmas-->
             <div class="container" style="font-size:12px !important;">
                 <div class="row text-center">
-                    <div class="col-5" style="width:35%;margin-top:10px;">
+                    <div class="col-5" style="width:35%; margin-top:10px;">
                         <!--Firma y sello-->
                         <div style="height:100px">
                             <t t-if="res_company.stamp_image">
-                                <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                    t-att-src="image_data_uri(res_company.stamp_image)"/>
+                                <img style="max-height:100px;width:auto;margin-bottom:5px" t-att-src="image_data_uri(res_company.stamp_image)"/>
                             </t>
                             <t t-else="">
-                                <img style="max-height:100px;width:auto;margin-bottom:5px"
-                                    t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
+                                <img style="max-height:100px;width:auto;margin-bottom:5px" t-att-src="'%s/l10n_ve_payment_extension/static/src/img/sign_seal.jpeg' % web_base_url"/>
                             </t>
                         </div>
                         <!--Firma y sello fin-->
-                        <div style="height:auto"></div>
-                        <h6 style="text-align: center; margin: 30px 0;border-top: 1px solid #000;width:80%; padding-top:10px;">
-                            Firma del Agente Retenido
-                        </h6>
-                    </div>
-
-                    <div class="col-5" style="width:30%; margin-top:10px;">
-                    </div>
-
-                    <div class="col-5" style="width:35%; margin-top:10px;">
                         <!--Firma digital-->
-                        <div style="height:100px">
+                        <div style="height:auto">
                             <t t-set="firma_raw" t-value="retention.get_signature()"/>
                             <t t-if="firma_raw">
                                 <t t-set="firma_clean" t-value="firma_raw.decode('utf-8') if isinstance(firma_raw, bytes) else firma_raw"/>
-                                <img style="max-height:120px;width:200px"
-                                    t-attf-src="data:image/png;base64,#{firma_clean}"/>
+                                <img style="max-height:120px;width:200px" t-attf-src="data:image/png;base64,#{firma_clean}"/>
                             </t>
                         </div>
                         <!--Firma digital fin-->
                         <h6 style="text-align: center; margin: 30px 0;border-top: 1px solid #000;width:80%; padding-top:10px;">
-                            Firma del Agente de Retención
+                            Agente de Retención
+                        </h6>
+                    </div>
+                    <div class="col-5" style="width:30%; margin-top:10px;">
+
+                    </div>
+                    <div class="col-5" style="width:35%;margin-top:10px;">
+                        <div style="height:100px"/>
+                        <h6 style="text-align: center; margin: 30px 0;border-top: 1px solid #000;width:80%; padding-top:10px;">
+                            Recibido por:
+                        </h6>
+                        <div style="height:30px"/>
+                        <h6 style="text-align: center; margin: 5px 0;width:80%; padding-top:10px;">Fecha de entrega:
                         </h6>
                     </div>
                 </div>
