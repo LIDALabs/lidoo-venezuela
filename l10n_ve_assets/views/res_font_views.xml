@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_res_font" model="ir.actions.act_window">
+        <field name="name">System Fonts</field>
+        <field name="res_model">res.font</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload your first system font.
+            </p>
+            <p>
+                Fonts uploaded here are installed in
+                <code>/usr/share/fonts/truetype/custom_fonts</code> and become
+                available to wkhtmltopdf reports.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_res_font_tree" model="ir.ui.view">
+        <field name="name">res.font.tree</field>
+        <field name="model">res.font</field>
+        <field name="arch" type="xml">
+            <tree string="System Fonts" decoration-muted="not active">
+                <field name="name"/>
+                <field name="filename"/>
+                <field name="installed"/>
+                <field name="active" widget="boolean_toggle"/>
+                <button name="action_install_font" type="object" string="Install" icon="fa-refresh" invisible="installed"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_res_font_form" model="ir.ui.view">
+        <field name="name">res.font.form</field>
+        <field name="model">res.font</field>
+        <field name="arch" type="xml">
+            <form string="System Font">
+                <header>
+                    <button name="action_install_font" type="object" string="Install / Refresh" class="btn-primary" icon="fa-refresh"/>
+                    <button name="action_uninstall_font" type="object" string="Uninstall" class="btn-secondary" icon="fa-trash"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g. Lato Regular"/>
+                            <field name="filename" placeholder="e.g. Lato-Regular.ttf"/>
+                            <field name="installed" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="font_file" filename="filename" widget="binary"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        The font file will be written to
+                        <strong>/usr/share/fonts/truetype/custom_fonts</strong>.
+                        Make sure the Odoo container has write permissions on that path.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_res_font_search" model="ir.ui.view">
+        <field name="name">res.font.search</field>
+        <field name="model">res.font</field>
+        <field name="arch" type="xml">
+            <search string="Search Fonts">
+                <field name="name"/>
+                <field name="filename"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu under Settings / Ajustes -->
+    <menuitem
+        id="menu_res_font_root"
+        name="System Fonts"
+        parent="base.menu_administration"
+        action="action_res_font"
+        sequence="120"
+        groups="base.group_system"/>
+
+</odoo>
