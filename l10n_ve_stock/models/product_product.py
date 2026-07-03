@@ -169,34 +169,25 @@ class ProductProduct(models.Model):
             return
         product_ids = list(res.keys())
         Move = self.env['stock.move'].with_context(active_test=False)
-        
+
         # Buscar movimientos done de calculadora para estos productos
-        base_domain = [
+        calc_moves = Move.search([
             ('product_id', 'in', product_ids),
             ('state', '=', 'done'),
             ('inventory_calculator_id', '!=', False),
-        ]
-        
-        # Movimientos ENTRADA (virtual → internal)
-        calc_in_domain = base_domain + [('location_id.usage', '=', 'inventory')]
-        calc_in_res = {product.id: product_qty for product, product_qty in Move._read_group(calc_in_domain, ['product_id'], ['product_qty:sum'])}
-        
-        # Movimientos SALIDA (internal → virtual/inventory)
-        calc_out_domain = base_domain + [('location_dest_id.usage', '=', 'inventory')]
-        calc_out_res = {product.id: product_qty for product, product_qty in Move._read_group(calc_out_domain, ['product_id'], ['product_qty:sum'])}
-        
+        ])
+
         for product_id in product_ids:
-            calc_in = calc_in_res.get(product_id, 0.0)
-            calc_out = calc_out_res.get(product_id, 0.0)
+            product_moves = calc_moves.filtered(lambda m: m.product_id.id == product_id)
+            # Usar nombre del movimiento (más confiable que ubicaciones)
+            calc_in = sum(m.product_uom_qty for m in product_moves if 'Entrada' in (m.name or ''))
+            calc_out = sum(m.product_uom_qty for m in product_moves if 'Salida' in (m.name or ''))
             if calc_in or calc_out:
-                # Agregar a incoming/outgoing para que se muestren en el botón
+                rounding = self.env['product.product'].browse(product_id).uom_id.rounding
                 res[product_id]['incoming_qty'] += calc_in
                 res[product_id]['outgoing_qty'] += calc_out
-                # Ajustar virtual_available: restar lo que agregamos porque
-                # qty_available ya incluye estos movimientos done
+                # Ajustar virtual_available porque qty_available ya incluye done
                 res[product_id]['virtual_available'] += calc_in - calc_out
-                # Re-redondear
-                rounding = self.env['product.product'].browse(product_id).uom_id.rounding
                 res[product_id]['incoming_qty'] = float_round(res[product_id]['incoming_qty'], precision_rounding=rounding)
                 res[product_id]['outgoing_qty'] = float_round(res[product_id]['outgoing_qty'], precision_rounding=rounding)
                 res[product_id]['virtual_available'] = float_round(res[product_id]['virtual_available'], precision_rounding=rounding)

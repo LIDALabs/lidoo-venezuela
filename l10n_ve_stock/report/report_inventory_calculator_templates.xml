@@ -25,12 +25,12 @@
                     <!-- Productos Finales -->
                     <h4>Productos Finales</h4>
                     <table class="table table-sm table-bordered">
-                        <thead class="table-dark">
+                        <thead style="background-color: #343a40; color: #ffffff;">
                             <tr>
-                                <th>Producto</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-end">Costo Unit. Materia Prima</th>
-                                <th class="text-end">Costo Total Materia Prima</th>
+                                <th style="color: #ffffff;">Producto</th>
+                                <th class="text-center" style="color: #ffffff;">Cantidad</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Unit. Materia Prima</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Total Materia Prima</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,12 +57,12 @@
                     <!-- Materias Primas -->
                     <h4 class="mt-4">Materias Primas</h4>
                     <table class="table table-sm table-bordered">
-                        <thead class="table-dark">
+                        <thead style="background-color: #343a40; color: #ffffff;">
                             <tr>
-                                <th>Materia Prima</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-end">Costo Unitario</th>
-                                <th class="text-end">Costo Total</th>
+                                <th style="color: #ffffff;">Materia Prima</th>
+                                <th class="text-center" style="color: #ffffff;">Cantidad</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Unitario</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,7 +90,7 @@
                     <div class="row mt-4">
                         <div class="col-6 offset-6">
                             <table class="table table-sm table-bordered">
-                                <tr class="table-active">
+                                <tr style="background-color: #e9ecef;">
                                     <th class="text-end">Costo Total Materias Primas</th>
                                     <td class="text-end">
                                         <strong>
