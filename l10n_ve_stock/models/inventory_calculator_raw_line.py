@@ -68,10 +68,10 @@ class InventoryCalculatorRawLine(models.Model):
     def _compute_available_qty(self):
         for line in self:
             if line.product_id:
-                # Usar la ubicación física del producto, o la del almacén
+                # Usar la ubicación física del producto, o el almacén principal
                 location = (
                     line.product_id.physical_location_id
-                    or line.product_id.warehouse_id.lot_stock_id
+                    or line.env.company.main_warehouse_id.lot_stock_id
                 )
                 if location:
                     quants = self.env["stock.quant"].search(
