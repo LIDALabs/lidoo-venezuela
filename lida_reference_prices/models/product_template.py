@@ -41,12 +41,40 @@ class ProductTemplate(models.Model):
         help="This is the reference price of the product in the reference pricelist. "
     )
 
+    reference_cost = fields.Monetary(
+        string="Costo Referencial",
+        currency_field='reference_currency_id',
+        compute='_compute_reference_cost',
+        readonly=False,
+        inverse='_inverse_reference_cost',
+        help="This is the reference cost of the product in the reference currency. "
+    )
+
     @api.onchange('list_price')
     def _onchange_list_price(self):
         prices = self._convert_using_reference_currency(self.list_price, inverse=True)
         self.reference_price = prices['reference_price']
 
         return
+
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        prices = self._convert_using_reference_currency(self.standard_price, inverse=True)
+        self.reference_cost = prices['reference_price']
+
+        return
+
+    @api.constrains('standard_price', 'list_price')
+    def _check_cost_not_greater_than_price(self):
+        for tmpl in self:
+            if tmpl.standard_price > tmpl.list_price:
+                raise ValidationError(_(
+                    "El costo (Bs. %(cost)s) no puede ser mayor que el precio de venta (Bs. %(price)s) para el producto '%(product)s'."
+                ) % {
+                    'cost': tmpl.standard_price,
+                    'price': tmpl.list_price,
+                    'product': tmpl.display_name,
+                })
 
     # ocasiona doble edición
     # @api.onchange('reference_price')
@@ -106,6 +134,35 @@ class ProductTemplate(models.Model):
                 reference_price = float_round(tmpl.list_price * rate, tmpl.reference_currency_id.decimal_places)
 
             tmpl.reference_price = reference_price
+
+    @api.depends('standard_price', 'reference_currency_id', 'reference_pricelist_id')
+    def _compute_reference_cost(self):
+        """ Compute the reference cost for the product template."""
+        Rate = self.env['res.currency.rate']
+        today = fields.Date.today()
+        for tmpl in self:
+            if not tmpl.reference_pricelist_id or not tmpl.reference_currency_id:
+                tmpl.reference_cost = 0.0
+                continue
+
+            rate = Rate.compute_rate(tmpl.reference_currency_id.id, today)['foreign_inverse_rate']
+            reference_cost = float_round(tmpl.standard_price * rate, tmpl.reference_currency_id.decimal_places)
+            tmpl.reference_cost = reference_cost
+
+    def _inverse_reference_cost(self):
+        """
+        Inverse method for reference_cost field.
+        This method updates the standard_price when reference_cost is edited.
+        """
+        Rate = self.env['res.currency.rate']
+        today = fields.Date.today()
+        for tmpl in self:
+            if not tmpl.reference_pricelist_id or not tmpl.reference_currency_id:
+                continue
+
+            rate = Rate.compute_rate(tmpl.reference_currency_id.id, today)['foreign_rate']
+            standard_price = float_round(tmpl.reference_cost * rate, tmpl.currency_id.decimal_places)
+            tmpl.standard_price = standard_price
 
     def _convert_using_reference_currency(self, reference, inverse=False):
         """
