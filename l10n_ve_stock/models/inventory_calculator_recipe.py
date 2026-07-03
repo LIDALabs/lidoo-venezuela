@@ -8,12 +8,12 @@ _logger = logging.getLogger(__name__)
 
 class InventoryCalculatorRecipe(models.Model):
     _name = "inventory.calculator.recipe"
-    _description = "Receta de Producto"
+    _description = "Plantilla de Producto"
     _order = "product_id"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(
-        string="Nombre de la Receta",
+        string="Nombre de la Plantilla",
         required=True,
         tracking=True,
     )
@@ -30,7 +30,7 @@ class InventoryCalculatorRecipe(models.Model):
         readonly=True,
     )
     active = fields.Boolean(
-        string="Receta Activa",
+        string="Plantilla Activa",
         default=True,
         tracking=True,
     )
@@ -80,8 +80,8 @@ class InventoryCalculatorRecipe(models.Model):
             if existing:
                 raise UserError(
                     _(
-                        "Ya existe una receta activa para el producto '%s'. "
-                        "Archive la receta existente primero."
+                        "Ya existe una plantilla activa para el producto '%s'. "
+                        "Archive la plantilla existente primero."
                     )
                     % rec.product_id.display_name
                 )
@@ -125,7 +125,7 @@ class InventoryCalculatorRecipe(models.Model):
     def create(self, vals_list):
         recipes = super().create(vals_list)
         for recipe in recipes:
-            recipe._log_action("created", f"Receta '{recipe.name}' creada para {recipe.product_id.display_name}")
+            recipe._log_action("created", f"Plantilla '{recipe.name}' creada para {recipe.product_id.display_name}")
         return recipes
 
     def write(self, vals):
@@ -141,13 +141,13 @@ class InventoryCalculatorRecipe(models.Model):
 
 class InventoryCalculatorRecipeLine(models.Model):
     _name = "inventory.calculator.recipe.line"
-    _description = "Linea de Receta"
+    _description = "Linea de Plantilla"
     _order = "sequence, id"
 
     sequence = fields.Integer(string="Secuencia", default=10)
     recipe_id = fields.Many2one(
         "inventory.calculator.recipe",
-        string="Receta",
+        string="Plantilla",
         required=True,
         ondelete="cascade",
         index=True,

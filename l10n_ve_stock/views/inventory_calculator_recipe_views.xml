@@ -5,7 +5,7 @@
         <field name="name">inventory.calculator.recipe.form</field>
         <field name="model">inventory.calculator.recipe</field>
         <field name="arch" type="xml">
-            <form string="Receta de Producto">
+            <form string="Plantilla de Producto">
                 <header>
                     <button name="action_view_history"
                             string="Historial"
@@ -24,15 +24,18 @@
                                    widget="statinfo"
                                    string="Cambios"/>
                         </button>
-                        <field name="raw_material_count"
-                               widget="statinfo"
-                               string="Materiales"/>
+                        <button class="oe_stat_button"
+                                icon="fa-cubes">
+                            <field name="raw_material_count"
+                                   widget="statinfo"
+                                   string="Materiales"/>
+                        </button>
                     </div>
 
                     <div class="oe_title">
                         <h1>
                             <field name="name"
-                                   placeholder="Nombre de la receta"/>
+                                   placeholder="Nombre de la plantilla"/>
                         </h1>
                         <div class="oe_subtypes">
                             <field name="product_id" readonly="1"/>
@@ -50,7 +53,7 @@
                             <field name="company_id"
                                    groups="base.group_multi_company"/>
                             <field name="active"
-                                   string="Receta Activa"/>
+                                   string="Plantilla Activa"/>
                         </group>
                     </group>
 
@@ -80,7 +83,7 @@
                         <page string="Notas" name="notes"
                               icon="fa-sticky-note-o">
                             <field name="note"
-                                   placeholder="Notas de la receta..."
+                                   placeholder="Notas de la plantilla..."
                                    nolabel="1"/>
                         </page>
                     </notebook>
@@ -94,10 +97,10 @@
         <field name="name">inventory.calculator.recipe.tree</field>
         <field name="model">inventory.calculator.recipe</field>
         <field name="arch" type="xml">
-            <tree string="Recetas de Productos"
+            <tree string="Plantillas de Productos"
                   decoration-muted="not active">
                 <field name="product_id" string="Producto"/>
-                <field name="name" string="Receta"/>
+                <field name="name" string="Plantilla"/>
                 <field name="raw_material_count"
                        string="Materiales"
                        sum="Total"/>
@@ -116,7 +119,7 @@
         <field name="name">inventory.calculator.recipe.search</field>
         <field name="model">inventory.calculator.recipe</field>
         <field name="arch" type="xml">
-            <search string="Buscar Recetas">
+            <search string="Buscar Plantillas">
                 <field name="name"/>
                 <field name="product_id"/>
                 <separator/>
@@ -138,18 +141,18 @@
 
     <!-- ACTION -->
     <record id="inventory_calculator_recipe_action" model="ir.actions.act_window">
-        <field name="name">Recetas de Productos</field>
+        <field name="name">Plantillas de Productos</field>
         <field name="res_model">inventory.calculator.recipe</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="inventory_calculator_recipe_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Crear su primera receta de producto
+                Crear su primera plantilla de producto
             </p>
             <p>
                 Defina que materia prima necesita cada producto final.
                 Al crear un registro en la calculadora, el sistema
-                buscara automaticamente la receta y calculara costos.
+                buscara automaticamente la plantilla y calculara costos.
             </p>
         </field>
     </record>
@@ -159,14 +162,14 @@
         <field name="name">inventory.calculator.recipe.log.tree</field>
         <field name="model">inventory.calculator.recipe.log</field>
         <field name="arch" type="xml">
-            <tree string="Historial de Recetas"
+            <tree string="Historial de Plantillas"
                   create="false" edit="false" delete="false"
                   decoration-success="action == 'created'"
                   decoration-warning="action == 'updated'"
                   decoration-info="action == 'lines_changed'"
                   decoration-muted="action in ('archived', 'unarchived')">
                 <field name="create_date" string="Fecha"/>
-                <field name="recipe_id" string="Receta"/>
+                <field name="recipe_id" string="Plantilla"/>
                 <field name="product_id" string="Producto"/>
                 <field name="action" string="Accion"
                        widget="badge"
@@ -201,7 +204,7 @@
                         icon="fa-cubes"/>
                 <separator/>
                 <group expand="0" string="Agrupar por">
-                    <filter string="Receta" name="group_by_recipe"
+                    <filter string="Plantilla" name="group_by_recipe"
                             context="{'group_by': 'recipe_id'}"/>
                     <filter string="Producto" name="group_by_product"
                             context="{'group_by': 'product_id'}"/>
@@ -218,7 +221,7 @@
 
     <!-- History Action -->
     <record id="inventory_calculator_recipe_log_action" model="ir.actions.act_window">
-        <field name="name">Historial de Recetas</field>
+        <field name="name">Historial de Plantillas</field>
         <field name="res_model">inventory.calculator.recipe.log</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="inventory_calculator_recipe_log_view_search"/>
@@ -226,13 +229,13 @@
 
     <!-- MENUS -->
     <menuitem id="menu_inventory_calculator_recipe"
-              name="Recetas de Productos"
+              name="Plantillas de Productos"
               parent="menu_inventory_calculator_root"
               action="inventory_calculator_recipe_action"
               sequence="30"/>
 
     <menuitem id="menu_inventory_calculator_recipe_log"
-              name="Historial de Recetas"
+              name="Historial de Plantillas"
               parent="menu_inventory_calculator_root"
               action="inventory_calculator_recipe_log_action"
               sequence="40"/>

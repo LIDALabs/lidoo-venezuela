@@ -3,13 +3,13 @@ from odoo import fields, models
 
 class InventoryCalculatorRecipeLog(models.Model):
     _name = "inventory.calculator.recipe.log"
-    _description = "Historial de Cambios de Recetas"
+    _description = "Historial de Cambios de Plantillas"
     _order = "create_date desc"
     _rec_name = "recipe_id"
 
     recipe_id = fields.Many2one(
         "inventory.calculator.recipe",
-        string="Receta",
+        string="Plantilla",
         required=True,
         ondelete="cascade",
         index=True,

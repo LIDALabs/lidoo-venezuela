@@ -108,24 +108,14 @@
                         </div>
                     </div>
 
-                    <!-- Ubicaciones -->
+                    <!-- Ubicacion -->
                     <group>
-                        <group string="Ubicaciones">
-                            <field name="location_src_id"
-                                   string="Origen"
-                                   required="state in ('draft', 'confirmed')"
-                                   placeholder="Donde estan las materias primas"/>
+                        <group string="Destino">
                             <field name="location_dest_id"
                                    string="Destino"
                                    required="state in ('draft', 'confirmed')"
                                    placeholder="Donde se guardan los productos terminados"/>
                             <field name="company_id" invisible="1"/>
-                        </group>
-                        <group string="Resumen">
-                            <field name="finished_product_count" readonly="1"/>
-                            <field name="raw_material_count" readonly="1"/>
-                            <field name="total_raw_cost" readonly="1"
-                                   options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
 
@@ -142,14 +132,14 @@
                             <field name="product_uom_id" readonly="1"
                                    string="Unidad"/>
                             <field name="recipe_id" readonly="1"
-                                   string="Receta"
+                                   string="Plantilla"
                                    optional="show"/>
                             <field name="quantity"
                                    string="Cantidad"
                                    required="1"/>
                             <field name="has_recipe" readonly="1"
                                    widget="boolean_toggle"
-                                   string="Receta"/>
+                                   string="Plantilla"/>
                             <field name="raw_cost_per_unit"
                                    readonly="1"
                                    string="Costo/Unit"
@@ -166,33 +156,51 @@
                     <div class="text-center mt-1 mb-2"
                          invisible="state != 'draft'">
                         <button name="action_compute_raw_materials"
-                                string="Calcular Materias Primas desde Recetas"
+                                string="Calcular Materias Primas desde Plantillas"
                                 type="object"
                                 class="btn-secondary"
                                 icon="fa-calculator"/>
                     </div>
 
-                    <!-- Materias Primas (solo lectura) -->
-                    <notebook invisible="not raw_material_ids">
-                        <page string="Materias Primas (referencia — no descuenta stock)"
-                              name="raw_materials">
-                            <field name="raw_material_ids" readonly="1" nolabel="1">
-                                <tree create="false" edit="false"
-                                      delete="false"
-                                      decoration-info="available_qty &gt; quantity"
-                                      decoration-danger="available_qty &lt; quantity">
-                                    <field name="product_id"
-                                           string="Materia Prima"/>
-                                    <field name="quantity"
-                                           string="Necesaria"/>
-                                    <field name="available_qty" readonly="1"
-                                           string="Disponible"/>
-                                    <field name="note" readonly="1"
-                                           string="Nota" optional="hide"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <!-- Resumen de totales -->
+                    <div class="oe_clear"/>
+                    <group col="2">
+                        <group/>
+                        <group string="Resumen" class="oe_right">
+                            <field name="finished_product_count" readonly="1"/>
+                            <field name="raw_material_count" readonly="1"/>
+                            <field name="total_raw_cost" readonly="1"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <!-- Materias Primas -->
+                    <separator string="Materias Primas"
+                               invisible="not raw_material_ids"/>
+                    <field name="raw_material_ids" readonly="1" nolabel="1"
+                           invisible="not raw_material_ids">
+                        <tree create="false" edit="false"
+                              delete="false"
+                              decoration-info="available_qty &gt; quantity"
+                              decoration-danger="available_qty &lt; quantity">
+                            <field name="product_id"
+                                   string="Materia Prima"/>
+                            <field name="quantity"
+                                   string="Necesaria"/>
+                            <field name="available_qty" readonly="1"
+                                   string="Disponible"/>
+                            <field name="unit_cost" readonly="1"
+                                   string="Costo/Unit"
+                                   optional="show"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_cost" readonly="1"
+                                   string="Costo Total"
+                                   optional="show"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="note" readonly="1"
+                                   string="Nota" optional="hide"/>
+                        </tree>
+                    </field>
 
                     <!-- Notas -->
                     <group string="Notas" invisible="state != 'draft'">
@@ -293,7 +301,7 @@
                 <field name="product_id" string="Producto"/>
                 <field name="product_uom_id" string="Unidad"/>
                 <field name="quantity" string="Cantidad"/>
-                <field name="has_recipe" string="Receta" widget="boolean_toggle"/>
+                <field name="has_recipe" string="Plantilla" widget="boolean_toggle"/>
                 <field name="raw_cost_per_unit"
                        string="Costo/Unit"
                        options="{'currency_field': 'currency_id'}"/>
@@ -328,7 +336,7 @@
                         </group>
                     </group>
                     <notebook invisible="not recipe_line_ids">
-                        <page string="Desglose de Receta" name="recipe">
+                        <page string="Desglose de Plantilla" name="recipe">
                             <field name="recipe_line_ids" nolabel="1">
                                 <tree>
                                     <field name="product_id"/>
@@ -397,7 +405,7 @@
                 Cree su primer registro de produccion
             </p>
             <p>
-                Seleccione productos finales que tengan receta,
+                Seleccione productos finales que tengan plantilla,
                 indique cantidades y procese. El sistema agrega
                 los productos finales al inventario.
             </p>

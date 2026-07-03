@@ -63,9 +63,8 @@ class InventoryCalculator(models.Model):
     location_src_id = fields.Many2one(
         "stock.location",
         string="Ubicacion Origen",
-        required=True,
         domain="[('usage', '=', 'internal')]",
-        help="Donde estan las materias primas.",
+        help="Donde estan las materias primas. Si no se indica, se usa la ubicacion fisica de cada producto.",
     )
     location_dest_id = fields.Many2one(
         "stock.location",
@@ -95,7 +94,7 @@ class InventoryCalculator(models.Model):
         compute="_compute_counts",
     )
 
-    # Materias Primas (calculadas desde recetas)
+    # Materias Primas (calculadas desde plantillas)
     raw_material_ids = fields.One2many(
         "inventory.calculator.raw.line",
         "calculator_id",
@@ -108,17 +107,17 @@ class InventoryCalculator(models.Model):
         compute="_compute_counts",
     )
     has_raw_without_recipe = fields.Boolean(
-        string="Tiene productos sin receta",
+        string="Tiene productos sin plantilla",
         compute="_compute_counts",
     )
 
-    # Filtro de productos (solo los que tienen receta)
+    # Filtro de productos (solo los que tienen plantilla)
     product_with_recipe_ids = fields.Many2many(
         "product.product",
         compute="_compute_product_with_recipe_ids",
         store=True,
         depends=["company_id"],
-        string="Productos con Receta",
+        string="Productos con Plantilla",
     )
 
     # Resumen de costos
@@ -156,7 +155,8 @@ class InventoryCalculator(models.Model):
 
     @api.depends("company_id")
     def _compute_virtual_location_id(self):
-        """Auto-detecta la ubicacion virtual de produccion desde el warehouse."""
+        """Auto-detecta la ubicacion virtual de produccion desde el warehouse.
+        Si no existe, la crea automaticamente."""
         for rec in self:
             if not rec.company_id:
                 rec.virtual_location_id = False
@@ -185,6 +185,16 @@ class InventoryCalculator(models.Model):
                     ],
                     limit=1,
                 )
+            if not production_loc and warehouse:
+                # Crear ubicación de producción si no existe
+                production_loc = self.env["stock.location"].create(
+                    {
+                        "name": _("Producción"),
+                        "usage": "production",
+                        "location_id": warehouse.view_location_id.id,
+                        "company_id": rec.company_id.id,
+                    }
+                )
             rec.virtual_location_id = production_loc
 
     @api.depends("finished_product_ids.raw_cost_total")
@@ -195,7 +205,7 @@ class InventoryCalculator(models.Model):
             )
 
     def _compute_product_with_recipe_ids(self):
-        """Retorna solo los productos que tienen una receta activa."""
+        """Retorna solo los productos que tienen una plantilla activa."""
         Recipe = self.env["inventory.calculator.recipe"]
         recipe_products = Recipe.sudo().search([("active", "=", True)]).mapped(
             "product_id"
@@ -256,9 +266,9 @@ class InventoryCalculator(models.Model):
                 )
         return super().unlink()
 
-    # Calculo de materias primas desde recetas
+    # Calculo de materias primas desde plantillas
     def action_compute_raw_materials(self):
-        """Calcula y llena las materias primas desde las recetas de todos
+        """Calcula y llena las materias primas desde las plantillas de todos
         los productos finales."""
         for rec in self:
             if not rec.finished_product_ids:
@@ -290,8 +300,8 @@ class InventoryCalculator(models.Model):
             if missing:
                 raise UserError(
                     _(
-                        "Los siguientes productos no tienen receta definida:\n%s\n"
-                        "Cree recetas en Inventario > Control de Produccion > Recetas de Productos."
+                        "Los siguientes productos no tienen plantilla definida:\n%s\n"
+                        "Cree plantillas en Inventario > Control de Produccion > Plantillas de Productos."
                     )
                     % "\n".join(f"• {name}" for name in missing)
                 )
@@ -331,20 +341,20 @@ class InventoryCalculator(models.Model):
                 raise UserError(
                     _("Agregue al menos un producto final.")
                 )
-            # Validar que todos tengan receta
-            sin_receta = rec.finished_product_ids.filtered(
+            # Validar que todos tengan plantilla
+            sin_plantilla = rec.finished_product_ids.filtered(
                 lambda l: not l.recipe_id
             )
-            if sin_receta:
+            if sin_plantilla:
                 nombres = "\n".join(
                     f"• {l.product_id.display_name}"
-                    for l in sin_receta
+                    for l in sin_plantilla
                 )
                 raise UserError(
                     _(
-                        "Los siguientes productos NO tienen receta:\n%s\n\n"
-                        "Cree recetas en Inventario > Control de Produccion "
-                        "> Recetas de Productos."
+                        "Los siguientes productos NO tienen plantilla:\n%s\n\n"
+                        "Cree plantillas en Inventario > Control de Produccion "
+                        "> Plantillas de Productos."
                     )
                     % nombres
                 )
@@ -418,6 +428,19 @@ class InventoryCalculator(models.Model):
                 subtype_xmlid="mail.mt_note",
             )
 
+    def _get_source_location(self, product):
+        """Devuelve la ubicacion de origen para un producto.
+        Usa physical_location_id del producto; si no tiene, usa la ubicacion
+        principal del almacen de la compania.
+        """
+        self.ensure_one()
+        if product.physical_location_id:
+            return product.physical_location_id
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.company_id.id)], limit=1
+        )
+        return warehouse.lot_stock_id if warehouse else False
+
     # Creacion de movimientos de stock
     def _validate_locations(self):
         """Valida que las ubicaciones requeridas esten configuradas."""
@@ -425,8 +448,6 @@ class InventoryCalculator(models.Model):
         errors = []
         if not self.virtual_location_id:
             errors.append(_("Ubicacion Virtual de Produccion"))
-        if not self.location_src_id:
-            errors.append(_("Ubicacion Origen"))
         if not self.location_dest_id:
             errors.append(_("Ubicacion Destino"))
         if errors:
@@ -441,14 +462,20 @@ class InventoryCalculator(models.Model):
     def _check_raw_material_availability(self):
         """Valida que haya stock suficiente de cada materia prima."""
         self.ensure_one()
-        needed = {}
+        needed_by_location = {}
         for line in self.raw_material_ids:
-            needed[line.product_id] = needed.get(line.product_id, 0.0) + line.quantity
+            location = self._get_source_location(line.product_id)
+            key = (line.product_id.id, location.id if location else False)
+            needed_by_location.setdefault(key, {"product": line.product_id, "location": location, "qty": 0.0})
+            needed_by_location[key]["qty"] += line.quantity
 
         shortages = []
-        for product, qty in needed.items():
+        for data in needed_by_location.values():
+            product = data["product"]
+            location = data["location"]
+            qty = data["qty"]
             available = product.with_context(
-                location=self.location_src_id.id
+                location=location.id if location else None
             ).free_qty
             if qty > available:
                 shortages.append(
@@ -465,12 +492,9 @@ class InventoryCalculator(models.Model):
         if shortages:
             raise UserError(
                 _(
-                    "No hay stock suficiente de materias primas en %(location)s:\n%s"
+                    "No hay stock suficiente de materias primas:\n%s"
                 )
-                % {
-                    "location": self.location_src_id.display_name,
-                    "shortages": "\n".join(shortages),
-                }
+                % "\n".join(shortages)
             )
 
     def _create_stock_moves(self):
@@ -484,7 +508,6 @@ class InventoryCalculator(models.Model):
         Move = self.env["stock.move"]
         MoveLine = self.env["stock.move.line"]
         virtual_loc = self.virtual_location_id
-        origin_loc = self.location_src_id
         dest_loc = self.location_dest_id
 
         for line in self.finished_product_ids:
@@ -492,6 +515,15 @@ class InventoryCalculator(models.Model):
             if line.recipe_id:
                 for rline in line.recipe_line_ids:
                     qty_needed = rline.quantity * line.quantity
+                    origin_loc = self._get_source_location(rline.product_id)
+                    if not origin_loc:
+                        raise UserError(
+                            _(
+                                "No se pudo determinar la ubicacion de origen para '%s'. "
+                                "Configure una ubicacion fisica en el producto o un almacen para la compania."
+                            )
+                            % rline.product_id.display_name
+                        )
                     raw_move = Move.create(
                         {
                             "name": f"[{self.name}] Salida: {rline.product_id.display_name}",
@@ -514,6 +546,7 @@ class InventoryCalculator(models.Model):
                             "quantity": qty_needed,
                             "location_id": origin_loc.id,
                             "location_dest_id": virtual_loc.id,
+                            "picked": True,
                         }
                     )
                     raw_move._action_confirm()
@@ -542,6 +575,7 @@ class InventoryCalculator(models.Model):
                     "quantity": line.quantity,
                     "location_id": virtual_loc.id,
                     "location_dest_id": dest_loc.id,
+                    "picked": True,
                 }
             )
             move._action_confirm()
@@ -589,6 +623,7 @@ class InventoryCalculator(models.Model):
                         "quantity": mline.quantity,
                         "location_id": mline.location_dest_id.id,
                         "location_dest_id": mline.location_id.id,
+                        "picked": True,
                     }
                 )
                 reverse_move._action_confirm()

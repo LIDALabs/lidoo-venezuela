@@ -32,22 +32,22 @@ class InventoryCalculatorFinishedLine(models.Model):
     )
     note = fields.Text(string="Nota")
 
-    # Receta
+    # Plantilla
     recipe_id = fields.Many2one(
         "inventory.calculator.recipe",
-        string="Receta",
+        string="Plantilla",
         compute="_compute_recipe_id",
         store=True,
     )
     has_recipe = fields.Boolean(
-        string="Tiene Receta",
+        string="Tiene Plantilla",
         compute="_compute_recipe_id",
         store=True,
     )
     recipe_line_ids = fields.One2many(
         "inventory.calculator.recipe.line",
         compute="_compute_recipe_line_ids",
-        string="Lineas de Receta",
+        string="Lineas de Plantilla",
     )
 
     # Costos

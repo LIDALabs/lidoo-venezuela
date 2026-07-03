@@ -33,6 +33,14 @@ class InventoryCalculatorRawLine(models.Model):
         string="Cantidad Disponible",
         compute="_compute_available_qty",
     )
+    unit_cost = fields.Float(
+        string="Costo/Unit",
+        compute="_compute_unit_cost",
+    )
+    total_cost = fields.Float(
+        string="Costo Total",
+        compute="_compute_total_cost",
+    )
     note = fields.Text(string="Nota")
 
     company_id = fields.Many2one(
@@ -40,21 +48,40 @@ class InventoryCalculatorRawLine(models.Model):
         related="calculator_id.company_id",
         readonly=True,
     )
+    currency_id = fields.Many2one(
+        "res.currency",
+        related="calculator_id.currency_id",
+        readonly=True,
+    )
 
-    @api.depends("product_id", "calculator_id.location_src_id")
+    @api.depends("product_id")
+    def _compute_unit_cost(self):
+        for line in self:
+            line.unit_cost = line.product_id.standard_price if line.product_id else 0.0
+
+    @api.depends("unit_cost", "quantity")
+    def _compute_total_cost(self):
+        for line in self:
+            line.total_cost = line.unit_cost * line.quantity
+
+    @api.depends("product_id")
     def _compute_available_qty(self):
         for line in self:
-            if line.product_id and line.calculator_id.location_src_id:
-                quants = self.env["stock.quant"].search(
-                    [
-                        ("product_id", "=", line.product_id.id),
-                        (
-                            "location_id",
-                            "=",
-                            line.calculator_id.location_src_id.id,
-                        ),
-                    ]
+            if line.product_id:
+                # Usar la ubicación física del producto, o la del almacén
+                location = (
+                    line.product_id.physical_location_id
+                    or line.product_id.warehouse_id.lot_stock_id
                 )
-                line.available_qty = sum(quants.mapped("quantity"))
+                if location:
+                    quants = self.env["stock.quant"].search(
+                        [
+                            ("product_id", "=", line.product_id.id),
+                            ("location_id", "=", location.id),
+                        ]
+                    )
+                    line.available_qty = sum(quants.mapped("quantity"))
+                else:
+                    line.available_qty = 0.0
             else:
                 line.available_qty = 0.0
