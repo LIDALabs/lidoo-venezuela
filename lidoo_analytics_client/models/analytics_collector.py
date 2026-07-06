@@ -84,7 +84,8 @@ class LidooAnalyticsCollector(models.AbstractModel):
 
         modules_list = [
             {"name": m.name, "version": m.installed_version or "",
-             "is_custom": m.name in custom_module_names}
+             "is_custom": m.name in custom_module_names,
+             "author": m.author or ""}
             for m in installed_modules
         ]
 
