@@ -304,8 +304,11 @@ class LidooAnalyticsTicket(models.Model):
     def _clickup_create_task(self, token, list_id):
         """Create a ClickUp task and return its id."""
         url = f"https://api.clickup.com/api/v2/list/{list_id}/task"
+        title_prefix = (self.description or "Ticket").strip().split("\n")[0][:40]
+        if len(title_prefix) < len(self.description or ""):
+            title_prefix = f"{title_prefix}..."
         payload = {
-            "name": f"Incidencia #{self.id} - DB: {self.db_name or 'N/A'}",
+            "name": f"Ticket #{self.id}: {title_prefix}",
             "description": self._build_clickup_description(),
             "status": "open",
             "priority": 3,
@@ -371,17 +374,29 @@ class LidooAnalyticsTicket(models.Model):
     def _build_clickup_description(self):
         """Build the ClickUp task description in markdown."""
         lines = [
-            f"**Usuario:** {self.user_id.name or 'N/A'}",
-            f"**Base de Datos/Empresa:** {self.db_name or 'N/A'}",
-            f"**Ruta:** {self.current_route or 'N/A'}",
+            "## Ticket de Incidencia",
             "",
-            "**Descripción:**",
+            f"**ID interno:** {self.id}",
+            f"**Usuario reportante:** {self.user_id.name or 'N/A'}",
+            f"**Base de Datos/Empresa:** {self.db_name or 'N/A'}",
+            f"**Fecha:** {self.create_date}",
+            "",
+            "### Ruta",
+            f"`{self.current_route or 'N/A'}`",
+            "",
+            "### Descripción",
             self.description or "Sin descripción",
         ]
 
         if self.server_logs:
             logs = self.server_logs[:2000]
-            lines.extend(["", "**Logs del servidor:**", "```", logs, "```"])
+            lines.extend([
+                "",
+                "### Logs del servidor",
+                "```text",
+                logs,
+                "```",
+            ])
 
         return "\n".join(lines)
 
