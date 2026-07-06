@@ -31,4 +31,5 @@
         "wizard/account_retention_alert_views.xml",
         "views/account_journal.xml",
     ],
+    "installable": False,
 }

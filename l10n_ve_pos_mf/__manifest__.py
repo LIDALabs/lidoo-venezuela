@@ -33,8 +33,8 @@
         ],
     },
     "images": ["static/description/l10n_ve.png"],
-    "installable": False,
     "application": False,
     "auto_install": False,
     "binaural": True,
+    "installable": False,
 }

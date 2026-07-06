@@ -19,4 +19,5 @@
     ],
     "images": ["static/description/l10n_ve.png"],
     "application": True,
+    "installable": False,
 }
