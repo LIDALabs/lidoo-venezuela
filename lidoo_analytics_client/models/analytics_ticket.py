@@ -2,8 +2,8 @@ import base64
 import io
 import json
 import logging
-
-import requests
+import urllib.request
+from urllib.parse import urlencode
 
 from odoo import api, fields, models
 
@@ -74,7 +74,7 @@ class LidooAnalyticsTicket(models.Model):
                 try:
                     image_bytes = base64.b64decode(raw)
                     filename = self.screenshot_filename or f"ticket_{self.id}.png"
-                    files["file[0]"] = (filename, io.BytesIO(image_bytes), "image/png")
+                    files[filename] = image_bytes
                     # Reference the attached file so Discord renders it inline
                     payload["embeds"][0]["image"] = {"url": f"attachment://{filename}"}
                     _logger.info(
@@ -94,36 +94,94 @@ class LidooAnalyticsTicket(models.Model):
                 list(files.keys()) or "none",
             )
 
-            resp = requests.post(
+            # Build multipart request manually using urllib
+            boundary = "----OdooBoundary"
+            body = []
+
+            # Add payload_json field
+            body.append(f"--{boundary}")
+            body.append('Content-Disposition: form-data; name="payload_json"')
+            body.append("")
+            body.append(payload_json)
+
+            # Add file if exists
+            if files:
+                for fname, fcontent in files.items():
+                    body.append(f"--{boundary}")
+                    body.append(f'Content-Disposition: form-data; name="file"; filename="{fname}"')
+                    body.append("Content-Type: image/png")
+                    body.append("")
+                    body.append(fcontent.decode("latin1") if isinstance(fcontent, bytes) else fcontent)
+
+            body.append(f"--{boundary}--")
+            body.append("")
+
+            data = "\r\n".join(body).encode("utf-8")
+            if files:
+                # If we have binary content, we need to handle it differently
+                # Rebuild with proper binary handling
+                body_lines = []
+                body_lines.append(f"--{boundary}".encode())
+                body_lines.append(b'Content-Disposition: form-data; name="payload_json"')
+                body_lines.append(b"")
+                body_lines.append(payload_json.encode())
+
+                for fname, fcontent in files.items():
+                    body_lines.append(f"--{boundary}".encode())
+                    body_lines.append(f'Content-Disposition: form-data; name="file"; filename="{fname}"'.encode())
+                    body_lines.append(b"Content-Type: image/png")
+                    body_lines.append(b"")
+                    body_lines.append(fcontent if isinstance(fcontent, bytes) else fcontent.encode())
+
+                body_lines.append(f"--{boundary}--".encode())
+                body_lines.append(b"")
+                data = b"\r\n".join(body_lines)
+
+            req = urllib.request.Request(
                 webhook_url,
-                data={"payload_json": payload_json},
-                files=files,
-                timeout=30,
+                data=data,
+                headers={
+                    "Content-Type": f"multipart/form-data; boundary={boundary}",
+                },
+                method="POST",
             )
 
-            _logger.info(
-                "Ticket %s Discord response: HTTP %s, body=%s",
-                self.id,
-                resp.status_code,
-                resp.text[:500],
-            )
-
-            if resp.ok:
-                _logger.info("Ticket %s sent to Discord (HTTP %s)", self.id, resp.status_code)
-                self.write({"state": "sent", "error_message": False})
-            else:
-                _logger.warning(
-                    "Ticket %s failed: HTTP %s %s",
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                resp_body = resp.read().decode("utf-8")[:500]
+                status_code = resp.status
+                _logger.info(
+                    "Ticket %s Discord response: HTTP %s, body=%s",
                     self.id,
-                    resp.status_code,
-                    resp.text[:200],
+                    status_code,
+                    resp_body,
                 )
-                self.write({
-                    "state": "failed",
-                    "error_message": f"HTTP {resp.status_code}: {resp.text[:500]}",
-                })
 
-        except requests.RequestException as e:
+                if status_code >= 200 and status_code < 300:
+                    _logger.info("Ticket %s sent to Discord (HTTP %s)", self.id, status_code)
+                    self.write({"state": "sent", "error_message": False})
+                else:
+                    _logger.warning(
+                        "Ticket %s failed: HTTP %s %s",
+                        self.id,
+                        status_code,
+                        resp_body[:200],
+                    )
+                    self.write({
+                        "state": "failed",
+                        "error_message": f"HTTP {status_code}: {resp_body[:500]}",
+                    })
+
+        except urllib.error.HTTPError as e:
+            resp_body = e.read().decode("utf-8")[:500]
+            _logger.warning(
+                "Ticket %s Discord HTTP error: %s, body=%s",
+                self.id,
+                e.code,
+                resp_body,
+                exc_info=True,
+            )
+            self.write({"state": "failed", "error_message": f"HTTP {e.code}: {resp_body[:256]}"})
+        except urllib.error.URLError as e:
             _logger.warning("Request error sending ticket %s: %s", self.id, e, exc_info=True)
             self.write({"state": "failed", "error_message": str(e)[:256]})
         except Exception as e:
