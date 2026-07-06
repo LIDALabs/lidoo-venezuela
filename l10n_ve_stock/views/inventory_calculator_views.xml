@@ -137,10 +137,7 @@
                             <field name="quantity"
                                    string="Cantidad"
                                    required="1"/>
-                            <field name="has_recipe" readonly="1"
-                                   widget="boolean_toggle"
-                                   string="Plantilla"/>
-                            <field name="raw_cost_per_unit"
+                             <field name="raw_cost_per_unit"
                                    readonly="1"
                                     string="Costo Unitario"
                                    options="{'currency_field': 'currency_id'}"/>
