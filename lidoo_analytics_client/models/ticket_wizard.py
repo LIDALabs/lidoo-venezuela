@@ -14,7 +14,7 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
     screenshot_filename = fields.Char(string="Nombre de archivo")
     current_route = fields.Char(string="Ruta actual")
     server_logs = fields.Text(string="Registros del servidor")
-    db_name = fields.Char(string="Base de datos")
+    db_name = fields.Char(string="Base de Datos/Empresa")
 
     @api.model
     def default_get(self, fields_list):

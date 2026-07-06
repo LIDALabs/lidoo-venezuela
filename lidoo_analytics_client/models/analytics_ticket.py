@@ -39,7 +39,7 @@ class LidooAnalyticsTicket(models.Model):
     user_id = fields.Many2one(
         "res.users", string="Usuario", default=lambda self: self.env.user, readonly=True
     )
-    db_name = fields.Char(string="Base de datos", readonly=True)
+    db_name = fields.Char(string="Base de Datos/Empresa", readonly=True)
 
     @api.depends("screenshot")
     def _compute_has_screenshot(self):
@@ -209,7 +209,7 @@ class LidooAnalyticsTicket(models.Model):
                     "inline": True,
                 },
                 {
-                    "name": "Base de datos",
+                    "name": "Base de Datos/Empresa",
                     "value": db_info[:1024],
                     "inline": True,
                 },
