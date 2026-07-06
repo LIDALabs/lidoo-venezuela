@@ -1094,3 +1094,31 @@ class AccountMove(models.Model):
                     "Los términos de pago son obligatorios para las facturas. "
                     "Por favor seleccione un término de pago antes de confirmar."
                 ))
+
+    def action_open_initial_balance_wizard(self):
+        """Open the initial balance import wizard."""
+        self.ensure_one()
+        # Find the initial balance journal automatically
+        Journal = self.env["account.journal"]
+        journal = Journal.search([
+            ("type", "=", "general"),
+            ("company_id", "=", self.env.company.id),
+            ("name", "ilike", "saldos iniciales"),
+        ], limit=1)
+        if not journal:
+            journal = Journal.search([
+                ("type", "=", "general"),
+                ("company_id", "=", self.env.company.id),
+            ], limit=1)
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Import Initial Balances",
+            "res_model": "account.initial.balance.import",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_move_id": self.id,
+                "default_company_id": self.env.company.id,
+                "default_journal_id": journal.id if journal else False,
+            },
+        }

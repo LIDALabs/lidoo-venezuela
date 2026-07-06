@@ -9,6 +9,12 @@
                 <div class="alert alert-warning mb-0" role="alert" invisible="foreign_balance == 0">
                     Warning: This account move has a foreign balance of <field
                         name="foreign_balance" />. </div>
+                <button name="action_open_initial_balance_wizard"
+                        string="Import Initial Balances"
+                        type="object"
+                        class="btn-primary"
+                        invisible="move_type != 'entry' or state != 'draft'"
+                        icon="fa-upload"/>
             </xpath>
             <xpath expr="//header/button[@name='button_cancel']" position="after">
                 <button name="action_update_account_id" string="Update account lines" type="object"
