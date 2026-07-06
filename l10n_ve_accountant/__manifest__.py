@@ -46,6 +46,7 @@
         "wizard/invoices_details.xml",
         "wizard/payment_report.xml",
         "wizard/move_action_post_alert_views.xml",
+        "wizard/account_initial_balance_import_views.xml",
     ],
     "images": ["static/description/l10n_ve.png"],
     "application": True,

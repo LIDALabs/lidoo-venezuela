@@ -1271,3 +1271,453 @@ msgstr "Notas de Crédito"
 #: model:ir.ui.menu,name:account.menu_action_account_payments_receivable
 msgid "Collections"
 msgstr "Cobranzas"
+
+#. module: l10n_ve_accountant
+#: model:ir.model,name:l10n_ve_accountant.model_account_initial_balance_import
+msgid "Import Initial Account Balances"
+msgstr "Importar Saldos Iniciales"
+
+#. module: l10n_ve_accountant
+#: model:ir.model,name:l10n_ve_accountant.model_account_initial_balance_import_line
+msgid "Initial Balance Import Line"
+msgstr "Línea de Importación de Saldo Inicial"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Import Initial Balances"
+msgstr "Importar Saldos Iniciales"
+
+#. module: l10n_ve_accountant
+#: model:ir.actions.act_window,name:l10n_ve_accountant.action_account_initial_balance_import
+msgid "Import Initial Balances"
+msgstr "Importar Saldos Iniciales"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.view_account_move_form_l10n_ve_accountant
+msgid "Import Initial Balances"
+msgstr "Importar Saldos Iniciales"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Download Template"
+msgstr "Descargar Plantilla"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Validate"
+msgstr "Validar"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Create Journal Entry"
+msgstr "Crear Asiento Contable"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Step 1: Configuration"
+msgstr "Paso 1: Configuración"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Step 2: Upload File"
+msgstr "Paso 2: Cargar Archivo"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__journal_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__file
+msgid "File"
+msgstr "Archivo"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__filename
+msgid "File Name"
+msgstr "Nombre del Archivo"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__line_ids
+msgid "Import Lines"
+msgstr "Líneas de Importación"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__error_count
+msgid "Errors"
+msgstr "Errores"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__warning_count
+msgid "Warnings"
+msgstr "Advertencias"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__valid_count
+msgid "Valid Lines"
+msgstr "Líneas Válidas"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import__move_id
+msgid "Journal Entry"
+msgstr "Asiento Contable"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__row_number
+msgid "Row"
+msgstr "Fila"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__account_id
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__account_code
+msgid "Account Code"
+msgstr "Código de Cuenta"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__partner_id
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__partner_name
+msgid "Partner Name"
+msgstr "Nombre de la Empresa"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__partner_vat
+msgid "Partner Tax ID"
+msgstr "RIF de la Empresa"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__debit
+msgid "Debit"
+msgstr "Débito"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__credit
+msgid "Credit"
+msgstr "Crédito"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__amount_currency
+msgid "Amount Currency"
+msgstr "Monto en Moneda"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__reference
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__analytic_account_id
+msgid "Analytic Account"
+msgstr "Cuenta Analítica"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__tax_id
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__notes
+msgid "Notes"
+msgstr "Notas"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Preview Lines"
+msgstr "Vista Previa de Líneas"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Template Help"
+msgstr "Ayuda de la Plantilla"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "CSV/XLS Template Format"
+msgstr "Formato de Plantilla CSV/XLS"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Required Columns"
+msgstr "Columnas Requeridas"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Optional Columns"
+msgstr "Columnas Opcionales"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Validation Successful"
+msgstr "Validación Exitosa"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "View Entry"
+msgstr "Ver Asiento"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import__state__validated
+msgid "Validated"
+msgstr "Validado"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import__state__done
+msgid "Done"
+msgstr "Hecho"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import_line__state__valid
+msgid "Valid"
+msgstr "Válido"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import_line__state__warning
+msgid "Warning"
+msgstr "Advertencia"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields.selection,name:l10n_ve_accountant.selection__account_initial_balance_import_line__state__error
+msgid "Error"
+msgstr "Error"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__analytic_name
+msgid "Analytic Name"
+msgstr "Nombre Analítico"
+
+#. module: l10n_ve_accountant
+#: model:ir.model.fields,field_description:l10n_ve_accountant.field_account_initial_balance_import_line__tax_name
+msgid "Tax Name"
+msgstr "Nombre del Impuesto"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "The journal must be of type 'General' for initial balance entries."
+msgstr "El diario debe ser de tipo 'General' para asientos de saldos iniciales."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Please upload a file first."
+msgstr "Por favor suba un archivo primero."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Unsupported file format. Please upload a CSV or XLS/XLSX file."
+msgstr "Formato de archivo no soportado. Suba un archivo CSV o XLS/XLSX."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "The file must have a header row and at least one data row."
+msgstr "El archivo debe tener una fila de encabezado y al menos una fila de datos."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Unable to decode the file. Please use UTF-8 or Latin-1 encoding."
+msgstr "No se pudo decodificar el archivo. Use codificación UTF-8 o Latin-1."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "The file is empty."
+msgstr "El archivo está vacío."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "XLS support requires openpyxl library. Please install it: pip install openpyxl"
+msgstr "El soporte XLSX requiere la librería openpyxl. Instale: pip install openpyxl"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Missing required columns: %s\n\nRequired columns: %s\nOptional columns: %s"
+msgstr "Faltan columnas requeridas: %s\n\nColumnas requeridas: %s\nColumnas opcionales: %s"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Validation errors found:\n\n%s"
+msgstr "Errores de validación encontrados:\n\n%s"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "No valid lines found in the file."
+msgstr "No se encontraron líneas válidas en el archivo."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid ""
+"Journal entry is not balanced!\n\n"
+"Total Debit: %.2f\n"
+"Total Credit: %.2f\n"
+"Difference: %.2f\n\n"
+"Please adjust your file to balance the entry."
+msgstr ""
+"¡El asiento contable no está cuadrado!\n\n"
+"Total Débito: %.2f\n"
+"Total Crédito: %.2f\n"
+"Diferencia: %.2f\n\n"
+"Ajuste su archivo para cuadrar el asiento."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Validation Successful"
+msgstr "Validación Exitosa"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Found %d valid lines. Total Debit: %.2f, Total Credit: %.2f"
+msgstr "Se encontraron %d líneas válidas. Total Débito: %.2f, Total Crédito: %.2f"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Please validate the file first."
+msgstr "Por favor valide el archivo primero."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "No lines to import."
+msgstr "No hay líneas para importar."
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "Initial Balance Import"
+msgstr "Importación de Saldos Iniciales"
+
+#. module: l10n_ve_accountant
+#. odoo-python
+#: code:addons/l10n_ve_accountant/wizard/account_initial_balance_import.py:0
+#, python-format
+msgid "XLS template requires xlwt library. Please install it: pip install xlwt"
+msgstr "La plantilla XLS requiere la librería xlwt. Instale: pip install xlwt"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "Upload File"
+msgstr "Cargar Archivo"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid "XLS Template Format"
+msgstr "Formato de Plantilla XLS"
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid ""
+"<strong>Required:</strong> Account Code, Debit, Credit. <strong>Optional:</strong> "
+"Partner, Partner Tax ID, Currency, Amount Currency, Reference, Description, "
+"Analytic Account, Tax. Download the template for the full format."
+msgstr ""
+"<strong>Requerido:</strong> Código de Cuenta, Débito, Crédito. "
+"<strong>Opcional:</strong> Proveedor/Cliente, RIF/Cédula, Moneda, Monto Moneda, "
+"Referencia, Descripción, Cuenta Analítica, Impuesto. Descargue la plantilla "
+"para el formato completo."
+
+#. module: l10n_ve_accountant
+#: model_terms:ir.ui.view,arch_db:l10n_ve_accountant.account_initial_balance_import_form
+msgid ""
+"<strong>Note:</strong> The journal entry must be balanced (Total Debit = Total "
+"Credit). The system will validate this before allowing you to create the entry."
+msgstr ""
+"<strong>Nota:</strong> El asiento contable debe estar cuadrado (Total Débito = "
+"Total Crédito). El sistema validará esto antes de permitirle crear el asiento."
+
+#. module: l10n_ve_accountant
+#: model:help:l10n_ve_accountant,field_account_initial_balance_import__journal_id
+msgid "General journal for initial balance entries"
+msgstr "Diario general para asientos de saldos iniciales"
+
+#. module: l10n_ve_accountant
+#: model:help:l10n_ve_accountant,field_account_initial_balance_import__date
+msgid "Date for the initial balance entries"
+msgstr "Fecha para los asientos de saldos iniciales"
+
+#. module: l10n_ve_accountant
+#: model:help:l10n_ve_accountant,field_account_initial_balance_import__file
+msgid "CSV or XLSX file with initial balances"
+msgstr "Archivo CSV o XLSX con saldos iniciales"
+
+#. module: l10n_ve_accountant
+#: model:help:l10n_ve_accountant,field_account_initial_balance_import__move_id
+msgid "Created journal entry"
+msgstr "Asiento contable creado"
