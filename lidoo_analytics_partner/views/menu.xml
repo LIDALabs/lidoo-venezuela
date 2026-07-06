@@ -7,5 +7,9 @@
 
     <menuitem id="menu_lidoo_analytics_reports" name="Reports" parent="menu_lidoo_analytics_root" action="action_lidoo_analytics_report" sequence="20" />
 
+    <menuitem id="menu_lidoo_analytics_modules" name="Módulos" parent="menu_lidoo_analytics_root" sequence="25" />
+    <menuitem id="menu_lidoo_analytics_module_summary" name="Resumen" parent="menu_lidoo_analytics_modules" action="action_lidoo_analytics_module_summary" sequence="10" />
+    <menuitem id="menu_lidoo_analytics_report_modules" name="Todos los módulos" parent="menu_lidoo_analytics_modules" action="action_lidoo_analytics_report_modules" sequence="20" />
+
     <menuitem id="menu_lidoo_analytics_alerts" name="Alerts" parent="menu_lidoo_analytics_root" action="action_lidoo_analytics_alert" sequence="30" />
 </odoo>

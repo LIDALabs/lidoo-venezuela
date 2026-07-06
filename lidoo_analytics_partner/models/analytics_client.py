@@ -216,6 +216,10 @@ class LidooAnalyticsClient(models.Model):
                     'message': 'Report fetched successfully',
                     'type': 'success',
                     'sticky': False,
+                    'next': {
+                        'type': 'ir.actions.client',
+                        'tag': 'soft_reload',
+                    },
                 }
             }
         else:

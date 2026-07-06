@@ -42,7 +42,10 @@
                     </group>
                     <group>
                         <group string="Modules">
-                            <field name="custom_module_count" />
+                            <div class="o_row">
+                                <field name="custom_module_count" />
+                                <button name="action_open_modules" string="Módulos" type="object" class="btn-sm btn-secondary" icon="fa-search" title="Abrir módulos con búsqueda"/>
+                            </div>
                         </group>
                         <group string="Hardware">
                             <field name="cpu_usage" widget="progressbar" />
@@ -52,14 +55,17 @@
                     <group string="Code Version">
                         <field name="lidoo_commit_hash" />
                     </group>
+                    <group>
+                        <field name="module_filter_name" placeholder="Escribí para filtrar módulos..." />
+                    </group>
                     <notebook>
-                        <page name="modules" string="Installed Modules">
-                            <field name="module_ids" />
+                        <page name="modules" string="Módulos instalados">
+                            <field name="filtered_module_ids" />
                         </page>
-                        <page name="lidoo-modules" string="Lidoo Modules">
-                            <field name="lidoo_module_ids" />
+                        <page name="lidoo-modules" string="Módulos Lidoo">
+                            <field name="filtered_custom_module_ids" />
                         </page>
-                        <page name="raw" string="Raw Payload">
+                        <page name="raw" string="Payload crudo">
                             <field name="raw_payload" widget="text" />
                         </page>
                     </notebook>

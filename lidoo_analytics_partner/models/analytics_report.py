@@ -87,12 +87,23 @@ class LidooAnalyticsReport(models.Model):
         compute="_compute_module_ids",
         store=True
     )
-    lidoo_module_ids = fields.One2many(
+
+    module_filter_name = fields.Char(
+        string="Buscar módulos",
+    )
+
+    filtered_module_ids = fields.One2many(
         "lidoo.analytics.report.modules",
         "report_id",
-        string="Lidoo Modules",
-        compute="_compute_lidoo_module_ids",
-        store=True
+        string="Módulos instalados",
+        compute="_compute_filtered_module_ids",
+    )
+
+    filtered_custom_module_ids = fields.One2many(
+        "lidoo.analytics.report.modules",
+        "report_id",
+        string="Módulos Lidoo",
+        compute="_compute_filtered_custom_module_ids",
     )
 
     def _compute_uptime_display(self):
@@ -116,6 +127,21 @@ class LidooAnalyticsReport(models.Model):
                 record.database_size_display = f"{size} B"
 
 
+    def action_open_modules(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Módulos",
+            "res_model": "lidoo.analytics.report.modules",
+            "view_mode": "tree",
+            "search_view_id": self.env.ref(
+                "lidoo_analytics_partner.view_lidoo_analytics_report_modules_search"
+            ).id,
+            "domain": [("report_id", "=", self.id)],
+            "context": {"create": False, "edit": False, "delete": False},
+            "target": "current",
+        }
+
     @api.depends('installed_modules')
     def _compute_module_ids(self):
         for record in self:
@@ -128,10 +154,25 @@ class LidooAnalyticsReport(models.Model):
                     'report_id': record.id,
                     'name': mod.get('name', ''),
                     'version': mod.get('version', ''),
+                    'author': mod.get('author', ''),
                     'is_custom': mod.get('is_custom', False),
                 })
 
-    @api.depends('module_ids')
-    def _compute_lidoo_module_ids(self):
+    @api.depends('module_ids', 'module_filter_name')
+    def _compute_filtered_module_ids(self):
         for record in self:
-            record.lidoo_module_ids = record.module_ids.filtered('is_custom')
+            modules = record.module_ids
+            if record.module_filter_name:
+                query = record.module_filter_name.lower()
+                modules = modules.filtered(lambda m: query in (m.name or '').lower())
+            record.filtered_module_ids = modules
+
+    @api.depends('module_ids', 'module_filter_name')
+    def _compute_filtered_custom_module_ids(self):
+        for record in self:
+            modules = record.module_ids.filtered(lambda m: m.is_custom)
+            if record.module_filter_name:
+                query = record.module_filter_name.lower()
+                modules = modules.filtered(lambda m: query in (m.name or '').lower())
+            record.filtered_custom_module_ids = modules
+

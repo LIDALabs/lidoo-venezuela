@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lidoo_analytics_report_modules_latest_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.modules.latest.tree</field>
+        <field name="model">lidoo.analytics.report.modules.latest</field>
+        <field name="arch" type="xml">
+            <tree string="Última versión por cliente" create="false" edit="false" delete="false">
+                <field name="client_id" string="Cliente"/>
+                <field name="report_date" string="Fecha del reporte"/>
+                <field name="name" string="Módulo"/>
+                <field name="version" string="Versión"/>
+                <field name="is_custom" string="Custom"/>
+                <field name="author" string="Autor" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_lidoo_analytics_report_modules_latest_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.modules.latest.search</field>
+        <field name="model">lidoo.analytics.report.modules.latest</field>
+        <field name="arch" type="xml">
+            <search string="Última versión por cliente">
+                <field name="name" string="Módulo"/>
+                <field name="client_id" string="Cliente"/>
+                <field name="version" string="Versión"/>
+                <filter name="filter_custom" string="Módulos custom" domain="[('is_custom', '=', True)]"/>
+                <filter name="filter_standard" string="Módulos estándar" domain="[('is_custom', '=', False)]"/>
+                <group string="Agrupar por" expand="0">
+                    <filter name="group_client" string="Cliente" context="{'group_by': 'client_id'}"/>
+                    <filter name="group_custom" string="Custom" context="{'group_by': 'is_custom'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

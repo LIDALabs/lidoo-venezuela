@@ -22,6 +22,8 @@
         "views/analytics_report_views.xml",
         "views/analytics_alert_views.xml",
         "views/analytics_report_modules_views.xml",
+        "views/analytics_report_modules_latest_views.xml",
+        "views/analytics_module_summary_views.xml",
         "views/menu.xml",
         "data/ir_cron.xml",
     ],

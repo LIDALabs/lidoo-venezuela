@@ -4,15 +4,47 @@
         <field name="name">lidoo.analytics.report.modules.tree</field>
         <field name="model">lidoo.analytics.report.modules</field>
         <field name="arch" type="xml">
-            <tree string="Modules" 
-                create="false" 
-                edit="false" 
-                delete="false" 
-                limit="20" 
+            <tree string="Módulos"
+                create="false"
+                edit="false"
+                delete="false"
+                limit="40"
                 default_order="name asc">
-                <field name="name" string="Module Name"/>
-                <field name="version" string="Version"/>
+                <field name="client_id" string="Cliente"/>
+                <field name="report_date" string="Fecha del reporte"/>
+                <field name="name" string="Módulo"/>
+                <field name="version" string="Versión"/>
+                <field name="is_custom" string="Custom" optional="show"/>
+                <field name="author" string="Autor" optional="hide"/>
             </tree>
         </field>
+    </record>
+
+    <record id="view_lidoo_analytics_report_modules_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.report.modules.search</field>
+        <field name="model">lidoo.analytics.report.modules</field>
+        <field name="arch" type="xml">
+            <search string="Módulos">
+                <field name="name" string="Módulo"/>
+                <field name="client_id" string="Cliente"/>
+                <field name="version" string="Versión"/>
+                <filter name="filter_custom" string="Módulos custom" domain="[('is_custom', '=', True)]"/>
+                <filter name="filter_standard" string="Módulos estándar" domain="[('is_custom', '=', False)]"/>
+                <group string="Agrupar por" expand="0">
+                    <filter name="group_name" string="Módulo" context="{'group_by': 'name'}"/>
+                    <filter name="group_client" string="Cliente" context="{'group_by': 'client_id'}"/>
+                    <filter name="group_custom" string="Custom" context="{'group_by': 'is_custom'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_lidoo_analytics_report_modules" model="ir.actions.act_window">
+        <field name="name">Módulos</field>
+        <field name="res_model">lidoo.analytics.report.modules</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_lidoo_analytics_report_modules_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
     </record>
 </odoo>

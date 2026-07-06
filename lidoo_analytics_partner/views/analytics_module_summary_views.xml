@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lidoo_analytics_module_summary_tree" model="ir.ui.view">
+        <field name="name">lidoo.analytics.module.summary.tree</field>
+        <field name="model">lidoo.analytics.module.summary</field>
+        <field name="arch" type="xml">
+            <tree string="Resumen de módulos" create="false" edit="false" delete="false">
+                <field name="name" string="Módulo"/>
+                <field name="client_count" string="Clientes"/>
+                <field name="last_version" string="Última versión"/>
+                <field name="last_report_date" string="Último reporte"/>
+                <field name="is_custom" string="Custom"/>
+                <button name="action_view_clients" string="Ver clientes" type="object" icon="fa-search" title="Ver clientes y versiones"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_lidoo_analytics_module_summary_search" model="ir.ui.view">
+        <field name="name">lidoo.analytics.module.summary.search</field>
+        <field name="model">lidoo.analytics.module.summary</field>
+        <field name="arch" type="xml">
+            <search string="Resumen de módulos">
+                <field name="name" string="Módulo"/>
+                <filter name="filter_custom" string="Módulos custom" domain="[('is_custom', '=', True)]"/>
+                <filter name="filter_standard" string="Módulos estándar" domain="[('is_custom', '=', False)]"/>
+                <group string="Agrupar por" expand="0">
+                    <filter name="group_custom" string="Custom" context="{'group_by': 'is_custom'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_lidoo_analytics_module_summary" model="ir.actions.act_window">
+        <field name="name">Resumen de módulos</field>
+        <field name="res_model">lidoo.analytics.module.summary</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_lidoo_analytics_module_summary_search"/>
+    </record>
+</odoo>
