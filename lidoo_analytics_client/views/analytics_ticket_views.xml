@@ -7,6 +7,7 @@
             <tree decoration-success="state == 'sent'" decoration-danger="state == 'failed'" decoration-muted="state == 'draft'">
                 <field name="create_date"/>
                 <field name="description"/>
+                <field name="db_name"/>
                 <field name="current_route"/>
                 <field name="has_screenshot" optional="show"/>
                 <field name="state"/>
@@ -54,6 +55,7 @@
                         <group string="Reportado por">
                             <field name="user_id" readonly="1"/>
                             <field name="create_date" readonly="1"/>
+                            <field name="db_name" readonly="1"/>
                             <field name="current_route" readonly="1"/>
                         </group>
                         <group string="Estado">

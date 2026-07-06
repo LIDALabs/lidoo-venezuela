@@ -39,6 +39,7 @@ class LidooAnalyticsTicket(models.Model):
     user_id = fields.Many2one(
         "res.users", string="Usuario", default=lambda self: self.env.user, readonly=True
     )
+    db_name = fields.Char(string="Base de datos", readonly=True)
 
     @api.depends("screenshot")
     def _compute_has_screenshot(self):
@@ -196,6 +197,7 @@ class LidooAnalyticsTicket(models.Model):
         stay within Discord's embed limits.
         """
         reporter = self.user_id.name or self.user_id.login or "Desconocido"
+        db_info = self.db_name or "Desconocida"
         embed = {
             "title": f"Incidencia #{self.id}"[:256],
             "description": (self.description or "Sin descripción")[:4096],
@@ -206,9 +208,14 @@ class LidooAnalyticsTicket(models.Model):
                     "value": reporter[:1024],
                     "inline": True,
                 },
+                {
+                    "name": "Base de datos",
+                    "value": db_info[:1024],
+                    "inline": True,
+                },
             ],
             "footer": {
-                "text": f"Reportado por {reporter}"[:2048],
+                "text": f"Reportado por {reporter} | DB: {db_info}"[:2048],
             },
         }
 
