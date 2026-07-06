@@ -1,7 +1,7 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -335,6 +335,23 @@ class InventoryCalculator(models.Model):
             )
 
     # Flujo de trabajo
+
+    @api.constrains("raw_material_ids")
+    def _check_raw_material_availability(self):
+        """No permite guardar si alguna materia prima tiene disponibilidad 0."""
+        for rec in self:
+            if rec.state in ("done", "cancelled"):
+                continue
+            for line in rec.raw_material_ids:
+                if line.available_qty <= 0:
+                    raise ValidationError(
+                        _(
+                            "La materia prima '%(product)s' tiene disponibilidad 0 "
+                            "en este momento. No se puede guardar el registro."
+                        )
+                        % {"product": line.product_id.display_name}
+                    )
+
     def action_confirm(self):
         for rec in self:
             if not rec.finished_product_ids:
@@ -360,6 +377,16 @@ class InventoryCalculator(models.Model):
                 )
             if not rec.raw_material_ids:
                 rec.action_compute_raw_materials()
+            # Validar disponibilidad antes de confirmar
+            for line in rec.raw_material_ids:
+                if line.available_qty <= 0:
+                    raise UserError(
+                        _(
+                            "La materia prima '%(product)s' tiene disponibilidad 0. "
+                            "No se puede confirmar la produccion."
+                        )
+                        % {"product": line.product_id.display_name}
+                    )
             rec.state = "confirmed"
             rec.message_post(
                 body=_("Confirmado por %s") % rec.user_id.name,
