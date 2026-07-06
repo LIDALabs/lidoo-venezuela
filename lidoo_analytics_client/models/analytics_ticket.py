@@ -304,11 +304,12 @@ class LidooAnalyticsTicket(models.Model):
     def _clickup_create_task(self, token, list_id):
         """Create a ClickUp task and return its id."""
         url = f"https://api.clickup.com/api/v2/list/{list_id}/task"
-        title_prefix = (self.description or "Ticket").strip().split("\n")[0][:40]
+        title_prefix = (self.description or "Ticket").strip().split("\n")[0][:30]
         if len(title_prefix) < len(self.description or ""):
             title_prefix = f"{title_prefix}..."
+        db_label = self.db_name or "N/A"
         payload = {
-            "name": f"Ticket #{self.id}: {title_prefix}",
+            "name": f"Ticket #{self.id} - {db_label}: {title_prefix}",
             "description": self._build_clickup_description(),
             "status": "open",
             "priority": 3,
