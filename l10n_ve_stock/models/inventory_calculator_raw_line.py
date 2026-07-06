@@ -77,7 +77,7 @@ class InventoryCalculatorRawLine(models.Model):
                     quants = self.env["stock.quant"].search(
                         [
                             ("product_id", "=", line.product_id.id),
-                            ("location_id", "=", location.id),
+                            ("location_id", "child_of", location.id),
                         ]
                     )
                     line.available_qty = sum(quants.mapped("quantity"))
