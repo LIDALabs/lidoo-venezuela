@@ -44,7 +44,7 @@
                             <field name="lidoo_analytics_clickup_api_token" password="True" placeholder="pk_..." />
                         </setting>
                         <setting id="lidoo_analytics_clickup_list_id" string="ClickUp List ID" title="ClickUp List ID" help="ID de la lista de ClickUp donde se crearán los tickets.">
-                            <field name="lidoo_analytics_clickup_list_id" placeholder="901113886442" />
+                            <field name="lidoo_analytics_clickup_list_id" placeholder="901113973387" />
                         </setting>
                         <setting id="lidoo_analytics_ticket_log_lines" string="Server Log Lines" title="Server Log Lines" help="Cantidad de líneas de log del servidor que se adjuntarán a cada ticket de incidencia.">
                             <field name="lidoo_analytics_ticket_log_lines" />
