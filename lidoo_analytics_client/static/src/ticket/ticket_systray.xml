@@ -4,7 +4,7 @@
         <button class="btn btn-link o-no-caret px-2 py-0 d-flex align-items-center h-100"
                 t-on-click="openTicket"
                 title="Reportar incidencia (Ctrl+Shift+E)">
-            <i class="fa fa-ticket"/>
+            <i class="fa fa-ticket lidoo-ticket-systray-icon"/>
         </button>
     </t>
 </templates>

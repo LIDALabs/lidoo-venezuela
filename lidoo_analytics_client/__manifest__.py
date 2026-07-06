@@ -29,6 +29,7 @@
             "lidoo_analytics_client/static/src/ticket/ticket_utils.js",
             "lidoo_analytics_client/static/src/ticket/ticket_systray.js",
             "lidoo_analytics_client/static/src/ticket/ticket_systray.xml",
+            "lidoo_analytics_client/static/src/ticket/ticket_systray.scss",
             "lidoo_analytics_client/static/src/ticket/floating_ticket_button.js",
             "lidoo_analytics_client/static/src/ticket/floating_ticket_button.xml",
             "lidoo_analytics_client/static/src/ticket/floating_ticket_button.scss",
