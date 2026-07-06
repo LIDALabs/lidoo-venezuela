@@ -114,18 +114,22 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
             }
         )
 
-        # Enviar automáticamente a Discord si hay webhook configurado
+        # Enviar a ClickUp (primario) y luego a Discord (secundario)
+        ticket.action_send_clickup()
         ticket.action_send()
 
         try:
             if ticket.state == "sent":
+                message = _('Ticket creado en ClickUp')
+                if ticket.clickup_task_url:
+                    message = f"{message}: {ticket.clickup_task_url}"
                 self.env['bus.bus']._sendone(
                     self.env.user.partner_id,
                     'simple_notification',
                     {
                         'type': 'success',
                         'title': _('Éxito'),
-                        'message': _('Ticket enviado correctamente a Discord.'),
+                        'message': message,
                     }
                 )
             elif ticket.state == "failed":
@@ -135,7 +139,7 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
                     {
                         'type': 'warning',
                         'title': _('Atención'),
-                        'message': _('Ticket guardado, pero no se pudo enviar a Discord: %s') % (ticket.error_message or ""),
+                        'message': _('Ticket guardado, pero no se pudo crear en ClickUp: %s') % (ticket.error_message or ""),
                     }
                 )
             else:
@@ -145,7 +149,7 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
                     {
                         'type': 'info',
                         'title': _('Información'),
-                        'message': _('Ticket guardado como borrador. Configurá el webhook de Discord en Ajustes para enviarlo.'),
+                        'message': _('Ticket guardado como borrador. Configurá el token y List ID de ClickUp en Ajustes para enviarlo.'),
                     }
                 )
         except Exception as e:

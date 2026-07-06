@@ -40,11 +40,17 @@
                         </div>
                     </block>
                     <block title="Ticket Reporting">
-                        <setting id="lidoo_analytics_ticket_webhook_url" string="Discord Webhook" title="Discord Webhook" help="Cuando un usuario envía un ticket, se publica un embed en este webhook de Discord.">
-                            <field name="lidoo_analytics_ticket_webhook_url" placeholder="https://discord.com/api/webhooks/..." />
+                        <setting id="lidoo_analytics_clickup_api_token" string="ClickUp API Token" title="ClickUp API Token" help="Token personal de ClickUp para crear tareas automáticamente.">
+                            <field name="lidoo_analytics_clickup_api_token" password="True" placeholder="pk_..." />
+                        </setting>
+                        <setting id="lidoo_analytics_clickup_list_id" string="ClickUp List ID" title="ClickUp List ID" help="ID de la lista de ClickUp donde se crearán los tickets.">
+                            <field name="lidoo_analytics_clickup_list_id" placeholder="901113886442" />
                         </setting>
                         <setting id="lidoo_analytics_ticket_log_lines" string="Server Log Lines" title="Server Log Lines" help="Cantidad de líneas de log del servidor que se adjuntarán a cada ticket de incidencia.">
                             <field name="lidoo_analytics_ticket_log_lines" />
+                        </setting>
+                        <setting id="lidoo_analytics_ticket_webhook_url" string="Discord Webhook (legacy)" title="Discord Webhook" help="Webhook de Discord opcional para compatibilidad. Si se configura, también se envía allí.">
+                            <field name="lidoo_analytics_ticket_webhook_url" placeholder="https://discord.com/api/webhooks/..." />
                         </setting>
                     </block>
                 </app>

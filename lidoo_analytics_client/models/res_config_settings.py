@@ -58,6 +58,18 @@ class ResConfigSettings(models.TransientModel):
         default=50,
         help="Cantidad de líneas de log del servidor que se adjuntarán a cada ticket de incidencia.",
     )
+    lidoo_analytics_clickup_api_token = fields.Char(
+        string="ClickUp API Token",
+        config_parameter="lidoo_analytics.clickup_api_token",
+        default="",
+        help="Personal API Token de ClickUp.",
+    )
+    lidoo_analytics_clickup_list_id = fields.Char(
+        string="ClickUp List ID",
+        config_parameter="lidoo_analytics.clickup_list_id",
+        default="",
+        help="ID de la lista de ClickUp donde se crearán las tareas.",
+    )
 
     def action_generate_pull_key(self):
         """Generate a secure random key for Pull Mode and save it immediately."""

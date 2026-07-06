@@ -40,6 +40,8 @@ class LidooAnalyticsTicket(models.Model):
         "res.users", string="Usuario", default=lambda self: self.env.user, readonly=True
     )
     db_name = fields.Char(string="Base de Datos/Empresa", readonly=True)
+    clickup_task_id = fields.Char(string="ClickUp Task ID", readonly=True)
+    clickup_task_url = fields.Char(string="ClickUp URL", readonly=True)
 
     @api.depends("screenshot")
     def _compute_has_screenshot(self):
@@ -249,5 +251,138 @@ class LidooAnalyticsTicket(models.Model):
             })
 
         return embed
+
+    def action_send_clickup(self):
+        """Create a ClickUp task for this ticket and upload the screenshot.
+
+        Reads ClickUp API token and list ID from ir.config_parameter.
+        On success stores the ClickUp task id/url and sets state to 'sent'.
+        """
+        self.ensure_one()
+
+        icp = self.env["ir.config_parameter"].sudo()
+        token = icp.get_param("lidoo_analytics.clickup_api_token", "").strip()
+        list_id = icp.get_param("lidoo_analytics.clickup_list_id", "").strip()
+
+        if not token or not list_id:
+            _logger.info("ClickUp not configured, skipping ticket %s", self.id)
+            return
+
+        try:
+            task_id = self._clickup_create_task(token, list_id)
+            if not task_id:
+                return
+
+            if self.screenshot:
+                self._clickup_upload_attachment(token, task_id)
+
+            task_url = f"https://app.clickup.com/t/{task_id}"
+            _logger.info("Ticket %s created in ClickUp: %s", self.id, task_url)
+            self.write({
+                "state": "sent",
+                "error_message": False,
+                "clickup_task_id": task_id,
+                "clickup_task_url": task_url,
+            })
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8")[:500]
+            _logger.warning(
+                "ClickUp HTTP error for ticket %s: %s - %s",
+                self.id, e.code, body, exc_info=True,
+            )
+            self.write({
+                "state": "failed",
+                "error_message": f"ClickUp HTTP {e.code}: {body[:256]}",
+            })
+        except urllib.error.URLError as e:
+            _logger.warning("ClickUp URL error for ticket %s: %s", self.id, e, exc_info=True)
+            self.write({"state": "failed", "error_message": str(e)[:256]})
+        except Exception as e:
+            _logger.error("Unexpected ClickUp error for ticket %s: %s", self.id, e, exc_info=True)
+            self.write({"state": "failed", "error_message": f"ClickUp: {e}"[:256]})
+
+    def _clickup_create_task(self, token, list_id):
+        """Create a ClickUp task and return its id."""
+        url = f"https://api.clickup.com/api/v2/list/{list_id}/task"
+        payload = {
+            "name": f"Incidencia #{self.id} - DB: {self.db_name or 'N/A'}",
+            "description": self._build_clickup_description(),
+            "status": "open",
+            "priority": 3,
+            "tags": ["odoo-ticket"],
+        }
+
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                "Authorization": token,
+                "Content-Type": "application/json",
+                "User-Agent": "Mozilla/5.0 (compatible; OdooBot/1.0; +https://www.odoo.com)",
+            },
+            method="POST",
+        )
+
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            task_id = result.get("id")
+            _logger.info("ClickUp task created with id %s", task_id)
+            return task_id
+
+    def _clickup_upload_attachment(self, token, task_id):
+        """Upload the ticket screenshot to a ClickUp task."""
+        url = f"https://api.clickup.com/api/v2/task/{task_id}/attachment"
+
+        raw = self.screenshot or ""
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf-8")
+        if not raw:
+            return
+
+        image_bytes = base64.b64decode(raw)
+        filename = self.screenshot_filename or f"ticket_{self.id}.png"
+
+        boundary = "----ClickUpBoundary"
+        body_lines = []
+        body_lines.append(f"--{boundary}".encode())
+        body_lines.append(f'Content-Disposition: form-data; name="attachment"; filename="{filename}"'.encode())
+        body_lines.append(b"Content-Type: image/png")
+        body_lines.append(b"")
+        body_lines.append(image_bytes)
+        body_lines.append(f"--{boundary}--".encode())
+        body_lines.append(b"")
+        data = b"\r\n".join(body_lines)
+
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                "Authorization": token,
+                "Content-Type": f"multipart/form-data; boundary={boundary}",
+                "User-Agent": "Mozilla/5.0 (compatible; OdooBot/1.0; +https://www.odoo.com)",
+            },
+            method="POST",
+        )
+
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            _logger.info("Screenshot uploaded to ClickUp task %s", task_id)
+
+    def _build_clickup_description(self):
+        """Build the ClickUp task description in markdown."""
+        lines = [
+            f"**Usuario:** {self.user_id.name or 'N/A'}",
+            f"**Base de Datos/Empresa:** {self.db_name or 'N/A'}",
+            f"**Ruta:** {self.current_route or 'N/A'}",
+            "",
+            "**Descripción:**",
+            self.description or "Sin descripción",
+        ]
+
+        if self.server_logs:
+            logs = self.server_logs[:2000]
+            lines.extend(["", "**Logs del servidor:**", "```", logs, "```"])
+
+        return "\n".join(lines)
 
 

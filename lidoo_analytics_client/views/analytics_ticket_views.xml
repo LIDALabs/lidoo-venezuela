@@ -62,6 +62,8 @@
                             <field name="has_screenshot" readonly="1"/>
                             <field name="screenshot_filename" readonly="1" invisible="not has_screenshot"/>
                             <field name="error_message" readonly="1" invisible="not error_message"/>
+                            <field name="clickup_task_id" readonly="1" invisible="not clickup_task_id"/>
+                            <field name="clickup_task_url" readonly="1" invisible="not clickup_task_id" widget="url"/>
                         </group>
                     </group>
                     <notebook>
