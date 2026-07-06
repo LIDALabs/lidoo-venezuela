@@ -142,9 +142,9 @@
                                    string="Plantilla"/>
                             <field name="raw_cost_per_unit"
                                    readonly="1"
-                                   string="Costo/Unit"
+                                    string="Costo Unitario"
                                    options="{'currency_field': 'currency_id'}"/>
-                            <field name="raw_cost_total"
+                             <field name="raw_cost_total"
                                    readonly="1"
                                    string="Costo Total"
                                    options="{'currency_field': 'currency_id'}"/>
