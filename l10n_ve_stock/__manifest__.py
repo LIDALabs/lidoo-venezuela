@@ -7,7 +7,7 @@
     "author": "binaural-dev",
     "website": "https://www.binauraldev.com",
     "category": "Stock",
-    "version": "17.0.0.0.7",
+    "version": "17.0.0.0.8",
     "depends": [
         "stock",
         "l10n_ve_tax",
@@ -15,7 +15,6 @@
         "l10n_ve_rate",
         "stock_delivery",
         "l10n_ve_base",
-        "report_xlsx",
     ],
     'auto_install': [
         "stock",

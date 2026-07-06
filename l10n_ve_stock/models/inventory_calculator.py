@@ -1,9 +1,16 @@
+import io
 import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import xlsxwriter
+except ImportError:
+    _logger.warning("xlsxwriter not installed. XLSX export will not work.")
+    xlsxwriter = None
 
 
 class InventoryCalculator(models.Model):
@@ -726,6 +733,134 @@ class InventoryCalculator(models.Model):
 
     def print_report_xlsx(self):
         self.ensure_one()
-        return self.env.ref(
-            "l10n_ve_stock.action_report_inventory_calculator_xlsx"
-        ).report_action(self)
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/web/inventory_calculator_xlsx?calculator_id=%d" % self.id,
+            "target": "self",
+        }
+
+    def _generate_xlsx_report(self):
+        self.ensure_one()
+        if not xlsxwriter:
+            raise UserError(_("The 'xlsxwriter' library is not installed."))
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {"in_memory": True})
+
+        header_fmt = workbook.add_format(
+            {
+                "bold": True,
+                "bg_color": "#4472C4",
+                "font_color": "#FFFFFF",
+                "border": 1,
+                "align": "center",
+                "valign": "vcenter",
+            }
+        )
+        subheader_fmt = workbook.add_format(
+            {
+                "bold": True,
+                "bg_color": "#D9E2F3",
+                "border": 1,
+                "align": "left",
+            }
+        )
+        money_fmt = workbook.add_format({"num_format": "#,##0.00", "border": 1})
+        money_bold_fmt = workbook.add_format(
+            {"num_format": "#,##0.00", "border": 1, "bold": True}
+        )
+        cell_fmt = workbook.add_format({"border": 1})
+        bold_fmt = workbook.add_format({"bold": True, "border": 1})
+
+        sheet_name = self.name or "Calculadora"
+        sheet = workbook.add_worksheet(sheet_name[:31])
+        row = 0
+
+        sheet.merge_range(row, 0, row, 3, "Calculadora de Inventario", header_fmt)
+        row += 1
+
+        info_data = [
+            ("Referencia", self.name),
+            ("Fecha", str(self.date) if self.date else ""),
+            ("Estado", self.state),
+            ("Empresa", self.company_id.name),
+            ("Responsable", self.user_id.name),
+            ("Ubicacion Destino", self.location_dest_id.display_name or ""),
+            ("Ubicacion Virtual", self.virtual_location_id.display_name or ""),
+        ]
+        for label, value in info_data:
+            sheet.write(row, 0, label, bold_fmt)
+            sheet.merge_range(row, 1, row, 3, value or "", cell_fmt)
+            row += 1
+
+        row += 1
+
+        sheet.merge_range(row, 0, row, 3, "Productos Finales", subheader_fmt)
+        row += 1
+
+        finished_headers = [
+            "Producto",
+            "Cantidad",
+            "Costo Unit. MP",
+            "Costo Total MP",
+        ]
+        for c, h in enumerate(finished_headers):
+            sheet.write(row, c, h, header_fmt)
+        row += 1
+
+        for line in self.finished_product_ids:
+            sheet.write(row, 0, line.product_id.display_name or "", cell_fmt)
+            sheet.write_number(row, 1, line.quantity, cell_fmt)
+            sheet.write_number(row, 2, line.raw_cost_per_unit, money_fmt)
+            sheet.write_number(row, 3, line.raw_cost_total, money_fmt)
+            row += 1
+
+        row += 1
+
+        sheet.merge_range(row, 0, row, 3, "Materias Primas", subheader_fmt)
+        row += 1
+
+        raw_headers = [
+            "Materia Prima",
+            "Cantidad",
+            "Costo Unitario",
+            "Costo Total",
+        ]
+        for c, h in enumerate(raw_headers):
+            sheet.write(row, c, h, header_fmt)
+        row += 1
+
+        for raw in self.raw_material_ids:
+            cost_unit = raw.product_id.standard_price or 0.0
+            cost_total = cost_unit * raw.quantity
+            sheet.write(row, 0, raw.product_id.display_name or "", cell_fmt)
+            sheet.write_number(row, 1, raw.quantity, cell_fmt)
+            sheet.write_number(row, 2, cost_unit, money_fmt)
+            sheet.write_number(row, 3, cost_total, money_fmt)
+            row += 1
+
+        row += 1
+
+        sheet.merge_range(row, 0, row, 3, "Resumen de Costos", subheader_fmt)
+        row += 1
+
+        sheet.write(row, 0, "Total Materias Primas", bold_fmt)
+        sheet.write_number(row, 1, self.total_raw_cost, money_bold_fmt)
+        row += 1
+
+        sheet.write(row, 0, "Productos Finales", bold_fmt)
+        sheet.write_number(row, 1, len(self.finished_product_ids), cell_fmt)
+        row += 1
+
+        sheet.write(row, 0, "Materias Primas", bold_fmt)
+        sheet.write_number(row, 1, len(self.raw_material_ids), cell_fmt)
+        row += 1
+
+        sheet.set_column(0, 0, 35)
+        sheet.set_column(1, 1, 15)
+        sheet.set_column(2, 2, 18)
+        sheet.set_column(3, 3, 18)
+
+        workbook.close()
+        output.seek(0)
+        return output.getvalue()
