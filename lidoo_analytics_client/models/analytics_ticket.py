@@ -309,7 +309,7 @@ class LidooAnalyticsTicket(models.Model):
             title_prefix = f"{title_prefix}..."
         db_label = self.db_name or "N/A"
         payload = {
-            "name": f"Ticket #{self.id} - {db_label}: {title_prefix}",
+            "name": f"{db_label}: {title_prefix}",
             "description": self._build_clickup_description(),
             "status": "open",
             "priority": 3,
