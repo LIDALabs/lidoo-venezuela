@@ -42,7 +42,6 @@ class ResConfigSettings(models.TransientModel):
         string="Pull API Key",
         config_parameter="lidoo_analytics.pull_api_key",
         default="",
-        readonly=True,
         help="Key used by the partner instance to authenticate pull requests.",
     )
 
@@ -75,8 +74,8 @@ class ResConfigSettings(models.TransientModel):
         """Generate a secure random key for Pull Mode and save it immediately."""
         new_key = secrets.token_bytes(32).hex()
         self.env['ir.config_parameter'].set_param('lidoo_analytics.pull_api_key', new_key)
-        # Return a reload action to update the view
+        # Soft-reload the current view so the new key is shown without a full page reload.
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload',
+            'tag': 'soft_reload',
         }

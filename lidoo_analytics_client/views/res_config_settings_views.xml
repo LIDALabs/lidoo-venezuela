@@ -34,7 +34,7 @@
                         <div class="content-group" invisible="not lidoo_analytics_enable_pull">
                             <div class="row mt16">
                                 <label string="Pull API Key" for="lidoo_analytics_pull_api_key" class="col-lg-3 o_light_label" />
-                                <field name="lidoo_analytics_pull_api_key" />
+                                <field name="lidoo_analytics_pull_api_key" readonly="1" force_save="1" />
                                 <button name="action_generate_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
                             </div>
                         </div>
