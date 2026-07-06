@@ -119,16 +119,34 @@ class LidooAnalyticsTicketWizard(models.TransientModel):
 
         try:
             if ticket.state == "sent":
-                self.env.user.notify_info(
-                    message=_("Ticket enviado correctamente a Discord."),
+                self.env['bus.bus']._sendone(
+                    self.env.user.partner_id,
+                    'simple_notification',
+                    {
+                        'type': 'success',
+                        'title': _('Éxito'),
+                        'message': _('Ticket enviado correctamente a Discord.'),
+                    }
                 )
             elif ticket.state == "failed":
-                self.env.user.notify_warning(
-                    message=_("Ticket guardado, pero no se pudo enviar a Discord: %s") % (ticket.error_message or ""),
+                self.env['bus.bus']._sendone(
+                    self.env.user.partner_id,
+                    'simple_notification',
+                    {
+                        'type': 'warning',
+                        'title': _('Atención'),
+                        'message': _('Ticket guardado, pero no se pudo enviar a Discord: %s') % (ticket.error_message or ""),
+                    }
                 )
             else:
-                self.env.user.notify_info(
-                    message=_("Ticket guardado como borrador. Configurá el webhook de Discord en Ajustes para enviarlo."),
+                self.env['bus.bus']._sendone(
+                    self.env.user.partner_id,
+                    'simple_notification',
+                    {
+                        'type': 'info',
+                        'title': _('Información'),
+                        'message': _('Ticket guardado como borrador. Configurá el webhook de Discord en Ajustes para enviarlo.'),
+                    }
                 )
         except Exception as e:
             _logger.warning("Could not notify user after ticket submit: %s", e)

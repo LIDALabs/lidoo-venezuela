@@ -143,6 +143,7 @@ class LidooAnalyticsTicket(models.Model):
                 data=data,
                 headers={
                     "Content-Type": f"multipart/form-data; boundary={boundary}",
+                    "User-Agent": "Mozilla/5.0 (compatible; OdooBot/1.0; +https://www.odoo.com)",
                 },
                 method="POST",
             )
