@@ -121,9 +121,7 @@
 
                     <!-- Productos Finales -->
                     <field name="finished_product_ids" nolabel="1">
-                        <tree editable="bottom"
-                              decoration-success="has_recipe"
-                              decoration-warning="not has_recipe">
+                        <tree editable="bottom">
                             <field name="sequence" widget="handle" optional="hide"/>
                             <field name="product_id"
                                    string="Producto"
