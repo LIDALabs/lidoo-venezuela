@@ -68,20 +68,7 @@ class InventoryCalculatorRawLine(models.Model):
     def _compute_available_qty(self):
         for line in self:
             if line.product_id:
-                # Usar la ubicación física del producto, o el almacén principal
-                location = (
-                    line.product_id.physical_location_id
-                    or line.env.company.main_warehouse_id.lot_stock_id
-                )
-                if location:
-                    quants = self.env["stock.quant"].search(
-                        [
-                            ("product_id", "=", line.product_id.id),
-                            ("location_id", "child_of", location.id),
-                        ]
-                    )
-                    line.available_qty = sum(quants.mapped("quantity"))
-                else:
-                    line.available_qty = 0.0
+                # Usar el stock disponible total del producto (calculado por Odoo)
+                line.available_qty = line.product_id.qty_available
             else:
                 line.available_qty = 0.0
