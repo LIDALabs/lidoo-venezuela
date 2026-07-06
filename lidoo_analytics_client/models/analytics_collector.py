@@ -76,9 +76,9 @@ class LidooAnalyticsCollector(models.AbstractModel):
         # Installed modules
         installed_modules = Module.search([("state", "=", "installed")])
 
-        # Custom modules (author is not Odoo SA / empty)
+        # Custom modules (author is not Odoo SA)
         custom_modules = installed_modules.filtered(
-            lambda m: m.author and "Odoo" not in (m.author or "")
+            lambda m: "Odoo" not in (m.author or "")
         )
         custom_module_names = set(custom_modules.mapped('name'))
 
