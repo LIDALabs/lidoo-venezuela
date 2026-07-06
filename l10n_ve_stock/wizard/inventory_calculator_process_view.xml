@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View del Wizard -->
+    <record id="inventory_calculator_process_view_form" model="ir.ui.view">
+        <field name="name">inventory.calculator.process.form</field>
+        <field name="model">inventory.calculator.process</field>
+        <field name="arch" type="xml">
+            <form string="Procesar Calculadora">
+                <group string="Informacion de la Calculadora">
+                    <field name="calculator_id"
+                           string="Calculadora"
+                           readonly="1"
+                           options="{'no_open': True}"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group string="Ubicaciones">
+                    <field name="location_src_id"
+                           string="Ubicacion Origen"
+                           placeholder="Donde estan las materias primas"/>
+                    <field name="location_dest_id"
+                           string="Ubicacion Destino"
+                           placeholder="Donde se guardan los productos terminados"/>
+                </group>
+                <footer>
+                    <button name="action_process"
+                            string="Procesar"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-cog"/>
+                    <button name="action_cancel"
+                            string="Cancelar"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-times"
+                            confirm="Se crearan movimientos de reversa. Continuar?"/>
+                    <button string="Cerrar"
+                            class="btn-secondary"
+                            special="cancel"
+                            icon="fa-close"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accion del Wizard -->
+    <record id="inventory_calculator_process_action" model="ir.actions.act_window">
+        <field name="name">Procesar Calculadora</field>
+        <field name="res_model">inventory.calculator.process</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="l10n_ve_stock.model_inventory_calculator"/>
+    </record>
+
+</odoo>

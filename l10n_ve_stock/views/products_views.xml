@@ -46,10 +46,10 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <label for="standard_price" position="attributes">
-                <attribute name="groups">l10n_ve_stock.group_show_standard_price</attribute>
+                <attribute name="groups">stock.group_stock_user</attribute>
             </label>
             <div name="standard_price_uom" position="attributes">
-                <attribute name="groups">l10n_ve_stock.group_show_standard_price</attribute>
+                <attribute name="groups">stock.group_stock_user</attribute>
             </div>
             <xpath expr="//div[@name='volume']" position="after">
                 <field name="liters_per_unit" groups="l10n_ve_stock.group_block_liters_per_unit"/>

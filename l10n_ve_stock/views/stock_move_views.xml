@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista tree standalone de stock.move para movimientos de calculadora -->
+    <record id="stock_move_calculator_tree_view" model="ir.ui.view">
+        <field name="name">stock.move.calculator.tree</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <tree string="Movimientos de Calculadora"
+                  decoration-success="name and 'Entrada' in name"
+                  decoration-danger="name and 'Salida' in name"
+                  decoration-muted="name and 'Reversa' in name"
+                  default_order="id asc">
+                <field name="id" string="#"/>
+                <field name="name" string="Tipo"/>
+                <field name="product_id" string="Producto"/>
+                <field name="product_uom_qty" string="Cantidad"/>
+                <field name="location_id" string="Origen"/>
+                <field name="location_dest_id" string="Destino"/>
+                <field name="state" string="Estado"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

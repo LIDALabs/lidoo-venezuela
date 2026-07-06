@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- FORM VIEW -->
+    <record id="inventory_calculator_view_form" model="ir.ui.view">
+        <field name="name">inventory.calculator.form</field>
+        <field name="model">inventory.calculator</field>
+        <field name="arch" type="xml">
+            <form string="Produccion">
+                <header>
+                    <button name="action_confirm"
+                            string="Confirmar"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            icon="fa-check"/>
+                    <button name="action_done"
+                            string="Procesar"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'confirmed'"
+                            icon="fa-cog"/>
+                    <button name="action_draft"
+                            string="Volver a Borrador"
+                            type="object"
+                            invisible="state not in ('confirmed', 'cancelled')"
+                            icon="fa-undo"/>
+                    <button name="action_cancel"
+                            string="Cancelar"
+                            type="object"
+                            invisible="state in ('cancelled')"
+                            confirm="Se crearan movimientos de reversa. Continuar?"
+                            icon="fa-times"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+
+                <sheet readonly="state in ('done', 'cancelled')">
+                    <field name="has_raw_without_recipe" invisible="1"/>
+                    <field name="product_with_recipe_ids" invisible="1"/>
+
+                    <!-- Button Box -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="print_report_pdf"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-print"
+                                invisible="state != 'done'">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">PDF</span>
+                            </div>
+                        </button>
+                        <button name="print_report_xlsx"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-excel-o"
+                                invisible="state != 'done'">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">XLSX</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button"
+                                icon="fa-money"
+                                invisible="not total_raw_cost">
+                            <field name="total_raw_cost"
+                                   widget="statinfo"
+                                   string="Costo Total"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </button>
+                        <button name="action_open_finished_products"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-cubes">
+                            <field name="finished_product_count"
+                                   widget="statinfo"
+                                   string="Productos"/>
+                        </button>
+                        <button name="action_open_raw_materials"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-cube">
+                            <field name="raw_material_count"
+                                   widget="statinfo"
+                                   string="Materias Primas"/>
+                        </button>
+                        <button name="action_open_finished_moves"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-exchange"
+                                invisible="not finished_move_count">
+                            <field name="finished_move_count"
+                                   widget="statinfo"
+                                   string="Movimientos"/>
+                        </button>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"
+                                   placeholder="Produccion"/>
+                        </h1>
+                        <div class="oe_subtypes">
+                            <field name="date" readonly="1"/>
+                            <span invisible="state != 'draft'"> — Borrador</span>
+                            <span invisible="state != 'confirmed'"> — Confirmado</span>
+                            <span invisible="state != 'done'"> — Procesado</span>
+                            <span invisible="state != 'cancelled'"> — Cancelado</span>
+                        </div>
+                    </div>
+
+                    <!-- Ubicacion -->
+                    <group>
+                        <group string="Destino">
+                            <field name="location_dest_id"
+                                   string="Destino"
+                                   required="state in ('draft', 'confirmed')"
+                                   placeholder="Donde se guardan los productos terminados"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Productos Finales -->
+                    <field name="finished_product_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" optional="hide"/>
+                            <field name="product_id"
+                                   string="Producto"
+                                   placeholder="Seleccionar producto..."
+                                   domain="[('id', 'in', parent.product_with_recipe_ids)]"/>
+                            <field name="product_uom_id" readonly="1"
+                                   string="Unidad"/>
+                            <field name="recipe_id" readonly="1"
+                                   string="Plantilla"
+                                   optional="show"/>
+                            <field name="quantity"
+                                   string="Cantidad"
+                                   required="1"/>
+                             <field name="raw_cost_per_unit"
+                                   readonly="1"
+                                    string="Costo Unitario"
+                                   options="{'currency_field': 'currency_id'}"/>
+                             <field name="raw_cost_total"
+                                   readonly="1"
+                                   string="Costo Total"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="note"
+                                   string="Nota"
+                                   optional="hide"/>
+                        </tree>
+                    </field>
+                    <div class="text-center mt-1 mb-2"
+                         invisible="state != 'draft'">
+                        <button name="action_compute_raw_materials"
+                                string="Calcular Materias Primas desde Plantillas"
+                                type="object"
+                                class="btn-secondary"
+                                icon="fa-calculator"/>
+                    </div>
+
+                    <!-- Resumen de totales -->
+                    <div class="oe_clear"/>
+                    <group col="2">
+                        <group/>
+                        <group string="Resumen" class="oe_right">
+                            <field name="finished_product_count" readonly="1"/>
+                            <field name="raw_material_count" readonly="1"/>
+                            <field name="total_raw_cost" readonly="1"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <!-- Materias Primas -->
+                    <separator string="Materias Primas"
+                               invisible="not raw_material_ids"/>
+                    <field name="raw_material_ids" readonly="1" nolabel="1"
+                           invisible="not raw_material_ids">
+                        <tree create="false" edit="false"
+                              delete="false"
+                              decoration-info="available_qty &gt; quantity"
+                              decoration-danger="available_qty &lt; quantity">
+                            <field name="product_id"
+                                   string="Materia Prima"/>
+                            <field name="quantity"
+                                   string="Necesaria"/>
+                            <field name="available_qty" readonly="1"
+                                   string="Disponible"/>
+                            <field name="unit_cost" readonly="1"
+                                   string="Costo Unitario"
+                                   optional="show"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_cost" readonly="1"
+                                   string="Costo Total"
+                                   optional="show"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="note" readonly="1"
+                                   string="Nota" optional="hide"/>
+                        </tree>
+                    </field>
+
+                    <!-- Notas -->
+                    <group string="Notas" invisible="state != 'draft'">
+                        <field name="note"
+                               placeholder="Notas adicionales..."
+                               nolabel="1"/>
+                    </group>
+                </sheet>
+
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW -->
+    <record id="inventory_calculator_view_tree" model="ir.ui.view">
+        <field name="name">inventory.calculator.tree</field>
+        <field name="model">inventory.calculator</field>
+        <field name="arch" type="xml">
+            <tree string="Produccion"
+                  decoration-info="state == 'draft'"
+                  decoration-warning="state == 'confirmed'"
+                  decoration-success="state == 'done'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name" string="Referencia"/>
+                <field name="date" string="Fecha"/>
+                <field name="user_id" string="Responsable"/>
+                <field name="finished_product_count"
+                       string="Productos Finales"
+                       sum="Total"/>
+                <field name="raw_material_count" string="Materias Primas"/>
+                <field name="total_raw_cost"
+                       string="Costo Total"
+                       sum="Total Costo"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="state" widget="badge"
+                       string="Estado"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'done'"
+                       decoration-muted="state == 'cancelled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="inventory_calculator_view_search" model="ir.ui.view">
+        <field name="name">inventory.calculator.search</field>
+        <field name="model">inventory.calculator</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Produccion">
+                <field name="name"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="Borradores" name="draft"
+                        domain="[('state', '=', 'draft')]"
+                        icon="fa-pencil"/>
+                <filter string="Confirmados" name="confirmed"
+                        domain="[('state', '=', 'confirmed')]"
+                        icon="fa-check"/>
+                <filter string="Procesados" name="done"
+                        domain="[('state', '=', 'done')]"
+                        icon="fa-cog"/>
+                <filter string="Cancelados" name="cancelled"
+                        domain="[('state', '=', 'cancelled')]"
+                        icon="fa-times"/>
+                <separator/>
+                <filter string="Hoy" name="today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"
+                        icon="fa-calendar"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Estado" name="group_by_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Responsable" name="group_by_user"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Fecha" name="group_by_date"
+                            context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- FINISHED LINE — standalone tree + form -->
+    <record id="inventory_calculator_view_finished_line_tree" model="ir.ui.view">
+        <field name="name">inventory.calculator.finished.line.tree.standalone</field>
+        <field name="model">inventory.calculator.finished.line</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Productos Finales"
+                  decoration-success="has_recipe"
+                  decoration-warning="not has_recipe">
+                <field name="calculator_id" string="Produccion"/>
+                <field name="product_id" string="Producto"/>
+                <field name="product_uom_id" string="Unidad"/>
+                <field name="quantity" string="Cantidad"/>
+                <field name="has_recipe" string="Plantilla" widget="boolean_toggle"/>
+                <field name="raw_cost_per_unit"
+                       string="Costo/Unit"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="raw_cost_total"
+                       string="Costo Total"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="note" string="Nota" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="inventory_calculator_view_finished_line_form" model="ir.ui.view">
+        <field name="name">inventory.calculator.finished.line.form</field>
+        <field name="model">inventory.calculator.finished.line</field>
+        <field name="arch" type="xml">
+            <form string="Producto Final" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="calculator_id"/>
+                            <field name="product_id"/>
+                            <field name="product_uom_id"/>
+                            <field name="quantity"/>
+                        </group>
+                        <group>
+                            <field name="has_recipe" widget="boolean_toggle"/>
+                            <field name="raw_cost_per_unit"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="raw_cost_total"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                    <notebook invisible="not recipe_line_ids">
+                        <page string="Desglose de Plantilla" name="recipe">
+                            <field name="recipe_line_ids" nolabel="1">
+                                <tree>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- RAW LINE — standalone tree + form -->
+    <record id="inventory_calculator_view_raw_line_tree" model="ir.ui.view">
+        <field name="name">inventory.calculator.raw.line.tree.standalone</field>
+        <field name="model">inventory.calculator.raw.line</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Materias Primas"
+                  decoration-info="available_qty &gt; quantity"
+                  decoration-danger="available_qty &lt; quantity">
+                <field name="calculator_id" string="Produccion"/>
+                <field name="product_id" string="Materia Prima"/>
+                <field name="product_uom_id" string="Unidad"/>
+                <field name="quantity" string="Necesaria"/>
+                <field name="available_qty" string="Disponible"/>
+                <field name="note" string="Nota" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="inventory_calculator_view_raw_line_form" model="ir.ui.view">
+        <field name="name">inventory.calculator.raw.line.form</field>
+        <field name="model">inventory.calculator.raw.line</field>
+        <field name="arch" type="xml">
+            <form string="Materia Prima" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="calculator_id"/>
+                            <field name="product_id"/>
+                            <field name="product_uom_id"/>
+                        </group>
+                        <group>
+                            <field name="quantity"/>
+                            <field name="available_qty"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="inventory_calculator_action" model="ir.actions.act_window">
+        <field name="name">Produccion</field>
+        <field name="res_model">inventory.calculator</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="inventory_calculator_view_search"/>
+        <field name="context">{'search_default_draft': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree su primer registro de produccion
+            </p>
+            <p>
+                Seleccione productos finales que tengan plantilla,
+                indique cantidades y procese. El sistema agrega
+                los productos finales al inventario.
+            </p>
+            <p class="text-muted">
+                Las materias primas se calculan como referencia y costo.
+                Este modulo NO descuenta stock de materia prima.
+            </p>
+        </field>
+    </record>
+
+    <!-- MENUS -->
+    <menuitem id="menu_inventory_calculator_root"
+              name="Control de Produccion"
+              parent="stock.menu_stock_root"
+              sequence="90"/>
+
+    <menuitem id="menu_inventory_calculator_main"
+              name="Calculadora"
+              parent="menu_inventory_calculator_root"
+              action="inventory_calculator_action"
+              sequence="10"/>
+
+    <menuitem id="menu_inventory_calculator_reports"
+              name="Reportes"
+              parent="menu_inventory_calculator_root"
+              sequence="20"/>
+</odoo>

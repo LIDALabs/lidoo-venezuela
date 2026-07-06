@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- FORM VIEW — Recipe -->
+    <record id="inventory_calculator_recipe_view_form" model="ir.ui.view">
+        <field name="name">inventory.calculator.recipe.form</field>
+        <field name="model">inventory.calculator.recipe</field>
+        <field name="arch" type="xml">
+            <form string="Plantilla de Producto">
+                <header>
+                    <button name="action_view_history"
+                            string="Historial"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-history"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_history"
+                                type="object"
+                                string="Historial"
+                                class="oe_stat_button"
+                                icon="fa-history">
+                            <field name="log_count"
+                                   widget="statinfo"
+                                   string="Cambios"/>
+                        </button>
+                        <button class="oe_stat_button"
+                                icon="fa-cubes">
+                            <field name="raw_material_count"
+                                   widget="statinfo"
+                                   string="Materiales"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                   placeholder="Nombre de la plantilla"/>
+                        </h1>
+                        <div class="oe_subtypes">
+                            <field name="product_id" readonly="1"/>
+                            <span invisible="not active"> — Activa</span>
+                            <span invisible="active"> — Archivada</span>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Producto">
+                            <field name="product_id"/>
+                            <field name="product_uom_id" readonly="1"/>
+                        </group>
+                        <group string="Configuracion">
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="active"
+                                   string="Plantilla Activa"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Materia Prima" name="raw_materials"
+                              icon="fa-cubes">
+                            <field name="line_ids">
+                                <tree editable="bottom"
+                                      decoration-info="quantity &gt; 0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"
+                                           placeholder="Materia prima..."/>
+                                    <field name="product_uom_id" readonly="1"/>
+                                    <field name="quantity"
+                                           string="Cantidad por Unidad"
+                                           required="1"/>
+                                </tree>
+                            </field>
+                            <div class="text-muted mt8"
+                                 invisible="not line_ids">
+                                La cantidad es por 1 unidad de producto final.
+                                Ejemplo: si produce 10 panes, indique cuanta
+                                harina necesita por 1 pan.
+                            </div>
+                        </page>
+
+                        <page string="Notas" name="notes"
+                              icon="fa-sticky-note-o">
+                            <field name="note"
+                                   placeholder="Notas de la plantilla..."
+                                   nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW — Recipe -->
+    <record id="inventory_calculator_recipe_view_tree" model="ir.ui.view">
+        <field name="name">inventory.calculator.recipe.tree</field>
+        <field name="model">inventory.calculator.recipe</field>
+        <field name="arch" type="xml">
+            <tree string="Plantillas de Productos"
+                  decoration-muted="not active">
+                <field name="product_id" string="Producto"/>
+                <field name="name" string="Plantilla"/>
+                <field name="raw_material_count"
+                       string="Materiales"
+                       sum="Total"/>
+                <field name="active" widget="boolean_toggle"/>
+                <button name="action_view_history"
+                        type="object"
+                        string="Historial"
+                        icon="fa-history"
+                        class="btn-link"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW — Recipe -->
+    <record id="inventory_calculator_recipe_view_search" model="ir.ui.view">
+        <field name="name">inventory.calculator.recipe.search</field>
+        <field name="model">inventory.calculator.recipe</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Plantillas">
+                <field name="name"/>
+                <field name="product_id"/>
+                <separator/>
+                <filter string="Activas" name="active"
+                        domain="[('active', '=', True)]"
+                        icon="fa-check"/>
+                <filter string="Archivadas" name="archived"
+                        domain="[('active', '=', False)]"
+                        icon="fa-archive"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Producto" name="group_by_product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Empresa" name="group_by_company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="inventory_calculator_recipe_action" model="ir.actions.act_window">
+        <field name="name">Plantillas de Productos</field>
+        <field name="res_model">inventory.calculator.recipe</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="inventory_calculator_recipe_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear su primera plantilla de producto
+            </p>
+            <p>
+                Defina que materia prima necesita cada producto final.
+                Al crear un registro en la calculadora, el sistema
+                buscara automaticamente la plantilla y calculara costos.
+            </p>
+        </field>
+    </record>
+
+    <!-- History Tree -->
+    <record id="inventory_calculator_recipe_log_view_tree" model="ir.ui.view">
+        <field name="name">inventory.calculator.recipe.log.tree</field>
+        <field name="model">inventory.calculator.recipe.log</field>
+        <field name="arch" type="xml">
+            <tree string="Historial de Plantillas"
+                  create="false" edit="false" delete="false"
+                  decoration-success="action == 'created'"
+                  decoration-warning="action == 'updated'"
+                  decoration-info="action == 'lines_changed'"
+                  decoration-muted="action in ('archived', 'unarchived')">
+                <field name="create_date" string="Fecha"/>
+                <field name="recipe_id" string="Plantilla"/>
+                <field name="product_id" string="Producto"/>
+                <field name="action" string="Accion"
+                       widget="badge"
+                       decoration-success="action == 'created'"
+                       decoration-warning="action == 'updated'"
+                       decoration-info="action == 'lines_changed'"
+                       decoration-muted="action in ('archived', 'unarchived')"/>
+                <field name="description" string="Detalles"/>
+                <field name="user_id" string="Usuario"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- History Search -->
+    <record id="inventory_calculator_recipe_log_view_search" model="ir.ui.view">
+        <field name="name">inventory.calculator.recipe.log.search</field>
+        <field name="model">inventory.calculator.recipe.log</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Historial">
+                <field name="recipe_id"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="Creado" name="created"
+                        domain="[('action', '=', 'created')]"
+                        icon="fa-plus"/>
+                <filter string="Actualizado" name="updated"
+                        domain="[('action', '=', 'updated')]"
+                        icon="fa-pencil"/>
+                <filter string="Materiales Cambiados" name="lines_changed"
+                        domain="[('action', '=', 'lines_changed')]"
+                        icon="fa-cubes"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Plantilla" name="group_by_recipe"
+                            context="{'group_by': 'recipe_id'}"/>
+                    <filter string="Producto" name="group_by_product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Usuario" name="group_by_user"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Accion" name="group_by_action"
+                            context="{'group_by': 'action'}"/>
+                    <filter string="Fecha" name="group_by_date"
+                            context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- History Action -->
+    <record id="inventory_calculator_recipe_log_action" model="ir.actions.act_window">
+        <field name="name">Historial de Plantillas</field>
+        <field name="res_model">inventory.calculator.recipe.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="inventory_calculator_recipe_log_view_search"/>
+    </record>
+
+    <!-- MENUS -->
+    <menuitem id="menu_inventory_calculator_recipe"
+              name="Plantillas de Productos"
+              parent="menu_inventory_calculator_root"
+              action="inventory_calculator_recipe_action"
+              sequence="30"/>
+
+    <menuitem id="menu_inventory_calculator_recipe_log"
+              name="Historial de Plantillas"
+              parent="menu_inventory_calculator_root"
+              action="inventory_calculator_recipe_log_action"
+              sequence="40"/>
+</odoo>

@@ -156,8 +156,41 @@ class ProductProduct(models.Model):
             res[product_id]['virtual_available'] = float_round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
                 precision_rounding=rounding)
+
+        # Agregar movimientos DONE de la calculadora
+        self._add_calculator_done_moves(res, domain_move_in, domain_move_out)
             
         return res
+
+    def _add_calculator_done_moves(self, res, domain_move_in, domain_move_out):
+        """Agrega movimientos done de la calculadora a incoming/outgoing,
+        sin afectar virtual_available (ya reflejados en qty_available)."""
+        if not res:
+            return
+        product_ids = list(res.keys())
+        Move = self.env['stock.move'].with_context(active_test=False)
+
+        # Buscar movimientos done de calculadora para estos productos
+        calc_moves = Move.search([
+            ('product_id', 'in', product_ids),
+            ('state', '=', 'done'),
+            ('inventory_calculator_id', '!=', False),
+        ])
+
+        for product_id in product_ids:
+            product_moves = calc_moves.filtered(lambda m: m.product_id.id == product_id)
+            # Usar nombre del movimiento (más confiable que ubicaciones)
+            calc_in = sum(m.product_uom_qty for m in product_moves if 'Entrada' in (m.name or ''))
+            calc_out = sum(m.product_uom_qty for m in product_moves if 'Salida' in (m.name or ''))
+            if calc_in or calc_out:
+                rounding = self.env['product.product'].browse(product_id).uom_id.rounding
+                res[product_id]['incoming_qty'] += calc_in
+                res[product_id]['outgoing_qty'] += calc_out
+                # Ajustar virtual_available porque qty_available ya incluye done
+                res[product_id]['virtual_available'] += calc_in - calc_out
+                res[product_id]['incoming_qty'] = float_round(res[product_id]['incoming_qty'], precision_rounding=rounding)
+                res[product_id]['outgoing_qty'] = float_round(res[product_id]['outgoing_qty'], precision_rounding=rounding)
+                res[product_id]['virtual_available'] = float_round(res[product_id]['virtual_available'], precision_rounding=rounding)
 
     def _compute_quantities_dict_for_report(
         self, lot_id, owner_id, package_id, from_date=False, to_date=False, location=False

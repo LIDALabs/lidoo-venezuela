@@ -1,4 +1,5 @@
 from . import models
+from . import report
 from . import wizard
 
 old_module = "binaural_stock"

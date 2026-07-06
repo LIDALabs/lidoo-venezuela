@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_inventory_calculator">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article">
+                    <!-- Encabezado -->
+                    <div class="row mt-3 mb-4">
+                        <div class="col-6">
+                            <h3>Calculadora de Inventario</h3>
+                            <p><strong>Referencia:</strong> <span t-field="doc.name"/></p>
+                            <p><strong>Producto Principal:</strong> <span t-field="doc.finished_product_ids[:1].product_id.display_name" t-options="{'widget': 'text'}"/></p>
+                            <p><strong>Fecha:</strong> <span t-field="doc.date" t-options="{'widget': 'date'}"/></p>
+                            <p><strong>Estado:</strong> <span t-field="doc.state"/></p>
+                            <p><strong>Empresa:</strong> <span t-field="doc.company_id.name"/></p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p><strong>Ubicacion Destino:</strong> <span t-field="doc.location_dest_id.display_name"/></p>
+                            <p><strong>Ubicacion Virtual:</strong> <span t-field="doc.virtual_location_id.display_name"/></p>
+                            <p><strong>Responsable:</strong> <span t-field="doc.user_id.name"/></p>
+                        </div>
+                    </div>
+
+                    <!-- Productos Finales -->
+                    <h4>Productos Finales</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color: #343a40; color: #ffffff;">
+                            <tr>
+                                <th style="color: #ffffff;">Producto</th>
+                                <th class="text-center" style="color: #ffffff;">Cantidad</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Unit. Materia Prima</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Total Materia Prima</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.finished_product_ids" t-as="line">
+                                <tr>
+                                    <td><span t-field="line.product_id.display_name"/></td>
+                                    <td class="text-center">
+                                        <span t-field="line.quantity"/>
+                                        <span t-field="line.product_uom_id.name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.raw_cost_per_unit"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.raw_cost_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Materias Primas -->
+                    <h4 class="mt-4">Materias Primas</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color: #343a40; color: #ffffff;">
+                            <tr>
+                                <th style="color: #ffffff;">Materia Prima</th>
+                                <th class="text-center" style="color: #ffffff;">Cantidad</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Unitario</th>
+                                <th class="text-end" style="color: #ffffff;">Costo Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.raw_material_ids" t-as="raw">
+                                <tr>
+                                    <td><span t-field="raw.product_id.display_name"/></td>
+                                    <td class="text-center">
+                                        <span t-field="raw.quantity"/>
+                                        <span t-field="raw.product_uom_id.name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="raw.product_id.standard_price"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="raw.product_id.standard_price * raw.quantity"
+                                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Resumen -->
+                    <div class="row mt-4">
+                        <div class="col-6 offset-6">
+                            <table class="table table-sm table-bordered">
+                                <tr style="background-color: #e9ecef;">
+                                    <th class="text-end">Costo Total Materias Primas</th>
+                                    <td class="text-end">
+                                        <strong>
+                                            <span t-field="doc.total_raw_cost"
+                                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-end">Productos Finales</th>
+                                    <td class="text-end">
+                                        <span t-esc="len(doc.finished_product_ids)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-end">Materias Primas</th>
+                                    <td class="text-end">
+                                        <span t-esc="len(doc.raw_material_ids)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Notas -->
+                    <div t-if="doc.note" class="mt-3">
+                        <h4>Notas</h4>
+                        <p t-field="doc.note"/>
+                    </div>
+
+                    <!-- Separador entre registros -->
+                    <div style="page-break-after: always;" t-if="not doc == docs[-1]"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Accion de reporte PDF -->
+    <record id="action_report_inventory_calculator_pdf" model="ir.actions.report">
+        <field name="name">Calculadora de Inventario (PDF)</field>
+        <field name="model">inventory.calculator</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ve_stock.report_inventory_calculator</field>
+        <field name="report_file">l10n_ve_stock.report_inventory_calculator</field>
+        <field name="print_report_name">'Calculadora - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_inventory_calculator"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Accion de reporte XLSX -->
+    <record id="action_report_inventory_calculator_xlsx" model="ir.actions.report">
+        <field name="name">Calculadora de Inventario (XLSX)</field>
+        <field name="model">inventory.calculator</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">l10n_ve_stock.report_inventory_calculator_xlsx</field>
+        <field name="report_file">l10n_ve_stock.report_inventory_calculator_xlsx</field>
+        <field name="print_report_name">'Calculadora - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_inventory_calculator"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

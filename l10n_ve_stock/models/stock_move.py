@@ -7,3 +7,9 @@ class StockMove(models.Model):
     priority_location = fields.Integer(
         string="Priority", related="product_id.priority_location", store=True
     )
+    inventory_calculator_id = fields.Many2one(
+        "inventory.calculator",
+        string="Calculadora de Inventario",
+        ondelete="set null",
+        index=True,
+    )
