@@ -41,4 +41,5 @@
             "l10n_ve_pos/static/src/**/**/**/*",
         ],
     },
+    "installable": False,
 }

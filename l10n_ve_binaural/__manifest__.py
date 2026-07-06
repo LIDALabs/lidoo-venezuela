@@ -15,4 +15,5 @@
     "demo": [
         "demo/demo_company.xml",
     ],
+    "installable": False,
 }
