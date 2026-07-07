@@ -56,3 +56,28 @@ def migrate(cr, version):
             ADD COLUMN auto_select_debit_note_journal BOOLEAN DEFAULT FALSE
             """
         )
+
+    # Odoo.sh builds occasionally fail to recreate transient model tables when
+    # restoring from a production backup. The autovacuum cron then crashes
+    # because it tries to query non-existent tables. Create minimal tables so
+    # the ORM can add the remaining columns during init_models.
+    transient_tables = [
+        "account_initial_balance_import",
+        "account_initial_balance_import_line",
+        "lidoo_analytics_ticket_wizard",
+        "inventory_calculator_process",
+    ]
+    for table in transient_tables:
+        if not tools.table_exists(cr, table):
+            cr.execute(
+                f"""
+                CREATE TABLE {table} (
+                    id SERIAL NOT NULL,
+                    create_uid INTEGER,
+                    create_date TIMESTAMP WITHOUT TIME ZONE,
+                    write_uid INTEGER,
+                    write_date TIMESTAMP WITHOUT TIME ZONE,
+                    CONSTRAINT {table}_pkey PRIMARY KEY (id)
+                )
+                """
+            )
