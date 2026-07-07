@@ -1,6 +1,18 @@
 from odoo import tools
 
 
+def _column_exists(cr, table, column):
+    cr.execute(
+        """
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name = %s AND column_name = %s
+        """,
+        (table, column),
+    )
+    return cr.fetchone() is not None
+
+
 def migrate(cr, version):
     # During upgrades the invoice_preset_note table may not exist yet (e.g. the
     # previous update was interrupted), but account.move's stored computed field
@@ -33,3 +45,14 @@ def migrate(cr, version):
         WHERE value_reference LIKE 'invoice.preset.note,%'
         """
     )
+
+    # Ensure the res.company column added by this module exists. In some
+    # interrupted upgrades the ORM may not have created it, which makes every
+    # res_company read crash with UndefinedColumn.
+    if not _column_exists(cr, "res_company", "auto_select_debit_note_journal"):
+        cr.execute(
+            """
+            ALTER TABLE res_company
+            ADD COLUMN auto_select_debit_note_journal BOOLEAN DEFAULT FALSE
+            """
+        )
