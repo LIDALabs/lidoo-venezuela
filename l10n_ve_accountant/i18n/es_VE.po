@@ -1702,22 +1702,4 @@ msgstr ""
 "<strong>Nota:</strong> El asiento contable debe estar cuadrado (Total Débito = "
 "Total Crédito). El sistema validará esto antes de permitirle crear el asiento."
 
-#. module: l10n_ve_accountant
-#: model:help:l10n_ve_accountant,field_account_initial_balance_import__journal_id
-msgid "General journal for initial balance entries"
-msgstr "Diario general para asientos de saldos iniciales"
 
-#. module: l10n_ve_accountant
-#: model:help:l10n_ve_accountant,field_account_initial_balance_import__date
-msgid "Date for the initial balance entries"
-msgstr "Fecha para los asientos de saldos iniciales"
-
-#. module: l10n_ve_accountant
-#: model:help:l10n_ve_accountant,field_account_initial_balance_import__file
-msgid "CSV or XLSX file with initial balances"
-msgstr "Archivo CSV o XLSX con saldos iniciales"
-
-#. module: l10n_ve_accountant
-#: model:help:l10n_ve_accountant,field_account_initial_balance_import__move_id
-msgid "Created journal entry"
-msgstr "Asiento contable creado"
