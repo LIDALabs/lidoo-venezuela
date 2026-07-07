@@ -1,9 +1,7 @@
 from odoo import tools
 
 
-def migrate(env, version):
-    cr = env.cr
-
+def migrate(cr, version):
     # During upgrades the invoice_preset_note table may not exist yet (e.g. the
     # previous update was interrupted), but account.move's stored computed field
     # preset_note_text reads the company-dependent preset_note_id, which joins
