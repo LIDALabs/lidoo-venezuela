@@ -10,6 +10,20 @@
             <xpath expr="//setting[@id='show_purchase_receipts']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Términos de pago por defecto (Venezuela)" name="l10n_ve_payment_term_defaults_setting">
+                    <setting id="l10n_ve_default_customer_payment_term_setting"
+                             title="Término de pago por defecto (cliente)"
+                             help="Término de pago que se usará por defecto en facturas de cliente cuando el contacto no tenga uno configurado.">
+                        <field name="l10n_ve_default_customer_payment_term_id" class="oe_inline"/>
+                    </setting>
+                    <setting id="l10n_ve_default_vendor_payment_term_setting"
+                             title="Término de pago por defecto (proveedor)"
+                             help="Término de pago que se usará por defecto en facturas de proveedor cuando el contacto no tenga uno configurado.">
+                        <field name="l10n_ve_default_vendor_payment_term_id" class="oe_inline"/>
+                    </setting>
+                </block>
+            </xpath>
         </field>
     </record>
 </odoo>

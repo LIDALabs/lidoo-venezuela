@@ -108,6 +108,31 @@ class AccountMove(models.Model):
     amount = fields.Float(tracking=True)
 
     @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if "invoice_payment_term_id" in fields_list and not res.get("invoice_payment_term_id"):
+            company = self.env.company
+            default_term = company.l10n_ve_default_customer_payment_term_id
+            if default_term:
+                res["invoice_payment_term_id"] = default_term.id
+        return res
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
+        res = super()._onchange_partner_id()
+        self._apply_l10n_ve_default_payment_term()
+        return res
+
+    def _apply_l10n_ve_default_payment_term(self):
+        if self.invoice_payment_term_id:
+            return
+        company = self.env.company
+        if self.move_type in ("out_invoice", "out_refund"):
+            self.invoice_payment_term_id = company.l10n_ve_default_customer_payment_term_id
+        elif self.move_type in ("in_invoice", "in_refund"):
+            self.invoice_payment_term_id = company.l10n_ve_default_vendor_payment_term_id
+
+    @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         context = self.with_context(active_test=False)
         return super(AccountMove, context).search_read(domain, fields, offset, limit, order)

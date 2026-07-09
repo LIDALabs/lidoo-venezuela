@@ -26,3 +26,19 @@ class ResCompany(models.Model):
         tracking=True,
         default=lambda self: self.env["res.country"].search([("code", "=", "VE")], limit=1),
     )
+
+    l10n_ve_default_customer_payment_term_id = fields.Many2one(
+        "account.payment.term",
+        string="Término de pago por defecto (cliente)",
+        help="Término de pago que se usará por defecto en facturas de cliente "
+             "cuando el contacto no tenga uno configurado.",
+        check_company=True,
+    )
+
+    l10n_ve_default_vendor_payment_term_id = fields.Many2one(
+        "account.payment.term",
+        string="Término de pago por defecto (proveedor)",
+        help="Término de pago que se usará por defecto en facturas de proveedor "
+             "cuando el contacto no tenga uno configurado.",
+        check_company=True,
+    )
