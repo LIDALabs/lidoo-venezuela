@@ -231,6 +231,10 @@ class StockPicking(models.Model):
                         from_picking_line=True
                     )
                     origin_name = self._get_origin_name(picking_id)
+                    payment_term = (
+                        picking_id.partner_id.property_payment_term_id
+                        or picking_id.company_id.l10n_ve_default_customer_payment_term_id
+                    )
                     invoice = self.env["account.move"].create(
                     {
                         "move_type": "out_invoice",
@@ -241,6 +245,7 @@ class StockPicking(models.Model):
                         "currency_id": self.env.user.company_id.currency_id.id,
                         "journal_id": int(customer_journal_id),
                         "payment_reference": picking_id.name,
+                        "invoice_payment_term_id": payment_term.id if payment_term else False,
                         "picking_ids": picking_id,
                         "invoice_line_ids": invoice_line_list,
                         "transfer_ids": self,
@@ -290,6 +295,10 @@ class StockPicking(models.Model):
                         },
                     )
                     invoice_line_list.append(vals)
+                    payment_term = (
+                        picking_id.partner_id.property_supplier_payment_term_id
+                        or picking_id.company_id.l10n_ve_default_vendor_payment_term_id
+                    )
                     invoice = picking_id.env["account.move"].create(
                         {
                             "move_type": "in_invoice",
@@ -300,6 +309,7 @@ class StockPicking(models.Model):
                             "currency_id": picking_id.env.user.company_id.currency_id.id,
                             "journal_id": int(vendor_journal_id),
                             "payment_reference": picking_id.name,
+                            "invoice_payment_term_id": payment_term.id if payment_term else False,
                             "picking_id": picking_id.id,
                             "invoice_line_ids": invoice_line_list,
                             "transfer_ids": self,

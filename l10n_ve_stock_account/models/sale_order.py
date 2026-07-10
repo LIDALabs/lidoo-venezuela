@@ -47,14 +47,29 @@ class SaleOrder(models.Model):
         partner = self.env["res.partner"].browse(self._context.get("default_partner_id"))
         return partner.default_document if partner else "invoice"
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if "payment_term_id" in fields_list and not res.get("payment_term_id"):
+            default_term = self.env.company.l10n_ve_default_customer_payment_term_id
+            if default_term:
+                res["payment_term_id"] = default_term.id
+        return res
+
     ### ONCHANGE ###
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
-        """Update the document field when the partner is changed."""
+        """Update the document field and payment term when the partner is changed."""
+        res = super()._onchange_partner_id()
         if self.partner_id:
             self.document = self.partner_id.default_document
+            # Always use company default payment term, not the partner's
+            self.payment_term_id = (
+                self.company_id.l10n_ve_default_customer_payment_term_id
+            )
         else:
             self.document = "invoice"
+        return res
 
     @api.onchange("is_consignation")
     def _onchange_is_consignation(self):
