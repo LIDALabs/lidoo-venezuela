@@ -27,6 +27,7 @@
         "data/res.bank.csv",
         "wizard/account_chart_replace_wizard_views.xml",
         "views/account_chart_replace_views.xml",
+        "views/res_config_settings_views.xml",
     ],
     "demo": [
         "demo/demo_company.xml",

@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_res_config_settings_l10n_ve_lida_accounts" model="ir.ui.view">
+        <field name="name">res.config.settings.l10n.ve.lida.accounts</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_ve_base.l10n_ve_base_view_res_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='l10n_ve_base']" position="inside">
+                <block title="Cuentas por defecto" name="l10n_ve_lida_default_accounts">
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_ve_lida_div_default_accounts">
+                        <div class="o_setting_right_pane">
+                            <separator string="Cuentas por defecto para contactos"/>
+                            <div class="text-muted">
+                                Estas cuentas se aplicarán a todos los contactos existentes y nuevos de la empresa
+                            </div>
+                            <group>
+                                <field name="default_account_receivable_id" string="Cuenta por cobrar"/>
+                                <field name="default_account_payable_id" string="Cuenta por pagar"/>
+                            </group>
+                            <div class="mt16">
+                                <button name="action_apply_default_accounts_to_contacts"
+                                        string="Aplicar a contactos"
+                                        type="object"
+                                        class="btn-primary"
+                                        confirm="¿Desea aplicar estas cuentas a todos los contactos de la empresa?"/>
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
