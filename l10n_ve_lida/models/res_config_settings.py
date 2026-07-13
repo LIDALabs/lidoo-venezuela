@@ -6,14 +6,16 @@ class ResConfigSettings(models.TransientModel):
 
     default_account_receivable_id = fields.Many2one(
         "account.account",
-        related="company_id.default_account_receivable_id",
+        related="company_id.account_receivable_id",
         readonly=False,
+        default_model="res.company",
         domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
     )
     default_account_payable_id = fields.Many2one(
         "account.account",
-        related="company_id.default_account_payable_id",
+        related="company_id.account_payable_id",
         readonly=False,
+        default_model="res.company",
         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
     )
 

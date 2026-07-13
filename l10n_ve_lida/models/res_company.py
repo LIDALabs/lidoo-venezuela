@@ -8,13 +8,13 @@ _logger = logging.getLogger(__name__)
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    default_account_receivable_id = fields.Many2one(
+    account_receivable_id = fields.Many2one(
         "account.account",
         string="Cuenta por cobrar predeterminada",
         domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
         help="Cuenta por cobrar predeterminada para nuevos contactos",
     )
-    default_account_payable_id = fields.Many2one(
+    account_payable_id = fields.Many2one(
         "account.account",
         string="Cuenta por pagar predeterminada",
         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
@@ -29,10 +29,10 @@ class ResCompany(models.Model):
         """Propaga las cuentas por defecto a todos los contactos de la empresa."""
         for company in self:
             vals = {}
-            if company.default_account_receivable_id:
-                vals["property_account_receivable_id"] = company.default_account_receivable_id.id
-            if company.default_account_payable_id:
-                vals["property_account_payable_id"] = company.default_account_payable_id.id
+            if company.account_receivable_id:
+                vals["property_account_receivable_id"] = company.account_receivable_id.id
+            if company.account_payable_id:
+                vals["property_account_payable_id"] = company.account_payable_id.id
             if vals:
                 contacts = self.env["res.partner"].search([("company_id", "=", company.id)])
                 if contacts:
