@@ -54,6 +54,7 @@
                                     readonly="state in ['emitted', 'cancel']">
                                     <tree editable="bottom">
                                         <field name="name" readonly="1" force_save="1" />
+                                        <field name="is_taxable_base_amount_manual" column_invisible="True" force_save="1" />
                                         <field
                                             name="move_id"
                                             domain="['&amp;',('id', 'in', parent.allowed_lines_move_ids), ('islr_voucher_number', '=',False)]"
