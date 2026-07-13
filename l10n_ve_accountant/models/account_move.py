@@ -112,7 +112,11 @@ class AccountMove(models.Model):
         res = super().default_get(fields_list)
         if "invoice_payment_term_id" in fields_list and not res.get("invoice_payment_term_id"):
             company = self.env.company
-            default_term = company.l10n_ve_default_customer_payment_term_id
+            move_type = res.get("move_type", self.env.context.get("default_move_type"))
+            if move_type in ("in_invoice", "in_refund"):
+                default_term = company.l10n_ve_default_vendor_payment_term_id
+            else:
+                default_term = company.l10n_ve_default_customer_payment_term_id
             if default_term:
                 res["invoice_payment_term_id"] = default_term.id
         return res
@@ -362,7 +366,17 @@ class AccountMove(models.Model):
         Ensure that the foreign_rate and foreign_inverse_rate are computed and computes the foreign
         debit and foreign credit of the line_ids fields (journal entries) when the move is created.
         """
+        company = self.env.company
         for vals in vals_list:
+            # Auto-apply company default payment term when not provided
+            move_type = vals.get("move_type")
+            if move_type in ("out_invoice", "in_invoice") and not vals.get("invoice_payment_term_id"):
+                if move_type == "out_invoice":
+                    default_term = company.l10n_ve_default_customer_payment_term_id
+                else:
+                    default_term = company.l10n_ve_default_vendor_payment_term_id
+                if default_term:
+                    vals["invoice_payment_term_id"] = default_term.id
 
             if 'name' in vals and vals['name'] != "/":
 
