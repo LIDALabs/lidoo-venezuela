@@ -449,11 +449,14 @@ class AccountRetentionLine(models.Model):
 
             is_vef_the_base_currency = self.env.company.currency_id == self.env.ref("base.VEF")
             is_client_retention = record.retention_id and record.retention_id.type == "out_invoice"
+            # Allow retention amount equal to the invoice residual (closes the invoice to 0).
+            # Use a small tolerance to absorb rounding differences between the computed retention
+            # and the invoice's amount_residual.
             if (
                 is_vef_the_base_currency
                 and is_client_retention
                 and record.move_id
-                and record.retention_amount > record.move_id.amount_residual
+                and record.retention_amount > record.move_id.amount_residual + 0.01
             ):
                 raise ValidationError(
                     _(
