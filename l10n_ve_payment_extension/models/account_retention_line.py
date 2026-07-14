@@ -268,7 +268,12 @@ class AccountRetentionLine(models.Model):
                     configured=", ".join(configured_types) or _("(none)"),
                 ))
 
-    @api.depends("invoice_amount", "foreign_invoice_amount", "related_percentage_tax_base")
+    @api.depends(
+        "invoice_amount",
+        "foreign_invoice_amount",
+        "related_percentage_tax_base",
+        "retention_id.type_retention",
+    )
     def _compute_taxable_base_amount(self):
         for record in self:
             if record.is_taxable_base_amount_manual:
@@ -280,8 +285,19 @@ class AccountRetentionLine(models.Model):
                 else:
                     record.foreign_taxable_base_amount = record.taxable_base_amount
                 continue
-            record.taxable_base_amount = record.invoice_amount * record.related_percentage_tax_base / 100
-            record.foreign_taxable_base_amount = record.foreign_invoice_amount * record.related_percentage_tax_base / 100
+            # IVA stores the agent retention % (e.g. 75) in related_percentage_tax_base.
+            # That % must NOT reduce the taxable base (unlike ISLR % tax base).
+            # Keep taxable_base_amount == invoice_amount so reports/helpers never re-apply 75%.
+            if record.retention_id.type_retention == "iva":
+                record.taxable_base_amount = record.invoice_amount
+                record.foreign_taxable_base_amount = record.foreign_invoice_amount
+                continue
+            record.taxable_base_amount = (
+                record.invoice_amount * record.related_percentage_tax_base / 100
+            )
+            record.foreign_taxable_base_amount = (
+                record.foreign_invoice_amount * record.related_percentage_tax_base / 100
+            )
 
     @api.depends("foreign_invoice_amount", "foreign_currency_rate")
     def _compute_amounts(self):
