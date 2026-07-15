@@ -12,7 +12,16 @@
     'version': '0.1.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'lida_api_auth'],
+    'depends': [
+        'base',
+        'lida_api_auth',
+        'sale_management',
+        'account',
+        'l10n_ve_contact',
+        'l10n_ve_sale',
+        'l10n_ve_rate',
+        'l10n_ve_invoice',
+    ],
 
     # always loaded
     'data': [
