@@ -10,6 +10,7 @@ from . import economic_activity
 from . import economic_branch
 from . import fees_retention
 from . import payment_concept
+from . import payment_concept_cleanup
 from . import payment_concept_line
 from . import product
 from . import product_category

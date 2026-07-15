@@ -6,7 +6,7 @@
             <field name="name">view.payment.concept.tree.l10n.ve.payment.extension</field>
             <field name="model">payment.concept</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree delete="true">
                     <field name="name" />
                     <field name="status" />
                 </tree>

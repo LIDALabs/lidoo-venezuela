@@ -62,10 +62,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
     @api.model
@@ -91,10 +87,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
         
     @api.model
@@ -134,10 +126,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
         
     @api.model
@@ -177,10 +165,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
     @api.model
@@ -220,10 +204,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
     @api.model
@@ -263,10 +243,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)      
 
     @api.model
@@ -306,10 +282,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
     @api.model
@@ -337,18 +309,18 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_nine(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_nine_l10n_ve_payment_extension'
-        name_concept = '077 - EMPRESAS DE SEGURO A CENTROS DE SALUD'
+        name_concept = '073/074 - EMPRESAS DE SEGURO CORRETAJE Y REASEGUROS'
         
         concept_lines = [
             {
-                'code': 77,
+                'code': 73,
                 'pay_from': 0.13,
                 'percentage_tax_base': 100,
                 'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_substrat_l10n_ve_payment_extension').id,
                 'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_l10n_ve_payment_extension').id 
             },
             {
-                'code': 77,
+                'code': 74,
                 'pay_from': 0.00,
                 'percentage_tax_base': 100,
                 'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_percentage_one_l10n_ve_payment_extension').id,
@@ -357,10 +329,6 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
         self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
     @api.model
@@ -379,15 +347,16 @@ class PaymentConcept(models.Model):
         ]
         
         new_concept_lines = self.validate_concept_lines(concept_lines) 
-
-        if not new_concept_lines:
-            return
-
-        self.create_concept_line(id_concept, name_concept, new_concept_lines)  
+        self.create_concept_line(id_concept, name_concept, new_concept_lines)
 
         
     def create_concept_line(self, id_concept, name_concept, new_concept_lines):
+        # Primero intentar por XML ID
         concept = self.env.ref(id_concept, raise_if_not_found=False)
+        
+        # Si no existe por XML ID, buscar por nombre
+        if not concept:
+            concept = self.env['payment.concept'].search([('name', '=', name_concept)], limit=1)
         
         if not concept:
             concept = self.env['payment.concept'].create({
@@ -397,6 +366,7 @@ class PaymentConcept(models.Model):
             })
         else:
             concept.write({
+                'name': name_concept,
                 'line_payment_concept_ids': [(0, 0, line) for line in new_concept_lines]
             })
 

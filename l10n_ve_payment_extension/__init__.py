@@ -7,6 +7,7 @@ old_module = "binaural_payment_extension"
 new_module = "l10n_ve_payment_extension"
     
 def pre_init_hook(env):
+    delete_old_payment_concepts(env.cr)
     reassign_xml_withholding_ids(env.cr)
     reassign_xml_fees_retention_ids(env.cr)
     reassign_xml_type_person_ids(env.cr)
@@ -14,6 +15,60 @@ def pre_init_hook(env):
     reassign_xml_accumulated_ids(env.cr)
     reassign_xml_tax_unit_data_ids(env.cr)
     reassign_xml_ir_rule_ids(env.cr)
+
+def post_init_hook(env):
+    delete_old_payment_concepts(env.cr)
+
+def uninstall_hook(env):
+    delete_old_payment_concepts(env.cr)
+
+def delete_old_payment_concepts(cr):
+    # Eliminar conceptos de pago viejos (sin códigos en el nombre)
+    old_names = [
+        'Honorarios Profesionales Pagados a',
+        'Gastos de Transporte (Fletes) Pagados a',
+        '(Contratista) Ejecución de obras y prestación de servicios en Venezuela pagadas a:',
+        'Arrendamiento de bienes muebles pagado a:',
+        'Arrendamiento o cesión de uso de bienes inmuebles, pagados al arrendador por personas jurídicas, comunidades o los administradores:',
+        'Publicidad, propaganda y venta de espacios pagadas a',
+        'Comisiones pagadas a',
+    ]
+    
+    for name in old_names:
+        cr.execute(
+            """
+            DELETE FROM payment_concept_line 
+            WHERE payment_concept_id IN (
+                SELECT id FROM payment_concept WHERE name = %s
+            )
+            """,
+            (name,)
+        )
+        cr.execute(
+            "DELETE FROM payment_concept WHERE name = %s",
+            (name,)
+        )
+    
+    # Eliminar duplicados (conceptos con el mismo nombre, mantener solo el más nuevo)
+    cr.execute(
+        """
+        DELETE FROM payment_concept_line 
+        WHERE payment_concept_id IN (
+            SELECT id FROM payment_concept 
+            WHERE id NOT IN (
+                SELECT MAX(id) FROM payment_concept GROUP BY name
+            )
+        )
+        """
+    )
+    cr.execute(
+        """
+        DELETE FROM payment_concept 
+        WHERE id NOT IN (
+            SELECT MAX(id) FROM payment_concept GROUP BY name
+        )
+        """
+    )
     
 def reassign_xml_withholding_ids(env):
     execute_script_sql(env, "account_withholding_type_")
