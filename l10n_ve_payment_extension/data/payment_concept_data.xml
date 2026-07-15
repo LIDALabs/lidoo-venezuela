@@ -7,5 +7,8 @@
         <function model="payment.concept" name="_handle_payment_concept_five"/>
         <function model="payment.concept" name="_handle_payment_concept_six"/>
         <function model="payment.concept" name="_handle_payment_concept_seven"/>
+        <function model="payment.concept" name="_handle_payment_concept_eight"/>
+        <function model="payment.concept" name="_handle_payment_concept_nine"/>
+        <function model="payment.concept" name="_handle_payment_concept_ten"/>
     </data>
 </odoo>

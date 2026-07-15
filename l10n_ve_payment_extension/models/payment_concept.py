@@ -28,7 +28,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_one(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_one_l10n_ve_payment_extension'
-        name_concept = 'Honorarios Profesionales Pagados a'
+        name_concept = '002/004 - HONORARIOS PROFESIONALES'
         
         concept_lines = [
             {
@@ -71,7 +71,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_two(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_two_l10n_ve_payment_extension'
-        name_concept = 'Gastos de Transporte (Fletes) Pagados a'
+        name_concept = '071/072 - GASTOS DE TRANSPORTE (FLETES)'
         
         concept_lines = [
             {
@@ -100,7 +100,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_three(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_three_l10n_ve_payment_extension'
-        name_concept = '(Contratista) Ejecución de obras y prestación de servicios en Venezuela pagadas a:'
+        name_concept = '053/055 - PAGOS A CONTRATISTAS / SUBCONTRATISTAS'
         
         concept_lines = [
             {
@@ -143,7 +143,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_four(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_four_l10n_ve_payment_extension'
-        name_concept = 'Arrendamiento de bienes muebles pagado a:'
+        name_concept = '061/063 - CANONES DE ARRENDAMIENTO DE BIENES MUEBLES'
         
         concept_lines = [
             {
@@ -186,7 +186,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_five(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_five_l10n_ve_payment_extension'
-        name_concept = 'Arrendamiento o cesión de uso de bienes inmuebles, pagados al arrendador por personas jurídicas, comunidades o los administradores:'
+        name_concept = '057/059 - PAGOS DE ADMINISTRADORES DE BIENES INMUEBLES'
         
         concept_lines = [
             {
@@ -229,7 +229,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_six(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_six_l10n_ve_payment_extension'
-        name_concept = 'Publicidad, propaganda y venta de espacios pagadas a'
+        name_concept = '083/084/086 - PUBLICIDAD PROPAGANDA Y CESION DE ESPACIOS'
         
         concept_lines = [
             {
@@ -272,7 +272,7 @@ class PaymentConcept(models.Model):
     @api.model
     def _handle_payment_concept_seven(self):
         id_concept = 'l10n_ve_payment_extension.payment_concept_seven_l10n_ve_payment_extension'
-        name_concept = 'Comisiones pagadas a'
+        name_concept = '014/016 - COMISIONES DISTINTAS A REMUNERACIONES'
         
         concept_lines = [
             {
@@ -302,6 +302,79 @@ class PaymentConcept(models.Model):
                 'percentage_tax_base': 100,
                 'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_percentage_one_l10n_ve_payment_extension').id,
                 'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_four_l10n_ve_payment_extension').id
+            }
+        ]
+        
+        new_concept_lines = self.validate_concept_lines(concept_lines) 
+
+        if not new_concept_lines:
+            return
+
+        self.create_concept_line(id_concept, name_concept, new_concept_lines)
+
+    @api.model
+    def _handle_payment_concept_eight(self):
+        id_concept = 'l10n_ve_payment_extension.payment_concept_eight_l10n_ve_payment_extension'
+        name_concept = '012 - CLINICAS BUFETES FIRMAS CONTADORES INGENIEROS'
+        
+        concept_lines = [
+            {
+                'code': 12,
+                'pay_from': 0.13,
+                'percentage_tax_base': 100,
+                'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_substrat_l10n_ve_payment_extension').id,
+                'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_l10n_ve_payment_extension').id 
+            }
+        ]
+        
+        new_concept_lines = self.validate_concept_lines(concept_lines) 
+
+        if not new_concept_lines:
+            return
+
+        self.create_concept_line(id_concept, name_concept, new_concept_lines)
+
+    @api.model
+    def _handle_payment_concept_nine(self):
+        id_concept = 'l10n_ve_payment_extension.payment_concept_nine_l10n_ve_payment_extension'
+        name_concept = '077 - EMPRESAS DE SEGURO A CENTROS DE SALUD'
+        
+        concept_lines = [
+            {
+                'code': 77,
+                'pay_from': 0.13,
+                'percentage_tax_base': 100,
+                'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_substrat_l10n_ve_payment_extension').id,
+                'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_l10n_ve_payment_extension').id 
+            },
+            {
+                'code': 77,
+                'pay_from': 0.00,
+                'percentage_tax_base': 100,
+                'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_percentage_one_l10n_ve_payment_extension').id,
+                'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_three_l10n_ve_payment_extension').id
+            }
+        ]
+        
+        new_concept_lines = self.validate_concept_lines(concept_lines) 
+
+        if not new_concept_lines:
+            return
+
+        self.create_concept_line(id_concept, name_concept, new_concept_lines)
+
+    @api.model
+    def _handle_payment_concept_ten(self):
+        id_concept = 'l10n_ve_payment_extension.payment_concept_ten_l10n_ve_payment_extension'
+        name_concept = '001 - SUELDOS Y SALARIOS'
+        
+        concept_lines = [
+            {
+                'code': 1,
+                'pay_from': 0.13,
+                'percentage_tax_base': 100,
+                'tariff_id': self.env.ref('l10n_ve_payment_extension.fees_retention_data_substrat_l10n_ve_payment_extension').id,
+                'type_person_id': self.env.ref('l10n_ve_payment_extension.type_person_l10n_ve_payment_extension').id 
             }
         ]
         
