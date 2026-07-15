@@ -1128,6 +1128,8 @@ class AccountMove(models.Model):
                 continue
             if move.state != "draft":
                 continue
+            if move.debit_origin_id:
+                continue
             if not move.invoice_payment_term_id:
                 raise ValidationError(_(
                     "Los términos de pago son obligatorios para las facturas. "
