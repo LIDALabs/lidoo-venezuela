@@ -18,13 +18,11 @@ class ResConfigSettings(models.TransientModel):
         readonly=True
     )
 
-    def action_generate_pull_key(self):
+    def action_generate_api_auth_pull_key(self):
         """Generate a secure random key for Pull Mode and save it immediately."""
-        new_key= secrets.token_bytes(32).hex()
+        new_key = secrets.token_bytes(32).hex()
         self.env['ir.config_parameter'].set_param('api_auth.pull_api_key', new_key)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
-        ...
-    ...

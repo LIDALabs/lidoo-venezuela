@@ -27,10 +27,16 @@ class AccountMoveRetention(models.Model):
         "account.retention.line",
         "move_id",
         string="ISLR Retention Lines",
+        # Only ISLR lines, or draft lines not yet linked to a retention but already
+        # carrying a payment concept (supplier invoice creation flow).
+        # Do NOT use bare payment_concept_id != False: IVA lines can also have a
+        # payment concept and would leak into the ISLR tab (e.g. line 36 on F 00000021).
         domain=[
             "|",
-            ("payment_concept_id", "!=", False),
             ("retention_id.type_retention", "=", "islr"),
+            "&",
+            ("retention_id", "=", False),
+            ("payment_concept_id", "!=", False),
         ],
     )
 

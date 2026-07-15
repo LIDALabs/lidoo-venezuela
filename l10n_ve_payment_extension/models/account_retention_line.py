@@ -115,6 +115,14 @@ class AccountRetentionLine(models.Model):
         digits="Tasa",
         readonly=False,
     )
+    is_taxable_base_amount_manual = fields.Boolean(
+        string="Taxable Base Edited Manually",
+        default=False,
+        help=(
+            "When the user manually edits the taxable base, this flag is set so the compute"
+            " does not override the manual value on the next recompute."
+        ),
+    )
 
     foreign_taxable_base_amount = fields.Float(
         string="Foreign Taxable Base",
@@ -260,11 +268,36 @@ class AccountRetentionLine(models.Model):
                     configured=", ".join(configured_types) or _("(none)"),
                 ))
 
-    @api.depends("invoice_amount", "foreign_invoice_amount", "related_percentage_tax_base")
+    @api.depends(
+        "invoice_amount",
+        "foreign_invoice_amount",
+        "related_percentage_tax_base",
+        "retention_id.type_retention",
+    )
     def _compute_taxable_base_amount(self):
         for record in self:
-            record.taxable_base_amount = record.invoice_amount * record.related_percentage_tax_base / 100
-            record.foreign_taxable_base_amount = record.foreign_invoice_amount * record.related_percentage_tax_base / 100
+            if record.is_taxable_base_amount_manual:
+                # Respect the user-edited taxable base. Keep the foreign equivalent in sync
+                # so currency computations stay consistent.
+                if record.foreign_invoice_amount and record.invoice_amount:
+                    rate = record.foreign_invoice_amount / record.invoice_amount
+                    record.foreign_taxable_base_amount = record.taxable_base_amount * rate
+                else:
+                    record.foreign_taxable_base_amount = record.taxable_base_amount
+                continue
+            # IVA stores the agent retention % (e.g. 75) in related_percentage_tax_base.
+            # That % must NOT reduce the taxable base (unlike ISLR % tax base).
+            # Keep taxable_base_amount == invoice_amount so reports/helpers never re-apply 75%.
+            if record.retention_id.type_retention == "iva":
+                record.taxable_base_amount = record.invoice_amount
+                record.foreign_taxable_base_amount = record.foreign_invoice_amount
+                continue
+            record.taxable_base_amount = (
+                record.invoice_amount * record.related_percentage_tax_base / 100
+            )
+            record.foreign_taxable_base_amount = (
+                record.foreign_invoice_amount * record.related_percentage_tax_base / 100
+            )
 
     @api.depends("foreign_invoice_amount", "foreign_currency_rate")
     def _compute_amounts(self):
@@ -281,6 +314,7 @@ class AccountRetentionLine(models.Model):
         "related_percentage_fees",
         "related_amount_subtract_fees",
         "foreign_currency_rate",
+        "taxable_base_amount",
     )
     @api.depends(
         "invoice_amount",
@@ -290,6 +324,7 @@ class AccountRetentionLine(models.Model):
         "related_amount_subtract_fees",
         "foreign_currency_rate",
         "move_id",
+        "taxable_base_amount",
     )
     def _compute_retention_amount(self):
         """
@@ -306,6 +341,29 @@ class AccountRetentionLine(models.Model):
             foreign_rate = record.move_id.foreign_rate
             if not foreign_rate:
                 foreign_rate = 1
+
+            if record.is_taxable_base_amount_manual:
+                # Honor the user-edited taxable base: compute the retention directly from
+                # taxable_base_amount instead of invoice_amount * related_percentage_tax_base.
+                if not base_currency_is_vef:
+                    record.retention_amount = ((
+                        record.taxable_base_amount
+                        * (record.related_percentage_fees / 100)
+                    ) - record.related_amount_subtract_fees) / foreign_rate
+                else:
+                    record.retention_amount = (
+                        record.taxable_base_amount
+                        * (record.related_percentage_fees / 100)
+                    ) - record.related_amount_subtract_fees
+                if record.taxable_base_amount and record.invoice_amount:
+                    rate = record.taxable_base_amount / record.invoice_amount
+                    record.foreign_retention_amount = (
+                        record.foreign_invoice_amount * rate
+                        * (record.related_percentage_fees / 100)
+                    ) - (record.related_amount_subtract_fees * record.foreign_currency_rate)
+                else:
+                    record.foreign_retention_amount = 0
+                continue
 
             if record.invoice_amount < record.related_pay_from:
                 record.retention_amount = 0
@@ -432,6 +490,40 @@ class AccountRetentionLine(models.Model):
                     * (1 / line.move_id.foreign_rate)
                 }
             )
+
+    @api.onchange("taxable_base_amount")
+    def onchange_taxable_base_amount(self):
+        """
+        Mark the taxable base as user-edited and recompute the retention amount using the
+        taxable base directly (instead of invoice_amount * related_percentage_tax_base / 100).
+
+        Without this onchange, manually editing taxable_base_amount had no effect on the
+        retention amount, since the existing onchange was only triggered by retention_amount /
+        invoice_amount changes.
+        """
+        if self.env.context.get("noonchange", False):
+            return
+        for line in self:
+            if not line.taxable_base_amount:
+                continue
+            if line.retention_id and line.retention_id.type_retention == "iva":
+                # IVA retentions do not depend on taxable_base_amount.
+                continue
+            updates = {"is_taxable_base_amount_manual": True}
+            if line.retention_id and line.retention_id.type_retention == "municipal":
+                updates["retention_amount"] = line.taxable_base_amount * line.aliquot / 100
+            else:
+                # ISLR (default): use the taxable base directly so the user-edited value
+                # drives the retention amount.
+                updates["retention_amount"] = (
+                    line.taxable_base_amount
+                    * (line.related_percentage_fees / 100)
+                ) - line.related_amount_subtract_fees
+            if line.move_id and line.move_id.foreign_inverse_rate:
+                updates["foreign_retention_amount"] = (
+                    updates["retention_amount"] * line.move_id.foreign_inverse_rate
+                )
+            line.update(updates)
 
     def _validate_retention_amounts(self):
         """Validate retention amounts after persistence, ensuring computed fields are settled."""

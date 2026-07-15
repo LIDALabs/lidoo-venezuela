@@ -261,7 +261,7 @@
                                     <span>--</span>
                                 </t>
                             </div>
-                            `<!-- Total Compras Incluyendo el IVA -->
+                            <!-- Total Compras Incluyendo el IVA -->
                             <div class="" style="width:7%">
                                 <span>
                     <t t-if="foreign_currency_is_vef">
@@ -288,26 +288,33 @@
                             </div>
 
 
-                            <!-- Base Imponible -->
+                            <!-- Base Imponible
+                                 For IVA, use invoice_amount (tax group base), NOT taxable_base_amount.
+                                 taxable_base_amount is an ISLR field computed as
+                                 invoice_amount * related_percentage_tax_base / 100.
+                                 On IVA lines related_percentage_tax_base stores the retention %
+                                 (e.g. 75), so printing taxable_base_amount wrongly multiplies the
+                                 real base by that percentage (e.g. 187.241,38 * 0.75 = 140.431,03).
+                            -->
                             <div class="" style="width:10%">
                     <t t-if="foreign_currency_is_vef">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.foreign_taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
-                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.foreign_taxable_base_amount)"/>
+                        <span t-esc="-line.foreign_invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.foreign_invoice_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.foreign_taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
-                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.foreign_taxable_base_amount)"/>
+                        <span t-esc="line.foreign_invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.foreign_invoice_amount)"/>
                     </t>
                     </t>
                     <t t-else="">
                     <t t-if="line.move_id.move_type in ('in_refund', 'out_refund')">
-                        <span t-esc="-line.taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
-                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.taxable_base_amount)"/>
+                        <span t-esc="-line.invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount - line.invoice_amount)"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="line.taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
-                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.taxable_base_amount)"/>
+                        <span t-esc="line.invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/>
+                        <t t-set="taxable_base_amount" t-value="float(taxable_base_amount + line.invoice_amount)"/>
                     </t>
                     </t>
                             </div>
@@ -664,15 +671,19 @@
                                     </span>
                         </t>
                             </div>
-                            <!-- Base de Retención -->
+                            <!-- Base de Retención
+                                 Use taxable_base_amount so the PDF matches the form and honors
+                                 manual edits (is_taxable_base_amount_manual). invoice_amount is
+                                 the full untaxed invoice total before applying % tax base.
+                            -->
                             <div style="width:15%">
                     <t t-if="foreign_currency_is_vef">
-                                    <span t-field="line.foreign_invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
+                                    <span t-field="line.foreign_taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                 </span>
                     </t>
                     <t t-else="">
-                                    <span t-field="line.invoice_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
+                                    <span t-field="line.taxable_base_amount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}">
                                         --
                                 </span>
                     </t>

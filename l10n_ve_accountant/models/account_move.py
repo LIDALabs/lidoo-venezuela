@@ -123,8 +123,10 @@ class AccountMove(models.Model):
 
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
-        res = super()._onchange_partner_id()
+        res = super()._onchange_partner_id() or {}
         self._apply_l10n_ve_default_payment_term()
+        if self.invoice_payment_term_id:
+            res.setdefault("value", {})["invoice_payment_term_id"] = self.invoice_payment_term_id.id
         return res
 
     def _apply_l10n_ve_default_payment_term(self):
@@ -1127,6 +1129,8 @@ class AccountMove(models.Model):
             if move.move_type not in ("out_invoice", "in_invoice"):
                 continue
             if move.state != "draft":
+                continue
+            if move.debit_origin_id:
                 continue
             if not move.invoice_payment_term_id:
                 raise ValidationError(_(
