@@ -6,7 +6,16 @@
             <field name="arch" type="xml">
                 <form string="Reporte de Producto por Periodo">
                     <group>
-                        <field name="product_id" options="{'no_create': True}"/>
+                        <group>
+                            <field name="product_selection"/>
+                        </group>
+                        <group>
+                            <field name="only_with_moves" invisible="product_selection != 'all'"/>
+                            <field name="report_type"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="product_id" options="{'no_create': True}" invisible="product_selection != 'specific'" required="product_selection == 'specific'"/>
                     </group>
                     <group>
                         <group>

@@ -13,7 +13,7 @@
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
     'category': 'Inventario',
-    'version': '17.0.1.1.2',
+    'version': '17.0.2.10.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', "product", "stock", 'purchase'],

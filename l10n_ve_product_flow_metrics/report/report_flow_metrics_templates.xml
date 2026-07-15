@@ -1,47 +1,212 @@
 <odoo>
     <data>
         <template id="metrics_template">
-            <div class="page">
-                <div class="text-center" style="border-bottom: 2px solid black; margin-bottom: 20px;">
-                    <h2>Reporte de Movimientos</h2>
-                    <h3><t t-esc="o.product_id.name"/></h3>
-                    <p>Del <t t-esc="o.date_from"/> al <t t-esc="o.date_to"/></p>
-                </div>
+            <style>
+                .mov-page { font-family: 'Lato', 'Open Sans', sans-serif; color: #333; }
+                .mov-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 14px;
+                    font-size: 9.5px;
+                }
+                .mov-table th, .mov-table td {
+                    padding: 5px 8px;
+                    border: 1px solid #dee2e6;
+                    vertical-align: top;
+                }
+                .mov-table th {
+                    font-weight: 600;
+                    text-align: left;
+                    font-size: 10px;
+                }
+                .mov-table .thead-sub th {
+                    background-color: #e9ecef !important;
+                    color: #495057 !important;
+                    font-size: 9px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.3px;
+                }
+                .mov-table tr:nth-child(even) { background-color: #f8f9fa; }
+                .text-end { text-align: right; }
+                .text-center { text-align: center; }
 
-                <div class="row mt-4">
-                    <div class="col-6">
-                        <h4>Flujo de Compras</h4>
-                        <p><strong>Comprado: </strong> <t t-esc="o.qty_purchased"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
-                        <p><strong>Compras Devueltas:</strong> <t t-esc="o.qty_purchased_return"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
+                .mov-header-card {
+                    background-color: #2c3e50;
+                    color: #fff;
+                    border-radius: 6px;
+                    padding: 16px 24px;
+                    margin-bottom: 18px;
+                }
+                .mov-header-card h2 {
+                    margin: 0;
+                    font-size: 18px;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                }
+                .mov-header-card .mov-sub {
+                    font-size: 11px;
+                    font-weight: 500;
+                    margin-top: 10px;
+                }
 
-                        <div>
-                            <strong>Balance Neto de las compras:</strong>
-                            <span> <t t-esc="o.qty_purchased_net"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></span>
+                .mov-section-header {
+                    background-color: #34495e;
+                    color: #fff;
+                    font-weight: 700;
+                    font-size: 11px;
+                    padding: 6px 8px;
+                    border-radius: 4px;
+                    margin-bottom: 6px;
+                    margin-top: 10px;
+                }
+
+                .mov-balance-row td {
+                    background-color: #2c3e50 !important;
+                    color: #fff;
+                    font-weight: 700;
+                    font-size: 10px;
+                }
+                .mov-balance-row td span {
+                    font-weight: 400;
+                }
+
+                .mov-price-cell {
+                    font-size: 8.5px;
+                    line-height: 1.4;
+                }
+            </style>
+
+            <t t-set="loop_idx" t-value="0"/>
+
+            <div class="page mov-page" style="padding-top: 10px;">
+                <!-- ===== PER PRODUCT ===== -->
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="pdata" t-value="docs_data[loop_idx]"/>
+                    <t t-set="loop_idx" t-value="loop_idx + 1"/>
+
+                    <!-- ===== HEADER ===== -->
+                    <div class="mov-header-card">
+                        <h2>Reporte de Movimientos</h2>
+                        <div class="mov-sub">
+                            <strong>Producto:</strong> <span t-esc="o.product_id.name"/>
+                             · Del <span t-esc="o.date_from"/> al <span t-esc="o.date_to"/>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <h4>Flujo de Ventas</h4>
-                        <p><strong>Vendido:</strong> <t t-esc="o.qty_sold"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
-                        <p><strong>Ventas Devueltas:</strong> <t t-esc="o.qty_sold_return"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></p>
-                        
-                        <div>
-                            <strong>Balance Neto de las ventas:</strong>
-                            <span> <t t-esc="o.qty_sold_net"/> <span style="margin-left: 1rem"><t t-esc="o.product_uom_id.name"/></span></span>
-                        </div>
-                    </div>
-                </div>
-                
 
+                    <!-- ===== FLUJO DE COMPRAS ===== -->
+                    <t t-if="o.report_type in ('both', 'purchases')">
+                    <div class="mov-section-header">Flujo de Compras</div>
+                    <table class="mov-table">
+                        <tr class="thead-sub">
+                            <th style="width: 30%;">Concepto</th>
+                            <th class="text-end" style="width: 12%;">Cantidad</th>
+                            <th class="text-center" style="width: 10%;">Unidad</th>
+                            <th class="text-center" style="width: 24%;">Precio Unitario</th>
+                            <th class="text-center" style="width: 24%;">Precio Total</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Comprado</strong></td>
+                            <td class="text-end"><t t-esc="o.qty_purchased"/></td>
+                            <td class="text-center"><t t-esc="o.product_uom_id.name"/></td>
+                            <td class="mov-price-cell">
+                                VES: <t t-esc="pdata['purchase_price_ves']"/><br/>
+                                USD: <t t-esc="pdata['purchase_price_usd']"/>
+                            </td>
+                            <td class="mov-price-cell">
+                                VES: <t t-esc="pdata['total_purchased_ves']"/><br/>
+                                USD: <t t-esc="pdata['total_purchased_usd']"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Compras Devueltas</strong></td>
+                            <td class="text-end"><t t-esc="o.qty_purchased_return"/></td>
+                            <td class="text-center"><t t-esc="o.product_uom_id.name"/></td>
+                            <td class="mov-price-cell">
+                                <t t-if="o.qty_purchased_return">
+                                    VES: <t t-esc="pdata['purchase_price_ves']"/><br/>
+                                    USD: <t t-esc="pdata['purchase_price_usd']"/>
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                            <td class="mov-price-cell">
+                                <t t-if="o.qty_purchased_return">
+                                    VES: <t t-esc="pdata['total_purchased_ves']"/><br/>
+                                    USD: <t t-esc="pdata['total_purchased_usd']"/>
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                        </tr>
+                        <tr class="mov-balance-row">
+                            <td>Balance Neto de las compras</td>
+                            <td class="text-end"><span t-esc="o.qty_purchased_net"/></td>
+                            <td class="text-center"><span t-esc="o.product_uom_id.name"/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    </t>
+
+                    <!-- ===== FLUJO DE VENTAS ===== -->
+                    <t t-if="o.report_type in ('both', 'sales')">
+                    <div class="mov-section-header">Flujo de Ventas</div>
+                    <table class="mov-table">
+                        <tr class="thead-sub">
+                            <th style="width: 30%;">Concepto</th>
+                            <th class="text-end" style="width: 12%;">Cantidad</th>
+                            <th class="text-center" style="width: 10%;">Unidad</th>
+                            <th class="text-center" style="width: 24%;">Precio Unitario</th>
+                            <th class="text-center" style="width: 24%;">Precio Total</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Vendido</strong></td>
+                            <td class="text-end"><t t-esc="o.qty_sold"/></td>
+                            <td class="text-center"><t t-esc="o.product_uom_id.name"/></td>
+                            <td class="mov-price-cell">
+                                VES: <t t-esc="pdata['sale_price_ves']"/><br/>
+                                USD: <t t-esc="pdata['sale_price_usd']"/>
+                            </td>
+                            <td class="mov-price-cell">
+                                VES: <t t-esc="pdata['total_sold_ves']"/><br/>
+                                USD: <t t-esc="pdata['total_sold_usd']"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ventas Devueltas</strong></td>
+                            <td class="text-end"><t t-esc="o.qty_sold_return"/></td>
+                            <td class="text-center"><t t-esc="o.product_uom_id.name"/></td>
+                            <td class="mov-price-cell">
+                                <t t-if="o.qty_sold_return">
+                                    VES: <t t-esc="pdata['sale_price_ves']"/><br/>
+                                    USD: <t t-esc="pdata['sale_price_usd']"/>
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                            <td class="mov-price-cell">
+                                <t t-if="o.qty_sold_return">
+                                    VES: <t t-esc="pdata['total_sold_ves']"/><br/>
+                                    USD: <t t-esc="pdata['total_sold_usd']"/>
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                        </tr>
+                        <tr class="mov-balance-row">
+                            <td>Balance Neto de las ventas</td>
+                            <td class="text-end"><span t-esc="o.qty_sold_net"/></td>
+                            <td class="text-center"><span t-esc="o.product_uom_id.name"/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    </t>
+                </t>
             </div>
         </template>
 
         
         <template id="report_metrics_template">
             <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="web.external_layout">
-                        <t t-call="l10n_ve_product_flow_metrics.metrics_template"/>
-                    </t>
+                <t t-call="web.external_layout">
+                    <t t-call="l10n_ve_product_flow_metrics.metrics_template"/>
                 </t>
             </t>
         </template>
