@@ -14,7 +14,7 @@
                                 <div class="row mt16">
                                     <label string="Pull API Key" for="api_auth_pull_api_key" class="col-lg-4 o_light_label"/>
                                     <field name="api_auth_pull_api_key" />
-                                    <button name="action_generate_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
+                                    <button name="action_generate_api_auth_pull_key" string="Generate" type="object" class="btn-link" icon="fa-refresh" />
                                 </div>
                             </div>
                         </setting>
