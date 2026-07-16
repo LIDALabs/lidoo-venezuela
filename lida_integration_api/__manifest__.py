@@ -9,7 +9,7 @@
     'author': "LIDALabs",
     'website': "https://lidalabs.com",
     'category': 'API',
-    'version': '0.1.1',
+    'version': '0.2.0',
 
     # any module necessary for this one to work correctly
     'depends': [
@@ -21,11 +21,16 @@
         'l10n_ve_sale',
         'l10n_ve_rate',
         'l10n_ve_invoice',
+        'l10n_ve_tax',
+        'l10n_ve_accountant',
     ],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'data/ir_cron_data.xml',
+        'views/webhook_event_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     # Icon
     "images": ["static/description/l10n_ve.png"],
