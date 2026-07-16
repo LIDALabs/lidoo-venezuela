@@ -19,9 +19,6 @@ def pre_init_hook(env):
 def post_init_hook(env):
     delete_old_payment_concepts(env.cr)
 
-def uninstall_hook(env):
-    delete_old_payment_concepts(env.cr)
-
 def delete_old_payment_concepts(cr):
     # Eliminar conceptos de pago viejos (sin códigos en el nombre)
     old_names = [

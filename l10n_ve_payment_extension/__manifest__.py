@@ -28,7 +28,6 @@
         "data/report_paperformat_data.xml",
         "data/fees_retention_data.xml",
         "data/payment_concept_data.xml",
-        "data/ir_cron_payment_concept_cleanup.xml",
         "report/retention_line_report_views.xml",
         "report/retention_voucher_templates.xml",
         "report/retention_voucher_reports.xml",
@@ -63,6 +62,5 @@
     "images": ["static/description/l10n_ve.png"],
     "application": True,
     "pre_init_hook": "pre_init_hook",
-    "post_init_hook": "post_init_hook",
-    "uninstall_hook": "uninstall_hook"
+    "post_init_hook": "post_init_hook"
 }

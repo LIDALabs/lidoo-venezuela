@@ -12,7 +12,7 @@ class PaymentConcept(models.Model):
         "payment.concept.line", "payment_concept_id", "Payment Concept Line", 
         store=True
     )
-    status = fields.Boolean(default=True, string="Active?", store=True)
+    active = fields.Boolean(default=True)
 
     @api.constrains("line_payment_concept_ids")
     def _constraint_line_payment_concept_ids(self):
@@ -361,7 +361,7 @@ class PaymentConcept(models.Model):
         if not concept:
             concept = self.env['payment.concept'].create({
                 'name': name_concept,
-                'status': True,
+                'active': True,
                 'line_payment_concept_ids': [(0, 0, line) for line in new_concept_lines]
             })
         else:
