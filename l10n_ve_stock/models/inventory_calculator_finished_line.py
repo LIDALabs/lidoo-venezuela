@@ -99,10 +99,15 @@ class InventoryCalculatorFinishedLine(models.Model):
                 ]
 
     @api.depends(
-        "recipe_line_ids",
-        "recipe_line_ids.quantity",
-        "recipe_line_ids.product_id",
-        "recipe_line_ids.product_id.standard_price",
+        # Se depende de la fuente almacenada (recipe_id.line_ids) en vez del
+        # One2many computado recipe_line_ids, que al no ser almacenado/buscable
+        # impide a Odoo 17 construir el árbol de recomputación (UserWarning en
+        # fields.py:814). recipe_line_ids == recipe_id.line_ids, así que el
+        # disparo es equivalente y además correcto.
+        "recipe_id",
+        "recipe_id.line_ids.quantity",
+        "recipe_id.line_ids.product_id",
+        "recipe_id.line_ids.product_id.standard_price",
         "quantity",
     )
     def _compute_raw_costs(self):
