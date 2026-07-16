@@ -5,15 +5,15 @@ class ResConfigSettings(models.TransientModel):
     _inherit="res.config.settings"
 
     api_auth_enable_pull = fields.Boolean(
-        string="Enable Pull Mode",
+        string="Habilitar modo Pull",
         config_parameter="api_auth.enable_pull",
-        help="Allow the partner instance to pull data from this instance",
+        help="Permite que el sistema externo consulte y cree datos en esta instancia",
         default=False
     )
     api_auth_pull_api_key = fields.Char(
-        string="Pull Api Key",
+        string="Clave API (Pull)",
         config_parameter="api_auth.pull_api_key",
-        help="Key used by the partner instance to authenticate pull requests",
+        help="Clave usada por el sistema externo para autenticar sus peticiones",
         default="",
         readonly=True
     )
