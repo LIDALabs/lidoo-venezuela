@@ -50,15 +50,19 @@
                 <attribute name="invisible">not show_reset_to_draft_button or (state in ['posted', 'cancel'] and move_type == 'out_invoice')</attribute>
             </button>
 
+            <!-- Nota de crédito habilitada también sobre notas de débito
+                 (debit_origin_id); oculta solo si el documento ya es NC. -->
             <button name="action_reverse" position="attributes">
-                <attribute name="invisible">(correlative == False or debit_origin_id or reversed_entry_id)</attribute>
+                <attribute name="invisible">(correlative == False or reversed_entry_id)</attribute>
             </button>
 
+            <!-- Nota de débito habilitada también sobre notas de crédito
+                 (reversed_entry_id); oculta solo si el documento ya es ND. -->
             <button name="action_reverse" position="after">
                 <button
                     name="action_debit_note_button" string="Agregar Nota de Débito"
                     type="object" class="o_btn_validate"
-                    invisible="correlative == False or debit_origin_id or reversed_entry_id"
+                    invisible="correlative == False or debit_origin_id"
                 />
             </button>
 
