@@ -35,6 +35,25 @@ class RegisterInvoiceController(http.Controller):
             status=status
         )
 
+    def _check_endpoint_enabled(self, endpoint):
+        """Return an error response if the endpoint is disabled in settings.
+
+        Toggles live in Ajustes → Integration API and are stored as "1"/"0"
+        in ir.config_parameter (lida_integration_api.endpoint_<name>_enable).
+        Default is enabled.
+
+        :param endpoint: 'quote' | 'invoice' | 'payment'
+        :return: response | None (None means enabled, continue)
+        """
+        ICP = request.env['ir.config_parameter'].sudo()
+        param = f'lida_integration_api.endpoint_{endpoint}_enable'
+        if ICP.get_param(param, '1') == '0':
+            return self._json_response(
+                {'status': 'error', 'message': f'El endpoint /api/{endpoint} está deshabilitado'},
+                403
+            )
+        return None
+
     def _find_partner_by_rif(self, vat):
         """
         Busca un res.partner a partir de un RIF venezolano.
@@ -294,6 +313,10 @@ class RegisterInvoiceController(http.Controller):
            }
            Crea la factura directamente y siempre queda en borrador.
         """
+        disabled = self._check_endpoint_enabled('invoice')
+        if disabled:
+            return disabled
+
         data = {}
         try:
             raw_data = request.httprequest.data
@@ -309,8 +332,9 @@ class RegisterInvoiceController(http.Controller):
             quote_id = data.get('quote_id')
             post_invoice = bool(data.get('post', False))
             create_partner = bool(data.get('create_partner_if_missing', False))
-            Company = request.env['res.company'].sudo().search([], limit=1, order='id')
-            company_id = Company.id
+            # Misma compañía que /api/quote y /api/payment (antes se tomaba la
+            # primera compañía de la DB, que en multi-company podía diferir).
+            company_id = request.env.company.id
 
             if not vat:
                 return self._json_response({'status': 'error', 'message': 'Falta el RIF'}, 400)
@@ -354,7 +378,7 @@ class RegisterInvoiceController(http.Controller):
                     })
 
                 if post_invoice:
-                    invoice.action_post()
+                    invoice.with_context(lida_api_origin=True, move_action_post_alert=True).action_post()
 
             else:
                 # ---- Modo legacy con lines ----
@@ -366,13 +390,12 @@ class RegisterInvoiceController(http.Controller):
                     )
 
                 invoice_lines = []
-                Product = request.env['product.product']
                 for line in lines:
                     sku = line.get('sku')
                     if not sku:
                         return self._json_response({'status': 'error', 'message': 'Falta SKU en una línea'}, 400)
 
-                    product = Product.sudo().search([('default_code', '=', sku)], limit=1)
+                    product = self._find_product_by_sku(sku)
                     if not product:
                         return self._json_response({'status': 'error', 'message': f'Producto no encontrado: {sku}'}, 400)
 
@@ -432,16 +455,30 @@ class RegisterInvoiceController(http.Controller):
                 invoice._onchange_partner_id()
                 invoice._compute_amount()
 
+                if post_invoice:
+                    invoice.with_context(lida_api_origin=True, move_action_post_alert=True).action_post()
+
             if len(invoice.line_ids) < 2:
                 return self._json_response({'status': 'error', 'message': 'El cliente no tiene cuenta contable configurada'}, 400)
 
+            # Reutiliza el mismo constructor que el webhook invoice_posted para
+            # que la respuesta síncrona y el evento asíncrono lleven idénticos
+            # datos (control_number, totales, foreign, lines...). event/source
+            # son semántica de webhook y se omiten en la respuesta HTTP.
+            data = invoice._lida_build_invoice_payload()
+            data.pop('event', None)
+            data.pop('source', None)
             return self._json_response({
                 'status': 'success',
-                'invoice_id': invoice.id,
-                'invoice_number': invoice.name,
                 'partner_id': contact.id,
                 'partner_created': partner_created,
                 'state': invoice.state,
+                # Ligado nativo con la cotización: _create_invoices() enlaza la
+                # sale.order con la factura (invoice_origin, invoice_ids,
+                # sale_line_ids). Se expone para que el sistema externo lo vea.
+                'quote_id': int(quote_id) if quote_id else None,
+                'sale_order': invoice.invoice_origin or None,
+                **data,
                 'message': 'factura creada'
             })
 
@@ -467,6 +504,10 @@ class RegisterInvoiceController(http.Controller):
         La moneda puede ser "VES"/"VEF" (moneda base de la compañía) o "USD"
         (moneda alterna configurada en la compañía).
         """
+        disabled = self._check_endpoint_enabled('quote')
+        if disabled:
+            return disabled
+
         try:
             raw_data = request.httprequest.data
             if not raw_data:
@@ -566,14 +607,16 @@ class RegisterInvoiceController(http.Controller):
             if is_base_currency:
                 subtotal = sale.amount_untaxed
                 total = sale.amount_total
-                taxes = total - subtotal
-                rate = sale.foreign_rate or 0.0
             else:
                 tax_totals = sale.tax_totals or {}
                 subtotal = tax_totals.get('foreign_amount_untaxed', 0.0)
                 total = tax_totals.get('foreign_amount_total', 0.0)
-                taxes = total - subtotal
-                rate = sale.foreign_rate or 0.0
+
+            subtotal = round(subtotal, 2)
+            total = round(total, 2)
+            taxes = round(total - subtotal, 2)
+            # 4 decimales: la tasa BCV suele tener más precisión que los montos.
+            rate = round(sale.foreign_rate or 0.0, 4)
 
             response_lines = []
             for line in sale.order_line:
@@ -587,8 +630,8 @@ class RegisterInvoiceController(http.Controller):
                 response_lines.append({
                     'sku': line.product_id.default_code or '',
                     'quantity': line.product_uom_qty,
-                    'price_unit': line_price_unit,
-                    'price_subtotal': line_subtotal,
+                    'price_unit': round(line_price_unit, 2),
+                    'price_subtotal': round(line_subtotal, 2),
                 })
 
             return self._json_response({
@@ -597,13 +640,13 @@ class RegisterInvoiceController(http.Controller):
                 'partner_id': partner.id,
                 'partner_created': partner_created,
                 'currency': currency_code,
-                'tasa': rate,
+                'rate': rate,
                 'subtotal': subtotal,
                 'taxes': taxes,
                 'total': total,
-                'desglose': {
+                'breakdown': {
                     'base': subtotal,
-                    'iva': taxes,
+                    'tax': taxes,
                     'total': total,
                 },
                 'lines': response_lines,
@@ -627,6 +670,10 @@ class RegisterInvoiceController(http.Controller):
             "payment_method_code": "manual" <-- Opcional (manual, inbound_credit_card, etc)
         }
         """
+        disabled = self._check_endpoint_enabled('payment')
+        if disabled:
+            return disabled
+
         data = {}
         try:
             raw_data = request.httprequest.data
@@ -648,7 +695,13 @@ class RegisterInvoiceController(http.Controller):
                     {'status': 'error', 'message': 'El monto (amount) debe ser numérico'},
                     400
                 )
-            payment_date = data.get('date', fields.Date.today())
+            try:
+                payment_date = fields.Date.to_date(data.get('date')) or fields.Date.today()
+            except ValueError:
+                return self._json_response(
+                    {'status': 'error', 'message': 'Formato de fecha inválido (use YYYY-MM-DD)'},
+                    400
+                )
             reference = data.get('payment_reference')
             journal_code = data.get('journal_code')
             bank_reference = data.get('bank_reference')
@@ -668,6 +721,50 @@ class RegisterInvoiceController(http.Controller):
             contact, partner_created, error = self._get_or_create_partner(vat, create_partner, data)
             if error:
                 return error
+
+            # --- Factura a conciliar (opcional) ---
+            # Si viene invoice_id o invoice_number, el pago se concilia contra
+            # esa factura (se admiten pagos parciales). Si no viene, el pago
+            # queda como anticipo.
+            invoice = None
+            if data.get('invoice_id') or data.get('invoice_number'):
+                Move = request.env['account.move'].sudo()
+                if data.get('invoice_id'):
+                    try:
+                        invoice = Move.browse(int(data['invoice_id']))
+                    except (TypeError, ValueError):
+                        return self._json_response(
+                            {'status': 'error', 'message': 'invoice_id debe ser numérico'}, 400
+                        )
+                    if not invoice.exists():
+                        invoice = None
+                else:
+                    invoice = Move.search([
+                        ('name', '=', str(data['invoice_number']).strip()),
+                        ('move_type', '=', 'out_invoice'),
+                        ('company_id', '=', request.env.company.id),
+                    ], limit=1) or None
+
+                if not invoice:
+                    return self._json_response(
+                        {'status': 'error', 'message': 'Factura no encontrada'}, 404
+                    )
+                if invoice.move_type != 'out_invoice':
+                    return self._json_response(
+                        {'status': 'error', 'message': 'La factura indicada no es una factura de cliente'}, 400
+                    )
+                if invoice.state != 'posted':
+                    return self._json_response(
+                        {'status': 'error', 'message': f'La factura {invoice.name} no está emitida (estado: {invoice.state})'}, 400
+                    )
+                if invoice.partner_id.id != contact.id:
+                    return self._json_response(
+                        {'status': 'error', 'message': 'La factura no pertenece al cliente del RIF indicado'}, 400
+                    )
+                if invoice.amount_residual <= 0:
+                    return self._json_response(
+                        {'status': 'error', 'message': f'La factura {invoice.name} ya está pagada'}, 400
+                    )
 
             # --- Buscar Diario (Banco/Caja) ---
             Journal = request.env['account.journal']
@@ -693,7 +790,7 @@ class RegisterInvoiceController(http.Controller):
                 req_method_str = str(req_method_code).strip()
                 candidates = journal.inbound_payment_method_line_ids
 
-                custom_method = candidates.filtered(lambda x: x.code == req_method_str)[:1]
+                custom_method = candidates.filtered(lambda x: x.payment_method_id.code == req_method_str)[:1]
                 if not custom_method:
                     custom_method = candidates.filtered(
                         lambda x: x.name and x.name.strip().lower() == req_method_str.lower()
@@ -727,14 +824,43 @@ class RegisterInvoiceController(http.Controller):
             payment = AccountPayment.sudo().create(payment_vals)
 
             # --- Confirmar el Pago (Postear) ---
-            payment.action_post()
+            payment.with_context(lida_api_origin=True).action_post()
 
+            # --- Conciliar con la factura (si se indicó) ---
+            # js_assign_outstanding_line aplica hasta el saldo pendiente; si
+            # el pago es mayor, el excedente queda como crédito a favor.
+            invoice_data = {}
+            if invoice:
+                residual_before = invoice.amount_residual
+                receivable_line = payment.move_id.line_ids.filtered(
+                    lambda l: l.account_id.account_type == 'asset_receivable' and l.credit > 0
+                )[:1]
+                if receivable_line:
+                    invoice.js_assign_outstanding_line(receivable_line.id)
+                applied = round(residual_before - invoice.amount_residual, 2)
+                invoice_data = {
+                    'invoice_id': invoice.id,
+                    'invoice_number': invoice.name,
+                    'invoice_payment_state': invoice.payment_state,
+                    'amount_applied': applied,
+                    'invoice_amount_residual': round(invoice.amount_residual, 2),
+                    'excess_amount': round(max(amount - applied, 0.0), 2),
+                }
+
+            # Reutiliza el mismo constructor que el webhook payment_posted para
+            # que la respuesta síncrona y el evento asíncrono lleven idénticos
+            # datos (amount, currency, foreign, bank_reference, journal_code...).
+            data = payment._lida_build_payment_payload()
+            data.pop('event', None)
+            data.pop('source', None)
             return self._json_response({
                 'status': 'success',
-                'payment_id': payment.id,
-                'payment_name': payment.name,
                 'partner_id': contact.id,
                 'partner_created': partner_created,
+                **data,
+                # Detalle de la conciliación (solo si se indicó factura):
+                # cuánto se aplicó, saldo restante y excedente a favor.
+                **invoice_data,
                 'message': 'Pago registrado exitosamente'
             })
 
