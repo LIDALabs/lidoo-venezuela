@@ -196,7 +196,7 @@ class RetentionIslrReport(models.TransientModel):
         new_row["Código Concepto"] = concept
 
         new_row["Monto Operación"] = (
-            round(ret_line_id.foreign_invoice_amount, 2) if is_vef_currency else ret_line_id.invoice_amount
+            round(ret_line_id.foreign_taxable_base_amount, 2) if is_vef_currency else ret_line_id.taxable_base_amount
         )
 
         new_row["Porcentaje de retención"] = alicuota
