@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_lida_integration_api" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.lida.integration.api</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='lida_api_auth']" position="inside">
+                <block title="Endpoints de la API">
+                    <setting id="lida_endpoint_quote_enable" string="Habilitar POST /api/quote" help="Permite a sistemas externos crear cotizaciones. Deshabilitado, el endpoint responde 403.">
+                        <field name="lida_endpoint_quote_enable"/>
+                    </setting>
+                    <setting id="lida_endpoint_invoice_enable" string="Habilitar POST /api/invoice" help="Permite a sistemas externos crear facturas de cliente. Deshabilitado, el endpoint responde 403.">
+                        <field name="lida_endpoint_invoice_enable"/>
+                    </setting>
+                    <setting id="lida_endpoint_payment_enable" string="Habilitar POST /api/payment" help="Permite a sistemas externos registrar pagos de cliente. Deshabilitado, el endpoint responde 403.">
+                        <field name="lida_endpoint_payment_enable"/>
+                    </setting>
+                </block>
+                <block title="Webhooks Salientes">
+                    <setting id="lida_webhook_enable" string="Habilitar Webhooks Salientes" help="Notifica a sistemas externos cuando se emiten facturas y pagos.">
+                        <field name="lida_webhook_enable"/>
+                    </setting>
+                    <setting id="lida_webhook_url" string="URL del Webhook" help="URL a la que Odoo enviará los eventos vía HTTP POST.">
+                        <field name="lida_webhook_url" placeholder="https://sistema.externo.com/webhook"/>
+                    </setting>
+                    <setting id="lida_webhook_secret" string="Secreto del Webhook" help="Secreto compartido para firmar los payloads salientes (HMAC-SHA256, header X-Lidoo-Signature).">
+                        <field name="lida_webhook_secret" password="True" placeholder="Secreto compartido"/>
+                    </setting>
+                    <setting id="lida_webhook_max_attempts" string="Intentos Máximos" help="Cantidad máxima de intentos de entrega antes de marcar el evento como fallido.">
+                        <field name="lida_webhook_max_attempts"/>
+                    </setting>
+                    <setting id="lida_webhook_invoice_enable" string="Enviar webhook al emitir factura" help="Si está activo (y los webhooks salientes encendidos), al emitir una factura de cliente se encola un evento invoice_posted.">
+                        <field name="lida_webhook_invoice_enable"/>
+                    </setting>
+                    <setting id="lida_webhook_payment_enable" string="Enviar webhook al registrar pago" help="Si está activo (y los webhooks salientes encendidos), al confirmar un pago de cliente se encola un evento payment_posted.">
+                        <field name="lida_webhook_payment_enable"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

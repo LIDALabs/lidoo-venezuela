@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lida_integration_api_webhook_event_tree" model="ir.ui.view">
+        <field name="name">lida_integration_api.webhook.event.tree</field>
+        <field name="model">lida_integration_api.webhook.event</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'sent'" decoration-danger="state == 'failed'" decoration-warning="state == 'pending'">
+                <field name="create_date"/>
+                <field name="event_type"/>
+                <field name="reference"/>
+                <field name="state"/>
+                <field name="attempts"/>
+                <field name="next_attempt_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_lida_integration_api_webhook_event_form" model="ir.ui.view">
+        <field name="name">lida_integration_api.webhook.event.form</field>
+        <field name="model">lida_integration_api.webhook.event</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="event_type"/>
+                        <field name="reference"/>
+                        <field name="state"/>
+                        <field name="attempts"/>
+                        <field name="next_attempt_at"/>
+                        <field name="last_error"/>
+                    </group>
+                    <group string="Payload">
+                        <field name="payload" widget="ace" options="{'mode': 'json'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+        </record>
+
+    <record id="action_lida_integration_api_webhook_event" model="ir.actions.act_window">
+        <field name="name">Webhook Events</field>
+        <field name="res_model">lida_integration_api.webhook.event</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Ajustes → Técnico → LIDA Webhook Events -->
+    <menuitem id="menu_lida_integration_api_webhook_event"
+              name="LIDA Webhook Events"
+              parent="base.menu_custom"
+              action="action_lida_integration_api_webhook_event"
+              groups="base.group_system"
+              sequence="99"/>
+</odoo>
+
