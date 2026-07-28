@@ -797,6 +797,8 @@ class AccountRetention(models.Model):
                 self._reconcile_customer_payment(payment)
 
     def _reconcile_supplier_payment(self, payment):
+        payment.invalidate_recordset(["retention_line_ids"])
+        retention_move = payment.retention_line_ids.mapped("move_id")
 
         if payment.payment_type == "outbound":
             
@@ -805,7 +807,8 @@ class AccountRetention(models.Model):
                 raise ValidationError(_("No registered lines found in the move to reconcile."))
             line_to_reconcile = lines[0]
 
-            payment.retention_line_ids.move_id.js_assign_outstanding_line(line_to_reconcile.id)
+            if retention_move:
+                retention_move.js_assign_outstanding_line(line_to_reconcile.id)
         
         elif payment.payment_type == "inbound":
             
@@ -814,9 +817,12 @@ class AccountRetention(models.Model):
                 raise ValidationError(_("No registered lines found in the move to reconcile."))
             line_to_reconcile = lines[0]
             
-            payment.retention_line_ids.move_id.js_assign_outstanding_line(line_to_reconcile.id)
+            if retention_move:
+                retention_move.js_assign_outstanding_line(line_to_reconcile.id)
 
     def _reconcile_customer_payment(self, payment):
+        payment.invalidate_recordset(["retention_line_ids"])
+        retention_move = payment.retention_line_ids.mapped("move_id")
         
         if payment.payment_type == "outbound":
             
@@ -826,7 +832,8 @@ class AccountRetention(models.Model):
                 raise ValidationError(_("No registered lines found in the move to reconcile."))
             line_to_reconcile = lines[0]
             
-            payment.retention_line_ids.move_id.js_assign_outstanding_line(line_to_reconcile.id)
+            if retention_move:
+                retention_move.js_assign_outstanding_line(line_to_reconcile.id)
         
         elif payment.payment_type == "inbound":
             lines = payment.move_id.line_ids.filtered(lambda l: l.account_id.account_type == "asset_receivable" and l.credit > 0)
@@ -835,7 +842,8 @@ class AccountRetention(models.Model):
                 raise ValidationError(_("No registered lines found in the move to reconcile."))
             line_to_reconcile = lines[0]
 
-            payment.retention_line_ids.move_id.js_assign_outstanding_line(line_to_reconcile.id)
+            if retention_move:
+                retention_move.js_assign_outstanding_line(line_to_reconcile.id)
 
     @api.model
     def compute_retention_lines_data(self, invoice_id, payment=None):
