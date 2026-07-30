@@ -1123,10 +1123,11 @@ class AccountMove(models.Model):
 
     @api.constrains("invoice_payment_term_id")
     def _check_invoice_payment_term_id(self):
-        """Valida que las facturas (no notas de crédito/débito) tengan términos de pago.
-        Solo aplica en creación/edición de borradores, no en facturas posteadas."""
+        """Valida que las facturas de cliente tengan términos de pago.
+        Solo aplica a facturas de salida (customer invoices) en borrador.
+        Las facturas de proveedor (vendor bills) no requieren este campo obligatorio."""
         for move in self:
-            if move.move_type not in ("out_invoice", "in_invoice"):
+            if move.move_type != "out_invoice":
                 continue
             if move.state != "draft":
                 continue
@@ -1134,7 +1135,7 @@ class AccountMove(models.Model):
                 continue
             if not move.invoice_payment_term_id:
                 raise ValidationError(_(
-                    "Los términos de pago son obligatorios para las facturas. "
+                    "Los términos de pago son obligatorios para las facturas de cliente. "
                     "Por favor seleccione un término de pago antes de confirmar."
                 ))
 
