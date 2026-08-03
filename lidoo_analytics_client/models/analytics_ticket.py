@@ -60,8 +60,7 @@ class LidooAnalyticsTicket(models.Model):
         webhook_url = icp.get_param("lidoo_analytics_ticket.webhook_url", "")
 
         if not webhook_url:
-            _logger.info("No webhook configured, ticket %s saved as draft", self.id)
-            self.write({"state": "draft"})
+            _logger.info("No Discord webhook configured, skipping ticket %s", self.id)
             return
 
         try:
@@ -400,5 +399,4 @@ class LidooAnalyticsTicket(models.Model):
             ])
 
         return "\n".join(lines)
-
 
