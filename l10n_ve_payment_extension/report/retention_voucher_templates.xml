@@ -471,6 +471,41 @@
             </div>
         </template>
 
+        <template id="report_iva_customer_reversal" inherit_id="l10n_ve_payment_extension.report_iva_customer">
+            <xpath expr="//div[@class='col-8'][1]/h6[1]" position="replace">
+                <t t-if="retention.reversal_of_id">
+                    <h6>CONSTANCIA DE REVERSIÓN DE RETENCIÓN DEL IMPUESTO AL VALOR AGREGADO</h6>
+                </t>
+                <t t-else="">
+                    <h6>COMPROBANTE DE RETENCIÓN DEL IMPUESTO AL VALOR AGREGADO</h6>
+                </t>
+            </xpath>
+            <xpath expr="//div[@class='col-8'][1]/p[1]" position="replace">
+                <t t-if="retention.reversal_of_id">
+                    <p>Documento de ajuste asociado a una nota de crédito. Esta constancia revierte el comprobante de retención original indicado en este documento.</p>
+                </t>
+                <t t-else="">
+                    <p>"Decreto con Rango, Valor y Fuerza de Ley de Reforma de la Ley del Impuesto al Valor agregado
+                        Nro 1.436 del 17 de Noviembre del 2014"
+                        Articulo 11: La Administracion Tributaria podra Designar como Responsable del Pago del
+                        Impuesto, en calidad de Agentes de Retencion a quienes por sus
+                        Funciones Publicas o por Razón de sus Actividades Privadas intervengan en operaciones
+                        Gravadas con el Impuesto Establecido en este Decreto con Rango,
+                        Valor y Fuerza de Ley.
+                    </p>
+                </t>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'row') and contains(@class, 'justify-content-end')][1]" position="after">
+                <t t-if="retention.reversal_of_id">
+                    <div class="row" style="margin-top:8px;border:1px solid #000;padding:5px;">
+                        <div class="col-4"><strong>Comprobante original:</strong> <span t-esc="retention.reversal_of_id.number"/></div>
+                        <div class="col-4"><strong>Nota de crédito:</strong> <span t-esc="retention.retention_line_ids[0].move_id.name"/></div>
+                        <div class="col-4"><strong>IVA revertido:</strong> <span t-esc="abs(retention.total_retention_amount)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: get_digits}"/></div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
 
         <template id="report_islr_customer">
             <!--Header-->

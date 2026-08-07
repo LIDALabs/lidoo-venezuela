@@ -89,6 +89,14 @@ class AccountMoveRetention(models.Model):
                 retention = move._create_supplier_retention("municipal")
                 retention.action_post()
 
+            if move.move_type == "in_refund":
+                retention = move._create_supplier_iva_retention_reversal()
+                if retention and retention.state == "draft":
+                    retention.action_post()
+                if retention:
+                    move.iva_voucher_number = retention.number
+                continue
+
             # The IVA retention will not be generated if the invoice already has a retention that
             # is not cancelled
             if (
@@ -100,6 +108,101 @@ class AccountMoveRetention(models.Model):
                 retention.action_post()
                 move.iva_voucher_number = retention.number
         return res
+
+    def _get_supplier_iva_retention_to_reverse(self):
+        """Find the single emitted IVA retention attached to the reversed invoice."""
+        self.ensure_one()
+        if self.move_type != "in_refund" or not self.reversed_entry_id:
+            return self.env["account.retention"]
+
+        retentions = self.env["account.retention"].search(
+            [
+                ("type_retention", "=", "iva"),
+                ("type", "=", "in_invoice"),
+                ("state", "=", "emitted"),
+                ("partner_id", "=", self.partner_id.id),
+                ("retention_line_ids.move_id", "=", self.reversed_entry_id.id),
+            ]
+        )
+        if len(retentions) > 1:
+            raise UserError(
+                _(
+                    "More than one emitted IVA retention is linked to the "
+                    "reversed invoice %(invoice)s. Select the retention to "
+                    "reverse before posting the credit note.",
+                    invoice=self.reversed_entry_id.display_name,
+                )
+            )
+        return retentions
+
+    def _create_supplier_iva_retention_reversal(self):
+        """Create an inbound technical adjustment for a supplier credit note."""
+        self.ensure_one()
+        if self.move_type != "in_refund":
+            return self.env["account.retention"]
+
+        original_retention = self._get_supplier_iva_retention_to_reverse()
+        if not original_retention:
+            return self.env["account.retention"]
+
+        existing = self.env["account.retention"].search(
+            [
+                ("reversal_of_id", "=", original_retention.id),
+                ("retention_line_ids.move_id", "=", self.id),
+                ("state", "!=", "cancel"),
+            ],
+            limit=1,
+        )
+        if existing:
+            return existing
+
+        if not self.partner_id.withholding_type_id:
+            raise UserError(_("The partner has no withholding type."))
+        if not self.env.company.iva_supplier_retention_journal_id:
+            raise UserError(
+                _("The company must have a journal for IVA supplier retention.")
+            )
+        if not any(self.invoice_line_ids.mapped("tax_ids").filtered(lambda tax: tax.amount > 0)):
+            raise UserError(_("The credit note has no tax to reverse."))
+
+        journal = self.env.company.iva_supplier_retention_journal_id
+        journal._ensure_retention_payment_method_line("inbound")
+        payment = self.env["account.payment"].create(
+            {
+                "payment_type": "inbound",
+                "partner_type": "supplier",
+                "partner_id": self.partner_id.id,
+                "journal_id": journal.id,
+                "payment_type_retention": "iva",
+                "payment_method_id": self.env.ref(
+                    "account.account_payment_method_manual_in"
+                ).id,
+                "is_retention": True,
+                "foreign_rate": self.foreign_rate,
+                "foreign_inverse_rate": self.foreign_inverse_rate,
+                "currency_id": self.company_id.currency_id.id,
+                "foreign_currency_id": False,
+            }
+        )
+        retention_lines_data = self.env["account.retention"].compute_retention_lines_data(
+            self, payment
+        )
+        retention = self.env["account.retention"].create(
+            {
+                "payment_ids": [Command.link(payment.id)],
+                "date_accounting": self.date,
+                "date": self.date,
+                "type_retention": "iva",
+                "type": "in_invoice",
+                "partner_id": self.partner_id.id,
+                "reversal_of_id": original_retention.id,
+                "retention_line_ids": [
+                    Command.create(line) for line in retention_lines_data
+                ],
+            }
+        )
+        payment.compute_retention_amount_from_retention_lines()
+        return retention
 
     def _validate_islr_retention(self):
         """
@@ -184,13 +287,18 @@ class AccountMoveRetention(models.Model):
             "partner_id": self.partner_id.id,
             "journal_id": journals[type_retention].id,
             "payment_type_retention": type_retention,
-            "payment_method_id": self.env.ref("account.account_payment_method_manual_in").id,
+            "payment_method_id": self.env.ref(
+                "account.account_payment_method_manual_in"
+                if payment_type == "inbound"
+                else "account.account_payment_method_manual_out"
+            ).id,
             "is_retention": True,
             "foreign_rate": self.foreign_rate,
             "foreign_inverse_rate": self.foreign_inverse_rate,
             "currency_id": self.env.user.company_id.currency_id.id,
             "foreign_currency_id": False,
         }
+        journals[type_retention]._ensure_retention_payment_method_line(payment_type)
         if type_retention == "islr":
             payment_vals["retention_line_ids"] = self.retention_islr_line_ids.filtered(
                 lambda rl: rl.state != "cancel"

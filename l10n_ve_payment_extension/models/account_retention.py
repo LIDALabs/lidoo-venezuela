@@ -80,6 +80,19 @@ class AccountRetention(models.Model):
         required=True,
         readonly=True,
     )
+    reversal_of_id = fields.Many2one(
+        "account.retention",
+        string="Reversal of retention",
+        copy=False,
+        index=True,
+        readonly=True,
+    )
+    reversal_ids = fields.One2many(
+        "account.retention",
+        "reversal_of_id",
+        string="Retention reversals",
+        copy=False,
+    )
     partner_id = fields.Many2one(
         "res.partner",
         "Social reason",
@@ -731,6 +744,7 @@ class AccountRetention(models.Model):
             ("iva", "out_invoice"): self.env.company.iva_customer_retention_journal_id,
             }
         journal_id = journals[(self.type_retention, self.type)].id
+        journal = self.env["account.journal"].browse(journal_id)
 
         if self.type_retention == "islr":
             self._validate_islr_retention_fields()
@@ -750,6 +764,7 @@ class AccountRetention(models.Model):
                 if payment_type == "inbound"
                 else "account.account_payment_method_manual_out"
             )
+            journal._ensure_retention_payment_method_line(payment_type)
 
             payment = Payment.create(
                 {
@@ -882,27 +897,34 @@ class AccountRetention(models.Model):
             if not taxes:
                 continue
             tax = taxes[0]
-            retention_amount = tax_group["tax_group_amount"] * (withholding_amount / 100)
+            tax_group_amount = abs(tax_group["tax_group_amount"])
+            tax_group_base_amount = abs(tax_group["tax_group_base_amount"])
+            foreign_tax_group_amount = abs(foreign_tax_group["tax_group_amount"])
+            foreign_tax_group_base_amount = abs(
+                foreign_tax_group["tax_group_base_amount"]
+            )
+            retention_amount = tax_group_amount * (withholding_amount / 100)
             line_data = {
                 "name": _("Iva Retention"),
                 "invoice_type": invoice_id.move_type,
                 "move_id": invoice_id.id,
                 "payment_id": payment.id if payment else None,
                 "aliquot": tax.amount,
-                "iva_amount": tax_group["tax_group_amount"],
-                "invoice_total": invoice_id.tax_totals["amount_total"],
+                "iva_amount": tax_group_amount,
+                "invoice_total": abs(invoice_id.tax_totals["amount_total"]),
                 "related_percentage_tax_base": withholding_amount,
-                "invoice_amount": tax_group["tax_group_base_amount"],
+                "invoice_amount": tax_group_base_amount,
                 "foreign_currency_rate": invoice_id.foreign_rate,
-                "foreign_invoice_amount": foreign_tax_group["tax_group_base_amount"],
-                "foreign_iva_amount": foreign_tax_group["tax_group_amount"],
-                "foreign_invoice_total": invoice_id.tax_totals["foreign_amount_total"],
+                "foreign_invoice_amount": foreign_tax_group_base_amount,
+                "foreign_iva_amount": foreign_tax_group_amount,
+                "foreign_invoice_total": abs(
+                    invoice_id.tax_totals["foreign_amount_total"]
+                ),
             }
-            
             line_data["retention_amount"] = retention_amount
-            line_data["foreign_retention_amount"] = line_data["foreign_iva_amount"] * (
+            line_data["foreign_retention_amount"] = foreign_tax_group_amount * (
                 withholding_amount / 100
-                )
+            )
             lines_data.append(line_data)
         return lines_data
 

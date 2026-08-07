@@ -29,6 +29,8 @@
                             <field name="foreign_currency_id" invisible="1" />
                             <field name="type_retention" invisible="1" force_save="1" />
                             <field name="type" force_save="1" select="2" />
+                            <field name="reversal_of_id" string="Reversión de" readonly="1"
+                                invisible="not reversal_of_id" />
                             <field name="company_id" invisible="1"/>
                             <field name="partner_id" on_change="onchange_partner_id(type,partner_id)"
                                 select="1"
@@ -180,6 +182,7 @@
                 <tree string="Retention">
                     <field name="number" />
                     <field name="type" />
+                    <field name="reversal_of_id" optional="hide" />
                     <field name="partner_id" />
                     <field name="date" />
                     <field name="date_accounting" />
