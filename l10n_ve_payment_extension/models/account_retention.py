@@ -657,6 +657,42 @@ class AccountRetention(models.Model):
             retention.number = correlative
 
     @api.model
+    def _configure_retention_sequences(self):
+        """Use transactional sequences and preserve the actual next number.
+
+        Existing standard sequences expose their authoritative counter through
+        ``number_next_actual`` (the PostgreSQL sequence). ``number_next`` may be
+        stale, so it must be copied before switching to ``no_gap``.
+        """
+        sequences = self.env["ir.sequence"].search([
+            ("code", "in", (
+                "retention.iva.control.number",
+                "retention.islr.control.number",
+                "retention.municipal.control.number",
+            )),
+        ])
+        for sequence in sequences:
+            if sequence.implementation != "standard":
+                continue
+            number_next = sequence.number_next_actual or sequence.number_next or 1
+            sequence.write({
+                "number_next": number_next,
+                "implementation": "no_gap",
+            })
+
+    @api.model
+    def _ensure_retention_sequence_no_gap(self, sequence):
+        """Migrate a legacy standard sequence before its first new number."""
+        sequence.ensure_one()
+        if sequence.implementation == "standard":
+            number_next = sequence.number_next_actual or sequence.number_next or 1
+            sequence.write({
+                "number_next": number_next,
+                "implementation": "no_gap",
+            })
+        return sequence
+
+    @api.model
     def get_sequence_iva_retention(self):
         sequence = self.env["ir.sequence"].search(
             [
@@ -670,9 +706,10 @@ class AccountRetention(models.Model):
                     "name": "Numero de control retenciones IVA",
                     "code": "retention.iva.control.number",
                     "padding": 8,
+                    "implementation": "no_gap",
                 }
             )
-        return sequence
+        return self._ensure_retention_sequence_no_gap(sequence)
 
     @api.model
     def get_sequence_islr_retention(self):
@@ -688,9 +725,10 @@ class AccountRetention(models.Model):
                     "name": "Numero de control retenciones ISLR",
                     "code": "retention.islr.control.number",
                     "padding": 5,
+                    "implementation": "no_gap",
                 }
             )
-        return sequence
+        return self._ensure_retention_sequence_no_gap(sequence)
 
     def get_sequence_municipal_retention(self):
         sequence = self.env["ir.sequence"].search(
@@ -703,11 +741,12 @@ class AccountRetention(models.Model):
             sequence = self.env["ir.sequence"].create(
                 {
                     "name": "Numero de control retenciones Municipal",
-                    "code": "retention.iva.control.number",
+                    "code": "retention.municipal.control.number",
                     "padding": 5,
+                    "implementation": "no_gap",
                 }
             )
-        return sequence
+        return self._ensure_retention_sequence_no_gap(sequence)
 
     def clear_islr_retention_number(self):
         for line in self.retention_line_ids:
