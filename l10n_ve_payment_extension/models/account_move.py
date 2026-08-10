@@ -1,5 +1,9 @@
+import re
+
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError
+
+from .account_journal import RETENTION_SEQUENCE_REGEX
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -7,6 +11,39 @@ _logger = logging.getLogger(__name__)
 
 class AccountMoveRetention(models.Model):
     _inherit = "account.move"
+
+    def _retention_sequence_regex(self):
+        """Return the composite regex only for a finalized retention name.
+
+        Payment creation temporarily uses ``/`` or Odoo's native sequence
+        format. Applying the retention regex at journal level makes Odoo fail
+        while computing ``sequence_prefix`` for that temporary name.
+        """
+        self.ensure_one()
+        payment = self.payment_id
+        if not payment or not payment.is_retention:
+            return False
+        retention_type = payment.payment_type_retention or payment.retention_id.type_retention
+        regex = RETENTION_SEQUENCE_REGEX.get(retention_type)
+        if not regex or not self.name or self.name == "/":
+            return False
+        return regex if re.match(regex, self.name) else False
+
+    @property
+    def _sequence_monthly_regex(self):
+        return self._retention_sequence_regex() or super()._sequence_monthly_regex
+
+    @property
+    def _sequence_yearly_regex(self):
+        return self._retention_sequence_regex() or super()._sequence_yearly_regex
+
+    @property
+    def _sequence_year_range_regex(self):
+        return self._retention_sequence_regex() or super()._sequence_year_range_regex
+
+    @property
+    def _sequence_fixed_regex(self):
+        return self._retention_sequence_regex() or super()._sequence_fixed_regex
 
     base_currency_is_vef = fields.Boolean(
         compute="_compute_currency_fields",

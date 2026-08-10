@@ -16,6 +16,7 @@
             <field name="name">Numero de control retenciones Municipal</field>
             <field name="code">retention.municipal.control.number</field>
             <field name="padding">5</field>
-	</record>
+        </record>
     </data>
+    <function model="account.journal" name="_clear_retention_sequence_overrides"/>
 </odoo>
