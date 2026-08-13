@@ -1039,6 +1039,8 @@ class AccountMove(models.Model):
 
     @api.depends(
         "invoice_line_ids.compute_all_tax",
+        "invoice_line_ids.foreign_price_total",
+        "invoice_line_ids.foreign_subtotal",
         "invoice_line_ids.price_subtotal",
         "foreign_inverse_rate",
         "foreign_currency_id",
@@ -1051,24 +1053,20 @@ class AccountMove(models.Model):
             is_draft = invoice.id != invoice._origin.id
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
             if invoice.is_invoice(True) and invoice.invoice_line_ids:
-                invoice._compute_tax_totals()
+                foreign_untaxed = sum(
+                    invoice.invoice_line_ids.mapped("foreign_subtotal")
+                )
+                foreign_total = sum(
+                    invoice.invoice_line_ids.mapped("foreign_price_total")
+                )
+                foreign_tax = foreign_total - foreign_untaxed
                 if invoice.invoice_payment_term_id:
                     if is_draft:
-                        tax_amount_currency = 0.0
-                        untaxed_amount_currency = 0.0
-                        for line in invoice.invoice_line_ids:
-                            untaxed_amount_currency += line.foreign_subtotal
-                            tax_amount_currency += (
-                                line.foreign_price_total - line.foreign_subtotal
-                            )
-                        untaxed_amount = untaxed_amount_currency
-                        tax_amount = tax_amount_currency
+                        untaxed_amount = foreign_untaxed
+                        tax_amount = foreign_tax
                     else:
-                        tax_amount = (
-                            invoice.foreign_total_billed
-                            - invoice.foreign_taxable_income
-                        ) * sign
-                        untaxed_amount = (invoice.foreign_taxable_income) * sign
+                        untaxed_amount = foreign_untaxed * sign
+                        tax_amount = foreign_tax * sign
 
                     invoice_payment_terms = (
                         invoice.invoice_payment_term_id._compute_terms(
@@ -1098,7 +1096,7 @@ class AccountMove(models.Model):
                     for key in list(invoice.needed_terms.keys()):
                         invoice.needed_terms[key] = {
                             **invoice.needed_terms[key],
-                            "foreign_balance": sign * invoice.foreign_total_billed,
+                            "foreign_balance": sign * foreign_total,
                         }
         return res
 
