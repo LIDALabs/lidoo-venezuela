@@ -37,11 +37,26 @@ class InvoicePaymentsReport(models.AbstractModel):
         invoice_payments_data = {}
         for invoice in invoices:
             total_bs += invoice.amount_total_signed
+            tax_totals = invoice.tax_totals or {}
+            igtf_totals = tax_totals.get('igtf') or {}
+            igtf_amount = igtf_totals.get('igtf_amount', 0.0) or 0.0
+            amount_total_igtf = igtf_totals.get(
+                'amount_total_igtf', invoice.amount_total + igtf_amount
+            )
             invoice_payments_data[invoice.id] = {
                 'payments': [],
                 'total_payments': 0.0,
                 'items': [],
                 'show_details': show_details,
+                'has_igtf': bool(
+                    igtf_totals.get('apply_igtf')
+                    and not invoice.currency_id.is_zero(igtf_amount)
+                ),
+                'amount_total_igtf': formatLang(
+                    self.env,
+                    amount_total_igtf,
+                    currency_obj=invoice.currency_id,
+                ),
             }
 
             if show_details:
@@ -75,10 +90,10 @@ class InvoicePaymentsReport(models.AbstractModel):
                     'name': payment_record.name,
                     'payment_method': f"{payment_record.journal_id.name} / {payment_record.payment_method_line_id.name}",
                     'amount': formatLang(
-                        self.env, reconciled_amount, currency_obj=payment_record.currency_id
+                        self.env, reconciled_amount, currency_obj=invoice.currency_id
                     ),
                     'amount_original': formatLang(
-                        self.env, reconciled_amount, currency_obj=payment_record.currency_id
+                        self.env, payment_record.amount, currency_obj=payment_record.currency_id
                     ),
                     'exchange_rate': payment_record.foreign_rate,
                     'is_igtf': payment_record.is_igtf_on_foreign_exchange,

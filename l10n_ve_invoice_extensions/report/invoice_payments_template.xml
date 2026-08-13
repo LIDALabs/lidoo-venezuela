@@ -95,6 +95,21 @@
                         font-weight: 700;
                         font-size: 11px;
                     }
+                    .total-line {
+                        white-space: nowrap;
+                        line-height: 14px;
+                    }
+                    .total-line .total-label {
+                        display: inline-block;
+                        width: 100px;
+                        margin-right: 2px;
+                        text-align: right;
+                    }
+                    .total-line .total-value {
+                        display: inline-block;
+                        width: 78px;
+                        text-align: right;
+                    }
                 </style>
 
                 <div class="page cierre-page" style="padding-top: 10px;" >
@@ -167,8 +182,7 @@
                                         <t t-if="payment['is_igtf']">
                                             <span t-out="payment['amount']"/>
                                             <div style="font-size:8px;">
-                                                (<span t-out="payment['amount_original']"/>
-                                                x <span t-out="payment['exchange_rate']"/>)
+                                                Efectivo: <span t-out="payment['amount_original']"/>
                                             </div>
                                         </t>
                                         <span t-else="" t-out="payment['amount']"/>
@@ -189,7 +203,14 @@
                                         </t>
                                     </td>
                                     <td colspan="2" class="td-total-right text-end">
-                                        TOTAL: <span t-field="invoice.amount_total_signed"/>
+                                        <div class="total-line">
+                                            <span class="total-label">TOTAL:</span>
+                                            <span class="total-value" t-field="invoice.amount_total_signed"/>
+                                        </div>
+                                        <div class="total-line" t-if="invoice_payments_data[invoice.id]['has_igtf']">
+                                            <span class="total-label">TOTAL CON IGTF:</span>
+                                            <span class="total-value" t-out="invoice_payments_data[invoice.id]['amount_total_igtf']"/>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

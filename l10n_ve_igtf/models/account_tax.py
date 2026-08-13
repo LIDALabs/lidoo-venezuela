@@ -89,10 +89,21 @@ class AccountTax(models.Model):
                 else invoice.bi_igtf if invoice.bi_igtf <= invoice.amount_total else invoice.amount_total
             )
 
-            base_igtf = amount_to_igtf
-            foreign_base_igtf = base_igtf * rate
-            if invoice.bi_igtf == res.get("amount_total"):
-                foreign_base_igtf = res.get("foreign_amount_total")
+            if (
+                not self._context.get("from_widget")
+                and invoice.currency_id.is_zero(invoice.amount_residual)
+            ):
+                # bi_igtf is accumulated from the payment converted with
+                # foreign_rate. Once the invoice is fully reconciled, use
+                # the invoice base already computed by account.tax so a
+                # conversion rounding difference cannot change the IGTF BI.
+                base_igtf = res.get("amount_total", 0)
+                foreign_base_igtf = res.get("foreign_amount_total", 0)
+            else:
+                base_igtf = amount_to_igtf
+                foreign_base_igtf = base_igtf * rate
+                if invoice.bi_igtf == res.get("amount_total"):
+                    foreign_base_igtf = res.get("foreign_amount_total")
 
         igtf_base_amount = float_round(
             base_igtf or 0, precision_rounding=currency.rounding
@@ -184,4 +195,3 @@ class AccountTax(models.Model):
         total_amount_to_igtf = sum(amount_to_igtf)  # Calcular la suma de los montos
 
         return total_amount_to_igtf
-
