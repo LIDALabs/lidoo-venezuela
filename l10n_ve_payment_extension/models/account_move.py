@@ -45,6 +45,18 @@ class AccountMoveRetention(models.Model):
     def _sequence_fixed_regex(self):
         return self._retention_sequence_regex() or super()._sequence_fixed_regex
 
+    def _is_customer_retention_move(self):
+        self.ensure_one()
+        payment = self.payment_id
+        if not payment or not payment.is_retention:
+            return False
+        return payment.retention_id.type in ("out_invoice", "out_refund", "out_debit")
+
+    def _sequence_matches_date(self):
+        if self._is_customer_retention_move():
+            return True
+        return super()._sequence_matches_date()
+
     base_currency_is_vef = fields.Boolean(
         compute="_compute_currency_fields",
     )
