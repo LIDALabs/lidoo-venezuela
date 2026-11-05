@@ -69,31 +69,36 @@ def get_bcv_rate_of_the_day(self):
             }
         
         usd_value = (
-            usd_container.text.replace("\n", "").replace("USD", "").replace(",", ".").strip()
+            usd_container.text.replace("\n", "").replace("USD", "").strip()
+            .replace(".", "").replace(",", ".")
         )
 
         # Parse EUR
         eur_container = soup.find(id="euro")
         eur_value = (
-            eur_container.text.replace("\n", "").replace("EUR", "").replace(",", ".").strip()
+            eur_container.text.replace("\n", "").replace("EUR", "").strip()
+            .replace(".", "").replace(",", ".")
         ) if eur_container else "0.0"
 
         # Parse CNY
         cny_container = soup.find(id="yuan")
         cny_value = (
-            cny_container.text.replace("\n", "").replace("CNY", "").replace(",", ".").strip()
+            cny_container.text.replace("\n", "").replace("CNY", "").strip()
+            .replace(".", "").replace(",", ".")
         ) if cny_container else "0.0"
 
         # Parse RUB
         rub_container = soup.find(id="rublo")
         rub_value = (
-            rub_container.text.replace("\n", "").replace("RUB", "").replace(",", ".").strip()
+            rub_container.text.replace("\n", "").replace("RUB", "").strip()
+            .replace(".", "").replace(",", ".")
         ) if rub_container else "0.0"
 
         # Parse TRY
         try_container = soup.find(id="lira")
         try_value = (
-            try_container.text.replace("\n", "").replace("TRY", "").replace(",", ".").strip()
+            try_container.text.replace("\n", "").replace("TRY", "").strip()
+            .replace(".", "").replace(",", ".")
         ) if try_container else "0.0"
         
         return {
